@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    
+    <script>
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault(); 
+            console.log('Install prompt blocked immediately in HEAD');
+            return false;
+        });
+    </script>
+    <link rel="manifest" href="manifest_admin.json">
+    <title>כניסת מנהל</title>
+
+<style>
+  /* איפוס בסיסי לחישוב גדלים נכון */
+  * {
+      box-sizing: border-box;
+  }
+
+  body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f3f4f6;
+      margin: 0;
+      direction: rtl; /* יישור לימין לכל הדף */
+  }
+
+  .card {
+      width: 360px;
+      padding: 30px; /* קצת יותר מרווח פנימי */
+      border-radius: 12px; /* פינות עגולות יותר */
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center; /* ממרכז את הכותרת והכפתור */
+  }
+
+  h2 {
+      margin: 0 0 20px;
+      color: #1f2937;
+  }
+
+  /* עיצוב שדות הקלט */
+  input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0; /* רווח אחיד מלמעלה ומלמטה */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+      transition: border-color 0.3s;
+  }
+
+  /* אפקט פוקוס לשדה */
+  input:focus {
+      border-color: #2563eb;
+  }
+
+  button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+  }
+
+  button:hover {
+      background: #1d4ed8;
+  }
+
+  #error {
+      color: #dc2626;
+      margin-top: 12px;
+      font-size: 0.9em;
+      min-height: 20px; /* שומר מקום להודעת שגיאה כדי שלא יקפוץ */
+  }
+
+  .small {
+      font-size: 0.85em;
+      color: #6b7280;
+      margin-top: 15px;
+  }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+// הכנס כאן את הגדרות Firebase שלך (אותו firebaseConfig)
+const firebaseConfig = {
+  apiKey: "AIzaSyCMO0LaL5zuZsqr8j_ovuxi26eXXLaXAqA",
+  authDomain: "myqueueapp-7494a.firebaseapp.com",
+  databaseURL: "https://myqueueapp-7494a-default-rtdb.firebaseio.com",
+  projectId: "myqueueapp-7494a",
+  storageBucket: "myqueueapp-7494a.firebasestorage.app",
+  messagingSenderId: "877049737454",
+  appId: "1:877049737454:web:14dcb6aa5e242bd9c403ff",
+  measurementId: "G-RHNLPSSJHK"
+};
+
+// רשימת מנהלים - החלף/הוסף כאן מיילים לפי הצורך
+const ADMIN_EMAILS = [
+  "alfa990@gmail.com" // החלף למייל שלך
+  // ,"admin2@example.com"
+];
+
+// כתובת פאנל המנהל  
+// שים לב: וודא שזה הקובץ הנכון שאליו רוצים לעבור אחרי הכניסה
+const ADMIN_PANEL_URL = "2x35"; 
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// אם כבר מחובר ומורשה - עבור ישר לפאנל
+auth.onAuthStateChanged(user => {
+  if (user && ADMIN_EMAILS.includes(user.email)) {
+    window.location.href = ADMIN_PANEL_URL;
+  }
+});
+</script>
+</head>
+<body>
+  <div class="card">
+    <h2>כניסת מנהל</h2>
+    <input id="email" type="email" placeholder="מייל מנהל" dir="ltr" style="direction: ltr; text-align: left;" />
+    <input id="password" type="password" placeholder="סיסמה" dir="ltr" style="direction: ltr; text-align: left;" />
+    <button onclick="login()">התחבר</button>
+    <div id="error"></div>
+    <div class="small">השתמש ב־Email + Password. אפשר להוסיף עוד מיילים בקובץ.</div>
+  </div>
+
+<script>
+function login() {
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  const err = document.getElementById('error');
+  err.innerText = '';
+
+  if (!email || !pass) {
+    err.innerText = 'מילא את המייל והסיסמה.';
+    return;
+  }
+
+  // הגדרה שהחיבור יהיה תקף רק לסשן הנוכחי (ברגע שסוגרים דפדפן - מתנתק)
+  auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    .then(() => {
+      // ביצוע ההתחברות רק אחרי שהגדרנו את סוג הזיכרון
+      return auth.signInWithEmailAndPassword(email, pass);
+    })
+    .then((userCredential) => {
+      // בדיקה אם המייל ברשימת המורשים
+      if (ADMIN_EMAILS.includes(userCredential.user.email)) {
+        window.location.href = ADMIN_PANEL_URL;
+      } else {
+        err.innerText = 'אין לך הרשאת ניהול.';
+        // התנתקות מיידית אם המשתמש לא מורשה
+        auth.signOut();
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      err.innerText = 'שגיאה בהתחברות: ' + error.message;
+    });
+}
+// --- הוספת תמיכה במקש Enter ---
+  
+  // מאזין לשדה הסיסמה
+  document.getElementById("password").addEventListener("keypress", function(event) {
+    // אם המקש שנלחץ הוא Enter
+    if (event.key === "Enter") {
+      event.preventDefault(); // מונע ירידת שורה מיותרת
+      login(); // מפעיל את פונקציה ההתחברות
+    }
+  });
+</script>
+
+</body>
+</html>
