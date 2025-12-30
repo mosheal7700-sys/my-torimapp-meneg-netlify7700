@@ -1125,13 +1125,32 @@ if (historyMode && isPast) {
 
       div.classList.add(statusClass);
 
-      div.innerHTML = `
-        <div>
-          <strong>${a.time}</strong>
-          <div style="font-size:0.85em; margin-top:2px;">${statusText}</div>
-          ${a.phone ? `<div style="font-size:0.8em; opacity:0.8;">📞 ${a.phone}</div>` : ''}
-        </div>
-      `;
+div.innerHTML = `
+  <div>
+    <strong>${a.time}</strong>
+
+    <div style="font-size:0.85em; margin-top:2px;">
+      ${statusText}
+    </div>
+
+    ${
+      a.first || a.last
+        ? `<div style="font-size:0.85em; margin-top:4px;">
+             👤 ${a.first || ''} ${a.last || ''}
+           </div>`
+        : ''
+    }
+
+    ${
+      a.phone
+        ? `<div style="font-size:0.8em; opacity:0.8;">
+             📞 ${a.phone}
+           </div>`
+        : ''
+    }
+  </div>
+`;
+
 
       slotsDiv.appendChild(div);
     });
