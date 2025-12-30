@@ -1,163 +1,163 @@
 <DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>ממשק ניהול תורים - v1</title>
+<meta charset="UTF-8">
+<title>ממשק ניהול תורים - v1</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="./manifest_admin.json">
 <meta name="theme-color" content="#000000">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
-    /* --- הגדרות משתנים (ברירת מחדל: מצב כהה) --- */
-    :root {
-        --bg-body: #0f172a;       /* כחול לילה עמוק */
-        --bg-panel: #1e293b;      /* פאנלים כהים */
-        --bg-header: #1e293b;     /* סרגל עליון */
-        --bg-input: #334155;      /* אינפוטים */
-        --text-main: #f1f5f9;     /* טקסט לבן */
-        --text-muted: #94a3b8;    /* טקסט אפור */
-        --border-color: rgba(255,255,255,0.1);
+/* --- הגדרות משתנים (ברירת מחדל: מצב כהה) --- */
+:root {
+  --bg-body: #0f172a;       /* כחול לילה עמוק */
+  --bg-panel: #1e293b;      /* פאנלים כהים */
+  --bg-header: #1e293b;     /* סרגל עליון */
+  --bg-input: #334155;      /* אינפוטים */
+  --text-main: #f1f5f9;     /* טקסט לבן */
+  --text-muted: #94a3b8;    /* טקסט אפור */
+  --border-color: rgba(255,255,255,0.1);
+  
+  --accent-blue: #3b82f6;
+  --accent-green: #ffffff;
+  --accent-red: #ef4444;
+  --accent-gold: #f59e0b;
+  
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --border-radius: 8px;
+}
 
-        --accent-blue: #3b82f6;   
-        --accent-green: #ffffff;  
-        --accent-red: #ef4444;    
-        --accent-gold: #f59e0b;   
+/* --- הגדרות למצב בהיר (Light Mode) --- */
+body.light-mode {
+  --bg-body: #f3f4f6;       /* אפור בהיר מאוד */
+  --bg-panel: #ffffff;      /* לבן */
+  --bg-header: #ffffff;     /* לבן */
+  --bg-input: #ffffff;      /* לבן */
+  --text-main: #111827;     /* שחור */
+  --text-muted: #6b7280;    /* אפור כהה */
+  --border-color: #e5e7eb;  /* אפור בהיר למסגרות */
+  
+  --accent-blue: #2563eb;
+  --accent-green: #059669;
+  --accent-red: #dc2626;
+  --accent-gold: #d97706;
+  
+  --shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        --border-radius: 8px;
-    }
+/* --- עיצוב כללי --- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  font-size: 13px;
+  direction: rtl;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    /* --- הגדרות למצב בהיר (Light Mode) --- */
-    body.light-mode {
-        --bg-body: #f3f4f6;       /* אפור בהיר מאוד */
-        --bg-panel: #ffffff;      /* לבן */
-        --bg-header: #ffffff;     /* לבן */
-        --bg-input: #ffffff;      /* לבן */
-        --text-main: #111827;     /* שחור */
-        --text-muted: #6b7280;    /* אפור כהה */
-        --border-color: #e5e7eb;  /* אפור בהיר למסגרות */
+/* סרגל עליון */
+.top-header {
+  height: 60px;
+  background: var(--bg-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 100;
+  position: relative;
+}
 
-        --accent-blue: #2563eb;   
-        --accent-green: #059669;  
-        --accent-red: #dc2626;    
-        --accent-gold: #d97706;   
+.header-title { font-size: 1.4em; font-weight: bold; color: var(--text-main); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
 
-        --shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
+/* כפתורים בסרגל */
+.action-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-main);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+.action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-excel { background: var(--accent-gold); color: #fff; border: none; }
+.btn-print { background: var(--bg-panel); color: var(--text-main); }
+.btn-theme { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
 
-    /* --- עיצוב כללי --- */
-    body { 
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-        background-color: var(--bg-body); 
-        color: var(--text-main); 
-        margin: 0; 
-        overflow: hidden; 
-        height: 100vh; 
-        font-size: 13px; 
-        direction: rtl;
-        transition: background-color 0.3s, color 0.3s;
-    }
+/* מתג היסטוריה */
+.history-wrapper {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-input);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
 
-    /* סרגל עליון */
-    .top-header {
-        height: 60px;
-        background: var(--bg-header);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        box-shadow: var(--shadow);
-        border-bottom: 1px solid var(--border-color);
-        z-index: 100;
-        position: relative;
-    }
+/* מבנה ראשי */
+#main-container {
+  display: flex; flex-direction: row;
+  height: calc(100vh - 60px);
+  padding: 15px; gap: 15px;
+  box-sizing: border-box;
+}
 
-    .header-title { font-size: 1.4em; font-weight: bold; color: var(--text-main); }
-    .header-actions { display: flex; align-items: center; gap: 10px; }
+.panel {
+  background: var(--bg-panel);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  display: flex; flex-direction: column; overflow: hidden;
+}
 
-    /* כפתורים בסרגל */
-    .action-btn {
-        display: flex; align-items: center; gap: 6px;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
-        background: var(--bg-input);
-        color: var(--text-main);
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9em;
-        transition: all 0.2s;
-    }
-    .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    .btn-excel { background: var(--accent-gold); color: #fff; border: none; }
-    .btn-print { background: var(--bg-panel); color: var(--text-main); }
-    .btn-theme { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+/* אלמנטים */
+input, select {
+  background: var(--bg-input); color: var(--text-main);
+  border: 1px solid var(--border-color); border-radius: 6px;
+  padding: 8px; width: 100%; box-sizing: border-box; text-align: center;
+  transition: border 0.3s;
+}
+input:focus { outline: none; border-color: var(--accent-blue); }
+h3 { color: var(--accent-blue); text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-top: 0; }
+label { color: var(--text-muted); display: block; margin-bottom: 4px; }
 
-    /* מתג היסטוריה */
-    .history-wrapper {
-        display: flex; align-items: center; gap: 8px;
-        background: var(--bg-input);
-        padding: 6px 12px;
-        border-radius: 20px;
-        border: 1px solid var(--border-color);
-    }
+/* עמודות */
+#configPanelWrapper { flex: 0 0 260px; overflow-y: auto; }
+#calendarPanel { flex: 0 0 320px; display: flex; flex-direction: column; }
+#slotsWrapper { flex: 1; min-width: 300px; background: var(--bg-input); }
 
-    /* מבנה ראשי */
-    #main-container {
-        display: flex; flex-direction: row; 
-        height: calc(100vh - 60px); 
-        padding: 15px; gap: 15px; 
-        box-sizing: border-box;
-    }
+/* קלנדר */
+#calendarHeader { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-main); }
+#calendarHeader button { background: transparent; border: none; color: var(--text-main); font-size: 1.2em; cursor: pointer; }
+#weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: var(--text-muted); margin-bottom: 5px; }
+#calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 
-    .panel {
-        background: var(--bg-panel); 
-        padding: 15px; 
-        border-radius: var(--border-radius); 
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border-color);
-        display: flex; flex-direction: column; overflow: hidden; 
-    }
+.day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; cursor: pointer; color: var(--text-main); border: 1px solid transparent;
+}
+.day:hover:not(.disabled) { background: var(--bg-input); }
 
-    /* אלמנטים */
-    input, select { 
-        background: var(--bg-input); color: var(--text-main); 
-        border: 1px solid var(--border-color); border-radius: 6px; 
-        padding: 8px; width: 100%; box-sizing: border-box; text-align: center;
-        transition: border 0.3s;
-    }
-    input:focus { outline: none; border-color: var(--accent-blue); }
-    h3 { color: var(--accent-blue); text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-top: 0; }
-    label { color: var(--text-muted); display: block; margin-bottom: 4px; }
-
-    /* עמודות */
-    #configPanelWrapper { flex: 0 0 260px; overflow-y: auto; }
-    #calendarPanel { flex: 0 0 320px; display: flex; flex-direction: column; }
-    #slotsWrapper { flex: 1; min-width: 300px; background: var(--bg-input); }
-
-    /* קלנדר */
-    #calendarHeader { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-main); }
-    #calendarHeader button { background: transparent; border: none; color: var(--text-main); font-size: 1.2em; cursor: pointer; }
-    #weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: var(--text-muted); margin-bottom: 5px; }
-    #calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-
-    .day { 
-        aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; cursor: pointer; color: var(--text-main); border: 1px solid transparent; 
-    }
-    .day:hover:not(.disabled) { background: var(--bg-input); }
-
-    .day.apply-selected {
-    background: rgba(59,130,246,0.25);
-    border: 2px dashed #3b82f6;
-    color: #ffffff;
-    font-weight: bold;
+.day.apply-selected {
+  background: rgba(59,130,246,0.25);
+  border: 2px dashed #3b82f6;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 /* --- עיצוב אחיד למצב "החלה לפי תאריכים נפרדים" --- */
@@ -166,286 +166,286 @@
 .day.apply-selected,
 .day.selected-day.apply-selected,
 .day.today.apply-selected {
-    /* צבע רקע אחיד ובולט (למשל סגול או כתום, שונה מהכחול הרגיל) */
-    background: #8b5cf6 !important; 
-
-    /* גבול אחיד */
-    border: 2px dashed #ffffff !important;
-
-    /* צבע טקסט אחיד */
-    color: #ffffff !important;
-
-    /* הדגשה אחידה */
-    font-weight: 800 !important;
-
-    /* אפקטים נוספים לאחידות */
-    border-radius: 50% !important;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.6) !important;
-    opacity: 1 !important;
-    transform: scale(0.95); /* הקטנה קלה לזיהוי */
+  /* צבע רקע אחיד ובולט (למשל סגול או כתום, שונה מהכחול הרגיל) */
+  background: #8b5cf6 !important;
+  
+  /* גבול אחיד */
+  border: 2px dashed #ffffff !important;
+  
+  /* צבע טקסט אחיד */
+  color: #ffffff !important;
+  
+  /* הדגשה אחידה */
+  font-weight: 800 !important;
+  
+  /* אפקטים נוספים לאחידות */
+  border-radius: 50% !important;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.6) !important;
+  opacity: 1 !important;
+  transform: scale(0.95); /* הקטנה קלה לזיהוי */
 }
 /* התאריך הנבחר - תיקון נראות המספר */
 .day.selected-day {
-    border: 2px solid #3b82f6 !important; /* כחול ניאון בולט */
-    border-radius: 50% !important;        /* עיגול מושלם */
-    background-color: #3b82f6 !important; /* מילוי כחול כדי ליצור במה למספר */
-    color: #ffffff !important;           /* הכרחת צבע טקסט לבן בוהק */
-    font-weight: 800 !important;         /* גופן עבה ובולט במיוחד */
-    width: 35px;
-    height: 35px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* הילה כחולה עדינה */
+  border: 2px solid #3b82f6 !important; /* כחול ניאון בולט */
+  border-radius: 50% !important;        /* עיגול מושלם */
+  background-color: #3b82f6 !important; /* מילוי כחול כדי ליצור במה למספר */
+  color: #ffffff !important;           /* הכרחת צבע טקסט לבן בוהק */
+  font-weight: 800 !important;         /* גופן עבה ובולט במיוחד */
+  width: 35px;
+  height: 35px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* הילה כחולה עדינה */
 }
 
-    .day.has-slots { font-weight: bold; position: relative; }
-    .day.has-slots::after { content: ''; position: absolute; bottom: 3px; width: 4px; height: 4px; background: var(--accent-green); border-radius: 50%; }
-    .day.past { opacity: 0.5; }
-    .day.disabled { opacity: 0.2; cursor: default; }
-    .day.history-available { color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+.day.has-slots { font-weight: bold; position: relative; }
+.day.has-slots::after { content: ''; position: absolute; bottom: 3px; width: 4px; height: 4px; background: var(--accent-green); border-radius: 50%; }
+.day.past { opacity: 0.5; }
+.day.disabled { opacity: 0.2; cursor: default; }
+.day.history-available { color: var(--accent-gold); border: 1px solid var(--accent-gold); }
 
-    /* --- עיצוב תורים (כולל התיקונים הסופיים) --- */
-    #slotsContainer { flex: 1; overflow-y: auto; padding: 5px; }
+/* --- עיצוב תורים (כולל התיקונים הסופיים) --- */
+#slotsContainer { flex: 1; overflow-y: auto; padding: 5px; }
 
-    .slot { 
-        display: flex; justify-content: space-between; align-items: center; 
-        padding: 10px; margin-bottom: 8px; 
-        background: var(--bg-panel);
-        border-radius: 6px; 
-        border-right: 4px solid #ccc;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+.slot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px; margin-bottom: 8px;
+  background: var(--bg-panel);
+  border-radius: 6px;
+  border-right: 4px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 
-    /* תור פנוי */
-    .slot.free { border-right-color: var(--accent-green); }
-    .slot.free strong { color: var(--accent-green); }
+/* תור פנוי */
+.slot.free { border-right-color: var(--accent-green); }
+.slot.free strong { color: var(--accent-green); }
 
-    /* תיקון: תור פנוי במצב בהיר - גוון מנטה עדין */
-    body.light-mode .slot.free {
-        background: #8aff8a;
-        border: 1px solid #d1fae5;
-    }
-    body.light-mode .slot.free:hover { background: #ecfdf5; }
+/* תיקון: תור פנוי במצב בהיר - גוון מנטה עדין */
+body.light-mode .slot.free {
+  background: #8aff8a;
+  border: 1px solid #d1fae5;
+}
+body.light-mode .slot.free:hover { background: #ecfdf5; }
 
-    /* תור מוזמן - תיקון למצב כהה */
-    .slot.booked { 
-        border-right-color: var(--accent-blue);
-        background-color: #1e3a8a; /* כחול עמוק בולט */
-        border: 1px solid #2563eb;
-    }
-    .slot.booked strong { color: #93c5fd; }
-    .slot.booked div { color: #dbeafe; }
+/* תור מוזמן - תיקון למצב כהה */
+.slot.booked {
+  border-right-color: var(--accent-blue);
+  background-color: #1e3a8a; /* כחול עמוק בולט */
+  border: 1px solid #2563eb;
+}
+.slot.booked strong { color: #93c5fd; }
+.slot.booked div { color: #dbeafe; }
 
-    /* תור מוזמן - תיקון למצב בהיר */
-    body.light-mode .slot.booked { 
-        background: #dbeafe; /* תכלת בהיר */
-        border: 1px solid #509fff;
-        color: inherit;
-    }
-    body.light-mode .slot.booked strong { color: var(--accent-blue); }
-    body.light-mode .slot.booked div { color: inherit; }
+/* תור מוזמן - תיקון למצב בהיר */
+body.light-mode .slot.booked {
+  background: #dbeafe; /* תכלת בהיר */
+  border: 1px solid #509fff;
+  color: inherit;
+}
+body.light-mode .slot.booked strong { color: var(--accent-blue); }
+body.light-mode .slot.booked div { color: inherit; }
 
-    /* חסום */
-    .slot.blocked { border-right-color: var(--text-muted); opacity: 0.6; border-style: dashed; }
+/* חסום */
+.slot.blocked { border-right-color: var(--text-muted); opacity: 0.6; border-style: dashed; }
 
-    /* מפרידים */
-    .break-separator { 
-        background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); 
-        padding: 5px; margin: 10px 0; text-align: center; border-radius: 12px; 
-        font-weight: bold; font-size: 0.9em; border: 1px solid rgba(245, 158, 11, 0.2);
-    }
+/* מפרידים */
+.break-separator {
+  background: rgba(245, 158, 11, 0.1); color: var(--accent-gold);
+  padding: 5px; margin: 10px 0; text-align: center; border-radius: 12px;
+  font-weight: bold; font-size: 0.9em; border: 1px solid rgba(245, 158, 11, 0.2);
+}
 
-    /* קו מפריד שעות - תיקון נראות */
-    .time-separator { border-bottom: 1px dashed var(--border-color); margin: 6px 0; }
-    body.light-mode .time-separator { border-color: #94a3b8; opacity: 1; } /* בולט בבהיר */
+/* קו מפריד שעות - תיקון נראות */
+.time-separator { border-bottom: 1px dashed var(--border-color); margin: 6px 0; }
+body.light-mode .time-separator { border-color: #94a3b8; opacity: 1; } /* בולט בבהיר */
 
-    /* כפתורים פנימיים */
-.save-btn { 
-    background: var(--accent-green); 
-    color: #000000 !important; /* הכרחת טקסט לבן לקריאות מקסימלית */
-    padding: 10px; 
-    border: none; 
-    border-radius: 6px; 
-    width: 100%; 
-    font-weight: bold; 
-    margin-top: 10px; 
-    cursor: pointer; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1.1em;
+/* כפתורים פנימיים */
+.save-btn {
+  background: var(--accent-green);
+  color: #000000 !important; /* הכרחת טקסט לבן לקריאות מקסימלית */
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  width: 100%;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.1em;
 }
 
 /* אפקט מעבר עדין */
 .save-btn:hover {
-    filter: brightness(1.1);
+  filter: brightness(1.1);
 }
-    .reset-btn { background: transparent; border:1px solid var(--accent-red); color: var(--accent-red); padding:8px; border-radius:6px; width:100%; margin-top:5px; cursor: pointer; }
-    .manual-slot-box { background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
+.reset-btn { background: transparent; border:1px solid var(--accent-red); color: var(--accent-red); padding:8px; border-radius:6px; width:100%; margin-top:5px; cursor: pointer; }
+.manual-slot-box { background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
 
-    button.del-btn { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid var(--accent-red); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
-    button.del-free-slot-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
-    button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
+button.del-btn { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid var(--accent-red); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
+button.del-free-slot-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
+button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 4px 8px; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
 
-    /* מודלים */
-    #waModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; }
-    .wa-modal-content { background: var(--bg-panel); padding: 20px; border-radius: 10px; text-align: center; width: 300px; border: 1px solid var(--border-color); color: var(--text-main); }
-    #loadingOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-body); z-index:9999; color: var(--text-main); display: flex; justify-content: center; align-items: center; flex-direction: column; }
+/* מודלים */
+#waModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; }
+.wa-modal-content { background: var(--bg-panel); padding: 20px; border-radius: 10px; text-align: center; width: 300px; border: 1px solid var(--border-color); color: var(--text-main); }
+#loadingOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-body); z-index:9999; color: var(--text-main); display: flex; justify-content: center; align-items: center; flex-direction: column; }
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 3px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #64748b; border-radius: 3px; }
 
 /* ==========================================
-       תיקון סופי לנייד: מירכוז + סדר מעודכן
-       ========================================== */
-    @media (max-width: 900px) {
-
-        /* איפוסים למניעת תקלות גלילה */
-        body { 
-            overflow-y: auto !important; 
-            overflow-x: hidden !important; 
-            height: auto !important; 
-            padding: 10px 0 !important;
-            margin: 0 !important;
-        }
-
-        .top-header { 
-            flex-direction: column; 
-            height: auto; 
-            align-items: center; 
-            gap: 15px;
-            width: 100%;
-            box-sizing: border-box;
-        }
+תיקון סופי לנייד: מירכוז + סדר מעודכן
+========================================== */
+@media (max-width: 900px) {
+  
+  /* איפוסים למניעת תקלות גלילה */
+  body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+  }
+  
+  .top-header {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 /* ==========================================
-       תיקון לנייד: סדר מאולץ (קלנדר > הגדרות > תורים)
-       ========================================== */
-    @media (max-width: 1000px) {
-
-        /* איפוסים חיוניים */
-        body { 
-            overflow-y: auto !important; 
-            overflow-x: hidden !important; 
-            height: auto !important; 
-            padding: 10px 0 !important;
-            margin: 0 !important;
-        }
-
-        .top-header { 
-            flex-direction: column; 
-            height: auto; 
-            align-items: center; 
-            gap: 15px;
-            width: 100%;
-        }
-
-/* ==========================================
-       תיקון סדר בטלפון: שימוש בשמות ID הנכונים
-       ========================================== */
-    @media (max-width: 1000px) {
-
-        /* 1. הגדרת הקונטיינר הראשי כ-Flex */
-        #main-container {
-            display: flex !important;            
-            flex-direction: column !important;   
-            height: auto !important;
-            align-items: center !important;      
-            gap: 20px;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
-
-        /* 2. עיצוב הפנלים */
-        .panel { 
-            width: 98% !important;   
-            max-width: 500px;        
-            flex: none !important; 
-            margin: 0 auto !important; 
-            box-sizing: border-box;
-        }
-
-        /* 3. קביעת הסדר (Order) - עם השמות הנכונים לקובץ שלך */
-
-        /* ראשון: לוח שנה */
-        #calendarPanel { 
-            order: 1 !important; 
-        }
-
-        /* שני: הגדרות (זה השם הנכון אצלך בקובץ) */
-        #configPanelWrapper, #configPanel { 
-            order: 2 !important; 
-        }
-
-        /* שלישי: תורים */
-        #slotsWrapper { 
-            order: 3 !important; 
-            min-height: 500px; 
-        }
-
-        /* תיקונים כלליים לטלפון */
-        body { 
-            overflow-y: auto !important; 
-            overflow-x: hidden !important; 
-            height: auto !important; 
-            padding: 10px 0 !important;
-        }
-
-        .top-header { 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 15px;
-        }
-
-        input, select, button, .header-actions button {
-            min-height: 45px;
-        }
+תיקון לנייד: סדר מאולץ (קלנדר > הגדרות > תורים)
+========================================== */
+@media (max-width: 1000px) {
+  
+  /* איפוסים חיוניים */
+  body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+  }
+  
+  .top-header {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  /* ==========================================
+  תיקון סדר בטלפון: שימוש בשמות ID הנכונים
+  ========================================== */
+  @media (max-width: 1000px) {
+    
+    /* 1. הגדרת הקונטיינר הראשי כ-Flex */
+    #main-container {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      align-items: center !important;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+      width: 100%;
     }
-@media all and (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
+    
+    /* 2. עיצוב הפנלים */
+    .panel {
+      width: 98% !important;
+      max-width: 500px;
+      flex: none !important;
+      margin: 0 auto !important;
+      box-sizing: border-box;
+    }
+    
+    /* 3. קביעת הסדר (Order) - עם השמות הנכונים לקובץ שלך */
+    
+    /* ראשון: לוח שנה */
+    #calendarPanel {
+      order: 1 !important;
+    }
+    
+    /* שני: הגדרות (זה השם הנכון אצלך בקובץ) */
+    #configPanelWrapper, #configPanel {
+      order: 2 !important;
+    }
+    
+    /* שלישי: תורים */
+    #slotsWrapper {
+      order: 3 !important;
+      min-height: 500px;
+    }
+    
+    /* תיקונים כלליים לטלפון */
+    body {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      height: auto !important;
+      padding: 10px 0 !important;
+    }
+    
+    .top-header {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    input, select, button, .header-actions button {
+      min-height: 45px;
+    }
+  }
+  @media all and (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
     #installAppBtn {
-        display: none !important;
+      display: none !important;
     }
+  }
 }
-    }
 
 /* שורת החלה */
 .apply-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 /* חצי פנל – ימים קדימה */
 .apply-days-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* חצי פנל – כפתור */
 .apply-mode-btn {
-    flex: 1;
-    align-self: flex-end;
-    height: 38px;               /* זהה ל-input */
-    margin-top: 22px;           /* גובה ה-label */
-    background: var(--bg-input);
-    color: var(--text-main);
-    border: 1px solid var(--accent-blue);
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
+  flex: 1;
+  align-self: flex-end;
+  height: 38px;               /* זהה ל-input */
+  margin-top: 22px;           /* גובה ה-label */
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--accent-blue);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 /* מצב פעיל (אם יש לך JS שמוסיף class) */
 .apply-mode-btn.active {
-    background: var(--accent-blue);
-    color: #fff;
+  background: var(--accent-blue);
+  color: #fff;
 }
 /* ===== היסטוריה ===== */
 
@@ -470,263 +470,290 @@
   border-right-color: #ef4444;
   background: rgba(239, 68, 68, 0.08);
 }
+/* ===== היסטוריה קומפקטית ===== */
 
+.history-slot {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+}
+
+.history-compact {
+  line-height: 1.25;
+}
+
+.history-line-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.history-line-2 {
+  font-size: 0.8em;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.history-status {
+  font-size: 0.8em;
+  white-space: nowrap;
+}
 
 </style>
 
 <style>
-    /* ==========================================================================
-       תיקון כפתור היסטוריה - בתגית נפרדת כדי לעקוף שגיאות סוגריים בקובץ הראשי
-       ========================================================================== */
-    .action-btn.history-btn {
-        padding: 6px 10px;
-        font-size: 0.85em;
-        border-radius: 999px;
-        background: var(--bg-input);
-        border: 1px solid var(--border-color);
-        color: var(--text-main);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
+/* ==========================================================================
+תיקון כפתור היסטוריה - בתגית נפרדת כדי לעקוף שגיאות סוגריים בקובץ הראשי
+========================================================================== */
+.action-btn.history-btn {
+  padding: 6px 10px;
+  font-size: 0.85em;
+  border-radius: 999px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
 
-    /* מצב פעיל – עיצוב בולט (זהוב) עם !important כדי לוודא דריסה */
-    .header-actions .action-btn.history-btn.active,
-    button.history-btn.active { 
-        background-color: var(--accent-gold) !important;
-        color: #000 !important;
-        border-color: var(--accent-gold) !important;
-        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35) !important;
-        transform: scale(1.05);
-    }
+/* מצב פעיל – עיצוב בולט (זהוב) עם !important כדי לוודא דריסה */
+.header-actions .action-btn.history-btn.active,
+button.history-btn.active {
+  background-color: var(--accent-gold) !important;
+  color: #000 !important;
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35) !important;
+  transform: scale(1.05);
+}
 </style>
 </head>
 <body>
 <div id="adminBookingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
-    <div class="wa-modal-content" style="width: 320px; text-align: right; position: relative;">
-        <h3 style="margin-top: 0; text-align: center; color: var(--accent-blue);">הזמנת תור ידנית</h3>
+<div class="wa-modal-content" style="width: 320px; text-align: right; position: relative;">
+<h3 style="margin-top: 0; text-align: center; color: var(--accent-blue);">הזמנת תור ידנית</h3>
 
-        <div style="margin-bottom: 10px;">
-            <label>שעה:</label>
-            <input type="text" id="bookingTimeDisplay" disabled style="font-weight: bold; background: #333; color: white;">
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>שם פרטי:</label>
-            <input type="text" id="bookFirstName" placeholder="הכנס שם פרטי" autocomplete="off">
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>שם משפחה:</label>
-            <input type="text" id="bookLastName" placeholder="הכנס שם משפחה" autocomplete="off">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label>טלפון:</label>
-            <input type="tel" id="bookPhone" placeholder="050-0000000" autocomplete="off">
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-            <button onclick="submitAdminBooking()" style="flex: 1; background: var(--accent-green); color: black; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">💾 הזמן תור</button>
-            <button onclick="closeBookingModal()" style="flex: 1; background: transparent; border: 1px solid var(--text-muted); color: var(--text-main); padding: 10px; border-radius: 6px; cursor: pointer;">ביטול</button>
-        </div>
-
-        </div>
-</div>
-    </div>
+<div style="margin-bottom: 10px;">
+<label>שעה:</label>
+<input type="text" id="bookingTimeDisplay" disabled style="font-weight: bold; background: #333; color: white;">
 </div>
 
-    <div id="waModal">
-        <div class="wa-modal-content">
-            <h3 style="margin:0; color:#25D366;">התור בוטל!</h3>
-            <p style="margin:10px 0;">שלח הודעה ללקוח:</p>
-            <button id="waModalBtn" style="background:#25D366; color:white; border:none; padding:10px; width:100%; border-radius:6px; cursor:pointer; font-weight:bold;">💬 פתח וואטסאפ</button>
-            <button onclick="document.getElementById('waModal').style.display='none'" style="background:transparent; border:1px solid #ccc; color:var(--text-main); padding:5px; width:100%; margin-top:10px; border-radius:6px; cursor:pointer;">סגור</button>
-        </div>
-    </div>
+<div style="margin-bottom: 10px;">
+<label>שם פרטי:</label>
+<input type="text" id="bookFirstName" placeholder="הכנס שם פרטי" autocomplete="off">
+</div>
 
-    <div id="loadingOverlay">
-        <div class="spinner" style="border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--accent-blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
-        <div style="margin-top: 15px;">טוען נתונים...</div>
-    </div>
-    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+<div style="margin-bottom: 10px;">
+<label>שם משפחה:</label>
+<input type="text" id="bookLastName" placeholder="הכנס שם משפחה" autocomplete="off">
+</div>
+
+<div style="margin-bottom: 15px;">
+<label>טלפון:</label>
+<input type="tel" id="bookPhone" placeholder="050-0000000" autocomplete="off">
+</div>
+
+<div style="display: flex; gap: 10px;">
+<button onclick="submitAdminBooking()" style="flex: 1; background: var(--accent-green); color: black; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">💾 הזמן תור</button>
+<button onclick="closeBookingModal()" style="flex: 1; background: transparent; border: 1px solid var(--text-muted); color: var(--text-main); padding: 10px; border-radius: 6px; cursor: pointer;">ביטול</button>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="waModal">
+<div class="wa-modal-content">
+<h3 style="margin:0; color:#25D366;">התור בוטל!</h3>
+<p style="margin:10px 0;">שלח הודעה ללקוח:</p>
+<button id="waModalBtn" style="background:#25D366; color:white; border:none; padding:10px; width:100%; border-radius:6px; cursor:pointer; font-weight:bold;">💬 פתח וואטסאפ</button>
+<button onclick="document.getElementById('waModal').style.display='none'" style="background:transparent; border:1px solid #ccc; color:var(--text-main); padding:5px; width:100%; margin-top:10px; border-radius:6px; cursor:pointer;">סגור</button>
+</div>
+</div>
+
+<div id="loadingOverlay">
+<div class="spinner" style="border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--accent-blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+<div style="margin-top: 15px;">טוען נתונים...</div>
+</div>
+<style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 
 <div class="top-header">
-    <div class="header-title">ממשק ניהול תורים</div>
+<div class="header-title">ממשק ניהול תורים</div>
 
-    <div class="header-actions">
-        <button id="fullscreenBtn" class="action-btn" onclick="toggleFullScreen()" title="מסך מלא" style="background: transparent; border: 1px solid #ff9800; padding: 5px;">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#75FBFD"><path d="M792-576v-120H672v-72h120q30 0 51 21.15T864-696v120h-72Zm-696 0v-120q0-30 21.15-51T168-768h120v72H168v120H96Zm576 384v-72h120v-120h72v120q0 30-21.15 51T792-192H672Zm-504 0q-30 0-51-21.15T96-264v-120h72v120h120v72H168Zm72-144v-288h480v288H240Zm72-72h336v-144H312v144Zm0 0v-144 144Z"/></svg>
-        </button>
+<div class="header-actions">
+<button id="fullscreenBtn" class="action-btn" onclick="toggleFullScreen()" title="מסך מלא" style="background: transparent; border: 1px solid #ff9800; padding: 5px;">
+<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#75FBFD"><path d="M792-576v-120H672v-72h120q30 0 51 21.15T864-696v120h-72Zm-696 0v-120q0-30 21.15-51T168-768h120v72H168v120H96Zm576 384v-72h120v-120h72v120q0 30-21.15 51T792-192H672Zm-504 0q-30 0-51-21.15T96-264v-120h72v120h120v72H168Zm72-144v-288h480v288H240Zm72-72h336v-144H312v144Zm0 0v-144 144Z"/></svg>
+</button>
 
-      <button id="installAppBtn" style="display: none;">⬇️ התקן את האפליקציה</button>
-        <button class="action-btn btn-theme" onclick="toggleTheme()" id="themeBtn">☀️ יום</button>
-        <button class="action-btn btn-print" onclick="openReportModal()">🖨️ הדפס דו"ח</button>
-        <button class="action-btn btn-excel" onclick="exportExcelReport()">📊 ייצוא לאקסל</button>
-        <button class="action-btn" style="background: #ef4444;" onclick="logoutAdmin()">🚪 יציאה</button>
+<button id="installAppBtn" style="display: none;">⬇️ התקן את האפליקציה</button>
+<button class="action-btn btn-theme" onclick="toggleTheme()" id="themeBtn">☀️ יום</button>
+<button class="action-btn btn-print" onclick="openReportModal()">🖨️ הדפס דו"ח</button>
+<button class="action-btn btn-excel" onclick="exportExcelReport()">📊 ייצוא לאקסל</button>
+<button class="action-btn" style="background: #ef4444;" onclick="logoutAdmin()">🚪 יציאה</button>
 
-        <button id="historyBtn" class="action-btn history-btn" onclick="toggleHistoryModeBtn()">🕘</button>
-    </div>
+<button id="historyBtn" class="action-btn history-btn" onclick="toggleHistoryModeBtn()">🕘</button>
+</div>
 </div>
 
-    <div id="main-container">
-        <div id="configPanelWrapper" class="panel">
-            <div id="configForm">
-                <h3>הגדרות יום</h3>
-                <div style="display: flex; gap: 8px;">
-                    <div style="flex:1"><label>התחלה:</label><input type="text" class="time-input" id="range1Start" placeholder="HH:MM" maxlength="5" data-next="range1End" oninput="autoFormatTime(this)"></div>
-                    <div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                     <div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
-                     <div style="flex:1"><label>קיבולת:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
-                </div>
+<div id="main-container">
+<div id="configPanelWrapper" class="panel">
+<div id="configForm">
+<h3>הגדרות יום</h3>
+<div style="display: flex; gap: 8px;">
+<div style="flex:1"><label>התחלה:</label><input type="text" class="time-input" id="range1Start" placeholder="HH:MM" maxlength="5" data-next="range1End" oninput="autoFormatTime(this)"></div>
+<div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
+</div>
+<div style="display: flex; gap: 8px;">
+<div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
+<div style="flex:1"><label>קיבולת:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
+</div>
 
-                <hr style="border-color: var(--border-color); opacity:0.3;">
-                <label>הפסקות:</label>
-                <div id="breaksContainer"></div>
-                <button onclick="addBreakRow()" style="width: 100%; margin-top: 5px; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); padding: 6px; cursor: pointer; border-radius: 6px;">+ הוסף הפסקה</button>
+<hr style="border-color: var(--border-color); opacity:0.3;">
+<label>הפסקות:</label>
+<div id="breaksContainer"></div>
+<button onclick="addBreakRow()" style="width: 100%; margin-top: 5px; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); padding: 6px; cursor: pointer; border-radius: 6px;">+ הוסף הפסקה</button>
 
-                <hr style="border-color: var(--border-color); opacity:0.3;">
-                <div class="manual-slot-box">
-                    <label style="color: var(--accent-blue); margin-bottom: 4px;">הוספת תור בודד:</label>
-                    <div class="manual-slot-row" style="display: flex; gap: 10px; align-items: center;">
-                        <input type="text" class="time-input" id="manualSlotTime" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)" style="flex: 1; margin-bottom: 0;">
-                        <button onclick="addManualSlotFromUI()" style="width: auto; background: var(--accent-green); border: none; color: white; border-radius: 4px; cursor: pointer; padding: 6px 12px; margin-top: 0;">➕</button>
-                    </div>
-                </div>
+<hr style="border-color: var(--border-color); opacity:0.3;">
+<div class="manual-slot-box">
+<label style="color: var(--accent-blue); margin-bottom: 4px;">הוספת תור בודד:</label>
+<div class="manual-slot-row" style="display: flex; gap: 10px; align-items: center;">
+<input type="text" class="time-input" id="manualSlotTime" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)" style="flex: 1; margin-bottom: 0;">
+<button onclick="addManualSlotFromUI()" style="width: auto; background: var(--accent-green); border: none; color: white; border-radius: 4px; cursor: pointer; padding: 6px 12px; margin-top: 0;">➕</button>
+</div>
+</div>
 
 <div class="apply-row">
 
-    <div class="apply-days-box">
-        <label for="daysToApply">החל על (ימים קדימה):</label>
-        <input
-            type="number"
-            id="daysToApply"
-            value="1"
-            min="1"
-        >
-    </div>
+<div class="apply-days-box">
+<label for="daysToApply">החל על (ימים קדימה):</label>
+<input
+type="number"
+id="daysToApply"
+value="1"
+min="1"
+>
+</div>
 
-    <button
-        type="button"
-        onclick="toggleApplyMode()"
-        id="applyModeBtn"
-        class="apply-mode-btn"
-    >
-        📅 החלה לפי תאריכים נבחרים
-    </button>
+<button
+type="button"
+onclick="toggleApplyMode()"
+id="applyModeBtn"
+class="apply-mode-btn"
+>
+📅 החלה לפי תאריכים נבחרים
+</button>
 
 </div>
 
 <div
-    id="applyDatesHint"
-    style="
-        display: none;
-        margin-top: 6px;
-        font-size: 0.85em;
-        color: var(--accent-blue);
-        text-align: center;
-    ">
-    מצב בחירה פעיל – לחץ על תאריכים בלוח
+id="applyDatesHint"
+style="
+display: none;
+margin-top: 6px;
+font-size: 0.85em;
+color: var(--accent-blue);
+text-align: center;
+">
+מצב בחירה פעיל – לחץ על תאריכים בלוח
 </div>
 
-                <button class="save-btn" onclick="saveDayConfig()">💾 שמור הגדרות</button>
-                <button class="reset-btn" onclick="resetSettings()">🔄 אפס הגדרות</button>
-            </div>
-        </div>
-
-        <div id="calendarPanel" class="panel">
-            <div id="calendarHeader">
-                <button onclick="prevMonth()">❮</button>
-                <span id="monthYearDisplay"></span>
-                <button onclick="nextMonth()">❯</button>
-            </div>
-            <div id="weekdays"><div>א</div><div>ב</div><div>ג</div><div>ד</div><div>ה</div><div>ו</div><div>ש</div></div>
-            <div id="calendar"></div>
-
-            <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color);">
-                <h4 style="margin: 0 0 10px 0; color: var(--text-muted); text-align: center; font-size: 1em;">הגדרות מערכת</h4>
-                <div style="margin-bottom: 10px;"><label style="font-size: 0.85em; display:block; margin-bottom:3px;">כותרת ליומן:</label><input type="text" id="calendarTitleSetting" placeholder="לדוגמה: תור למספרה" style="width:100%; text-align:right;"></div>
-                <div style="margin-bottom: 5px;"><label style="font-size: 0.85em; display:block; margin-bottom:3px;">שמירת היסטוריה (ימים):</label><input type="number" id="historyDays" value="30" style="width:100%; text-align:center;"></div>
-                <button onclick="saveSystemSettings()" style="width: 100%; background:var(--accent-blue); border:none; padding:8px; color:white; border-radius:4px; cursor:pointer; font-weight:bold;">שמור הגדרות מערכת</button>
-            </div>
-        </div>
-
-        <div id="slotsWrapper" class="panel">
-            <h3>תורים: <span id="selectedDateDisplay" style="color:var(--text-main);"></span></h3>
-            <div id="slotsContainer"></div> 
-        </div>
-
-        <div id="reportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
-    <div class="wa-modal-content" style="width: 350px; text-align: right;">
-        <h3 style="margin-top: 0; text-align: center; color: var(--accent-blue);">הפקת דוחות</h3>
-
-        <div style="background: var(--bg-input); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-            <label style="font-weight: bold; margin-bottom: 5px;">1. דוח יומי (ליום שנבחר)</label>
-            <button onclick="printDailyReport(); closeReportModal();" style="width: 100%; background: var(--bg-panel); border: 1px solid var(--accent-blue); color: var(--text-main); padding: 8px; border-radius: 4px; cursor: pointer;">
-                🖨️ הדפס דוח ליום הנוכחי
-            </button>
-        </div>
-
-        <div style="background: var(--bg-input); padding: 10px; border-radius: 6px;">
-            <label style="font-weight: bold; margin-bottom: 10px;">2. דוח לפי טלפון וטווח תאריכים</label>
-
-            <div style="margin-bottom: 8px;">
-                <span style="font-size: 0.9em;">מתאריך:</span>
-                <input type="date" id="repStart" style="width: 100%;">
-            </div>
-
-            <div style="margin-bottom: 8px;">
-                <span style="font-size: 0.9em;">עד תאריך:</span>
-                <input type="date" id="repEnd" style="width: 100%;">
-            </div>
-
-            <div style="margin-bottom: 10px;">
-                <span style="font-size: 0.9em;">מספר טלפון:</span>
-                <input type="text" id="repPhone" autocomplete="off" placeholder="הזן מספר לחיפוש" style="width: 100%;">
-            </div>
-
-            <button onclick="printRangeReport()" style="width: 100%; background: var(--accent-gold); border: none; color: white; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                🔍 אתר והדפס תורים
-            </button>
-        </div>
-
-        <button onclick="closeReportModal()" style="margin-top: 15px; background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 5px; width: 100%; border-radius: 6px; cursor: pointer;">ביטול</button>
-    </div>
+<button class="save-btn" onclick="saveDayConfig()">💾 שמור הגדרות</button>
+<button class="reset-btn" onclick="resetSettings()">🔄 אפס הגדרות</button>
 </div>
-    </div>
+</div>
+
+<div id="calendarPanel" class="panel">
+<div id="calendarHeader">
+<button onclick="prevMonth()">❮</button>
+<span id="monthYearDisplay"></span>
+<button onclick="nextMonth()">❯</button>
+</div>
+<div id="weekdays"><div>א</div><div>ב</div><div>ג</div><div>ד</div><div>ה</div><div>ו</div><div>ש</div></div>
+<div id="calendar"></div>
+
+<div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color);">
+<h4 style="margin: 0 0 10px 0; color: var(--text-muted); text-align: center; font-size: 1em;">הגדרות מערכת</h4>
+<div style="margin-bottom: 10px;"><label style="font-size: 0.85em; display:block; margin-bottom:3px;">כותרת ליומן:</label><input type="text" id="calendarTitleSetting" placeholder="לדוגמה: תור למספרה" style="width:100%; text-align:right;"></div>
+<div style="margin-bottom: 5px;"><label style="font-size: 0.85em; display:block; margin-bottom:3px;">שמירת היסטוריה (ימים):</label><input type="number" id="historyDays" value="30" style="width:100%; text-align:center;"></div>
+<button onclick="saveSystemSettings()" style="width: 100%; background:var(--accent-blue); border:none; padding:8px; color:white; border-radius:4px; cursor:pointer; font-weight:bold;">שמור הגדרות מערכת</button>
+</div>
+</div>
+
+<div id="slotsWrapper" class="panel">
+<h3>תורים: <span id="selectedDateDisplay" style="color:var(--text-main);"></span></h3>
+<div id="slotsContainer"></div>
+</div>
+
+<div id="reportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+<div class="wa-modal-content" style="width: 350px; text-align: right;">
+<h3 style="margin-top: 0; text-align: center; color: var(--accent-blue);">הפקת דוחות</h3>
+
+<div style="background: var(--bg-input); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+<label style="font-weight: bold; margin-bottom: 5px;">1. דוח יומי (ליום שנבחר)</label>
+<button onclick="printDailyReport(); closeReportModal();" style="width: 100%; background: var(--bg-panel); border: 1px solid var(--accent-blue); color: var(--text-main); padding: 8px; border-radius: 4px; cursor: pointer;">
+🖨️ הדפס דוח ליום הנוכחי
+</button>
+</div>
+
+<div style="background: var(--bg-input); padding: 10px; border-radius: 6px;">
+<label style="font-weight: bold; margin-bottom: 10px;">2. דוח לפי טלפון וטווח תאריכים</label>
+
+<div style="margin-bottom: 8px;">
+<span style="font-size: 0.9em;">מתאריך:</span>
+<input type="date" id="repStart" style="width: 100%;">
+</div>
+
+<div style="margin-bottom: 8px;">
+<span style="font-size: 0.9em;">עד תאריך:</span>
+<input type="date" id="repEnd" style="width: 100%;">
+</div>
+
+<div style="margin-bottom: 10px;">
+<span style="font-size: 0.9em;">מספר טלפון:</span>
+<input type="text" id="repPhone" autocomplete="off" placeholder="הזן מספר לחיפוש" style="width: 100%;">
+</div>
+
+<button onclick="printRangeReport()" style="width: 100%; background: var(--accent-gold); border: none; color: white; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+🔍 אתר והדפס תורים
+</button>
+</div>
+
+<button onclick="closeReportModal()" style="margin-top: 15px; background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 5px; width: 100%; border-radius: 6px; cursor: pointer;">ביטול</button>
+</div>
+</div>
+</div>
 
 <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCMO0LaL5zuZsqr8j_ovuxi26eXXLaXAqA",
-      authDomain: "myqueueapp-7494a.firebaseapp.com",
-      databaseURL: "https://myqueueapp-7494a-default-rtdb.firebaseio.com",
-      projectId: "myqueueapp-7494a",
-      storageBucket: "myqueueapp-7494a.firebasestorage.app",
-      messagingSenderId: "877049737454",
-      appId: "1:877049737454:web:14dcb6aa5e242bd9c403ff",
-      measurementId: "G-RHNLPSSJHK"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyCMO0LaL5zuZsqr8j_ovuxi26eXXLaXAqA",
+  authDomain: "myqueueapp-7494a.firebaseapp.com",
+  databaseURL: "https://myqueueapp-7494a-default-rtdb.firebaseio.com",
+  projectId: "myqueueapp-7494a",
+  storageBucket: "myqueueapp-7494a.firebasestorage.app",
+  messagingSenderId: "877049737454",
+  appId: "1:877049737454:web:14dcb6aa5e242bd9c403ff",
+  measurementId: "G-RHNLPSSJHK"
+};
 
-    let db;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-    } catch(e) { console.error(e); alert("תקלה בחיבור ל-Firebase"); }
+let db;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+} catch(e) { console.error(e); alert("תקלה בחיבור ל-Firebase"); }
 
 /* ============================================================
-   בדיקת אבטחה וכניסה - מותאם ל-Netlify ול-Localhost
-   ============================================================ */
+בדיקת אבטחה וכניסה - מותאם ל-Netlify ול-Localhost
+============================================================ */
 
 // רשימת מנהלים - החלף/הוסף כאן מיילים לפי הצורך
 
 // רשימת המנהלים המורשים
 const ADMIN_EMAILS = [
-    "alfa990@gmail.com",
-    // "new-admin@example.com"
+"alfa990@gmail.com",
+// "new-admin@example.com"
 ];
 
 // נתיב יחסי - הדפדפן ימצא לבד את הקובץ שנמצא באותה תיקייה
@@ -734,1515 +761,1515 @@ const ADMIN_LOGIN_URL = "admin-login.html";
 
 // לוגיקה של בדיקת מחובר/לא מחובר
 if (typeof firebase !== 'undefined' && firebase.auth) {
-    firebase.auth().onAuthStateChanged(function(user) {
-
-        // מקרים בהם צריך לזרוק את המשתמש החוצה:
-
-        // 1. אם המשתמש לא מחובר בכלל
-        if (!user) {
-            window.location.href = ADMIN_LOGIN_URL;
-            return;
-        }
-
-        // 2. אם המשתמש מחובר, אבל המייל שלו לא ברשימת המנהלים
-        if (!ADMIN_EMAILS.includes(user.email)) {
-            alert("גישה נדחתה: המייל שלך אינו מורשה לניהול.");
-            // מנתק את המשתמש ושולח אותו לדף הכניסה
-            firebase.auth().signOut().then(function() {
-                window.location.href = ADMIN_LOGIN_URL;
-            });
-            return;
-        }
-
-        // אם הגענו לפה - המשתמש מחובר ומורשה. הכל תקין.
-        console.log("מנהל מחובר:", user.email);
-    });
+  firebase.auth().onAuthStateChanged(function(user) {
+    
+    // מקרים בהם צריך לזרוק את המשתמש החוצה:
+    
+    // 1. אם המשתמש לא מחובר בכלל
+    if (!user) {
+      window.location.href = ADMIN_LOGIN_URL;
+      return;
+    }
+    
+    // 2. אם המשתמש מחובר, אבל המייל שלו לא ברשימת המנהלים
+    if (!ADMIN_EMAILS.includes(user.email)) {
+      alert("גישה נדחתה: המייל שלך אינו מורשה לניהול.");
+      // מנתק את המשתמש ושולח אותו לדף הכניסה
+      firebase.auth().signOut().then(function() {
+        window.location.href = ADMIN_LOGIN_URL;
+      });
+      return;
+    }
+    
+    // אם הגענו לפה - המשתמש מחובר ומורשה. הכל תקין.
+    console.log("מנהל מחובר:", user.email);
+  });
 } else {
-    // רשת ביטחון: אם פיירבייס לא נטען משום מה - זרוק לכניסה
-    console.error("Firebase Auth missing");
-    window.location.href = ADMIN_LOGIN_URL;
+  // רשת ביטחון: אם פיירבייס לא נטען משום מה - זרוק לכניסה
+  console.error("Firebase Auth missing");
+  window.location.href = ADMIN_LOGIN_URL;
 }
 
-    // --- הוסף את הפונקציה הזו בתחילת הסקריפט (למשל שורה 320) ---
-    function addSmartFocus(element) {
-        if (!element) return;
-
-        element.addEventListener('focus', function() {
-            // שמור את הערך המקורי
-            this.setAttribute('data-original-val', this.value);
-            // רוקן את השדה להקלדה חדשה
-            this.value = '';
-        });
-
-        element.addEventListener('blur', function() {
-            // אם לא הוקלד כלום, שחזר את הערך המקורי
-            if (this.value.trim() === '') {
-                this.value = this.getAttribute('data-original-val') || '';
-            }
-        });
+// --- הוסף את הפונקציה הזו בתחילת הסקריפט (למשל שורה 320) ---
+function addSmartFocus(element) {
+  if (!element) return;
+  
+  element.addEventListener('focus', function() {
+    // שמור את הערך המקורי
+    this.setAttribute('data-original-val', this.value);
+    // רוקן את השדה להקלדה חדשה
+    this.value = '';
+  });
+  
+  element.addEventListener('blur', function() {
+    // אם לא הוקלד כלום, שחזר את הערך המקורי
+    if (this.value.trim() === '') {
+      this.value = this.getAttribute('data-original-val') || '';
     }
+  });
+}
 
-    function toggleTheme() {
-        const body = document.body;
-        const btn = document.getElementById('themeBtn');
-        body.classList.toggle('light-mode');
-
-        if (body.classList.contains('light-mode')) {
-            localStorage.setItem('theme', 'light');
-            btn.innerHTML = '🌙 לילה';
-        } else {
-            localStorage.setItem('theme', 'dark');
-            btn.innerHTML = '☀️ יום';
-        }
-    }
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeBtn');
+  body.classList.toggle('light-mode');
+  
+  if (body.classList.contains('light-mode')) {
+    localStorage.setItem('theme', 'light');
+    btn.innerHTML = '🌙 לילה';
+  } else {
+    localStorage.setItem('theme', 'dark');
+    btn.innerHTML = '☀️ יום';
+  }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
-        // ... (קוד קיים של Theme) ...
-        const savedTheme = localStorage.getItem('theme');
-        const btn = document.getElementById('themeBtn');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-            if(btn) btn.innerHTML = '🌙 לילה';
-        }
+  // ... (קוד קיים של Theme) ...
+  const savedTheme = localStorage.getItem('theme');
+  const btn = document.getElementById('themeBtn');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if(btn) btn.innerHTML = '🌙 לילה';
+  }
+  
+  // --- הוסף את הקטע הזה כאן: ---
+  // רשימת השדות שברצונך להחיל עליהם את ההתנהגות
+  const inputsToSmartFocus = [
+  'range1Start',
+  'range1End',
+  'range1Interval',
+  'maxSlots',
+  'daysToApply',
+  'manualSlotTime',
+  'calendarTitleSetting',
+  'historyDays'
+  ];
+  
+  inputsToSmartFocus.forEach(id => {
+    addSmartFocus(document.getElementById(id));
+  });
+  // -----------------------------
+});
 
-        // --- הוסף את הקטע הזה כאן: ---
-        // רשימת השדות שברצונך להחיל עליהם את ההתנהגות
-        const inputsToSmartFocus = [
-            'range1Start', 
-            'range1End', 
-            'range1Interval', 
-            'maxSlots', 
-            'daysToApply', 
-            'manualSlotTime',
-            'calendarTitleSetting',
-            'historyDays'
-        ];
+let globalData = {};
+let selectedDate = null;
+let currentMonthDate = new Date();
+let historyMode = false;
 
-        inputsToSmartFocus.forEach(id => {
-            addSmartFocus(document.getElementById(id));
-        });
-        // -----------------------------
-    });
-
-    let globalData = {};
-    let selectedDate = null;
-    let currentMonthDate = new Date();
-    let historyMode = false;
-
-    let applyMode = false;                 // מצב בחירת תאריכים להחלה
-    let selectedApplyDates = new Set();    // תאריכים שנבחרו להחלה
+let applyMode = false;                 // מצב בחירת תאריכים להחלה
+let selectedApplyDates = new Set();    // תאריכים שנבחרו להחלה
 
 function toggleHistoryModeBtn() {
-    historyMode = !historyMode;
-
-    const btn = document.getElementById("historyBtn");
-
-    if (historyMode) {
-        btn.classList.add("active");
-        btn.innerHTML = "📜";   // ← כאן: מצב היסטוריה פעיל
-    } else {
-        btn.classList.remove("active");
-        btn.innerHTML = "🕘";   // ← כאן: מצב רגיל
-
-        // חזרה אוטומטית להיום
-        const now = new Date();
-        selectedDate = dateToKey(now);
-        currentMonthDate = new Date();
-    }
-
-    buildCalendar();
-    renderSlots(selectedDate);
+  historyMode = !historyMode;
+  
+  const btn = document.getElementById("historyBtn");
+  
+  if (historyMode) {
+    btn.classList.add("active");
+    btn.innerHTML = "📜";   // ← כאן: מצב היסטוריה פעיל
+  } else {
+    btn.classList.remove("active");
+    btn.innerHTML = "🕘";   // ← כאן: מצב רגיל
+    
+    // חזרה אוטומטית להיום
+    const now = new Date();
+    selectedDate = dateToKey(now);
+    currentMonthDate = new Date();
+  }
+  
+  buildCalendar();
+  renderSlots(selectedDate);
 }
 
 function toggleApplyMode() {
-
-    applyMode = !applyMode;
-
-    const hint = document.getElementById("applyDatesHint");
-    const btn  = document.getElementById("applyModeBtn");
-    const daysInput = document.getElementById("daysToApply");
-
-    if (applyMode) {
-
-        if (hint) hint.style.display = "block";
-        if (btn) {
-            btn.style.background = "#3b82f6";
-            btn.style.color = "#ffffff";
-        }
-
-        // השבתת החלה על ימים קדימה
-        if (daysInput) {
-            daysInput.disabled = true;
-            daysInput.style.opacity = "0.5";
-        }
-
-    } else {
-
-        if (hint) hint.style.display = "none";
-        if (btn) {
-            btn.style.background = "";
-            btn.style.color = "";
-        }
-
-        // ניקוי בחירות לוגיות
-        selectedApplyDates.clear();
-
-        // ניקוי סימונים ויזואליים
-        document.querySelectorAll(".day.apply-selected").forEach(el => {
-            el.classList.remove("apply-selected");
-        });
-
-        // החזרת ימים קדימה
-        if (daysInput) {
-            daysInput.disabled = false;
-            daysInput.style.opacity = "1";
-        }
+  
+  applyMode = !applyMode;
+  
+  const hint = document.getElementById("applyDatesHint");
+  const btn  = document.getElementById("applyModeBtn");
+  const daysInput = document.getElementById("daysToApply");
+  
+  if (applyMode) {
+    
+    if (hint) hint.style.display = "block";
+    if (btn) {
+      btn.style.background = "#3b82f6";
+      btn.style.color = "#ffffff";
     }
+    
+    // השבתת החלה על ימים קדימה
+    if (daysInput) {
+      daysInput.disabled = true;
+      daysInput.style.opacity = "0.5";
+    }
+    
+  } else {
+    
+    if (hint) hint.style.display = "none";
+    if (btn) {
+      btn.style.background = "";
+      btn.style.color = "";
+    }
+    
+    // ניקוי בחירות לוגיות
+    selectedApplyDates.clear();
+    
+    // ניקוי סימונים ויזואליים
+    document.querySelectorAll(".day.apply-selected").forEach(el => {
+      el.classList.remove("apply-selected");
+    });
+    
+    // החזרת ימים קדימה
+    if (daysInput) {
+      daysInput.disabled = false;
+      daysInput.style.opacity = "1";
+    }
+  }
 }
 
 function autoFormatTime(input) {
-        // 1. ניקוי ופירמוט בסיסי
-        let val = input.value.replace(/[^0-9]/g, '');
-        if (val.length > 2) {
-            val = val.substring(0, 2) + ':' + val.substring(2, 4);
-        }
-
-        // 2. בדיקת שגיאות
-        let isInvalid = false;
-
-        // בדיקת שעות (אם הוקלדו 2 ספרות)
-        if (val.length >= 2) {
-            const hh = parseInt(val.substring(0, 2));
-            if (hh > 23) isInvalid = true;
-        }
-
-        // בדיקת דקות (אם הוקלדו 5 תווים)
-        if (val.length === 5) {
-            const mm = parseInt(val.substring(3, 5));
-            if (mm > 59) isInvalid = true;
-        }
-
-        // 3. טיפול בתצוגה
-        if (isInvalid) {
-            // טעות קריטית: רוקן שדה + הפעל מצב "שגיאה" (אדום)
-            input.value = ''; 
-            input.style.borderColor = '#ff4444';
-            input.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
-            input.style.boxShadow = '0 0 8px rgba(255, 68, 68, 0.4)';
-        } else {
-            // המצב תקין בינתיים: עדכן את הערך בשדה
-            input.value = val;
-
-            // מתי מכבים את האדום?
-            // רק כשיש שעה מלאה (5 תווים) או כשהשדה ריק לגמרי (איפוס)
-            // אחרת (למשל כשיש 3 תווים), האדום נשאר אם הוא כבר דולק
-            if (val.length === 5 || val.length === 0) {
-                input.style.borderColor = '';
-                input.style.backgroundColor = '';
-                input.style.boxShadow = '';
-            }
-
-            // 4. מעבר שדה אוטומטי (רק בסיום מוצלח)
-            if (val.length === 5) {
-                 const form = input.form || document.body;
-                 const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]), select, textarea, button'));
-                 const index = focusable.indexOf(input);
-                 if (index > -1 && index < focusable.length - 1) {
-                     focusable[index + 1].focus();
-                 }
-            }
-        }
+  // 1. ניקוי ופירמוט בסיסי
+  let val = input.value.replace(/[^0-9]/g, '');
+  if (val.length > 2) {
+    val = val.substring(0, 2) + ':' + val.substring(2, 4);
+  }
+  
+  // 2. בדיקת שגיאות
+  let isInvalid = false;
+  
+  // בדיקת שעות (אם הוקלדו 2 ספרות)
+  if (val.length >= 2) {
+    const hh = parseInt(val.substring(0, 2));
+    if (hh > 23) isInvalid = true;
+  }
+  
+  // בדיקת דקות (אם הוקלדו 5 תווים)
+  if (val.length === 5) {
+    const mm = parseInt(val.substring(3, 5));
+    if (mm > 59) isInvalid = true;
+  }
+  
+  // 3. טיפול בתצוגה
+  if (isInvalid) {
+    // טעות קריטית: רוקן שדה + הפעל מצב "שגיאה" (אדום)
+    input.value = '';
+    input.style.borderColor = '#ff4444';
+    input.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
+    input.style.boxShadow = '0 0 8px rgba(255, 68, 68, 0.4)';
+  } else {
+    // המצב תקין בינתיים: עדכן את הערך בשדה
+    input.value = val;
+    
+    // מתי מכבים את האדום?
+    // רק כשיש שעה מלאה (5 תווים) או כשהשדה ריק לגמרי (איפוס)
+    // אחרת (למשל כשיש 3 תווים), האדום נשאר אם הוא כבר דולק
+    if (val.length === 5 || val.length === 0) {
+      input.style.borderColor = '';
+      input.style.backgroundColor = '';
+      input.style.boxShadow = '';
     }
+    
+    // 4. מעבר שדה אוטומטי (רק בסיום מוצלח)
+    if (val.length === 5) {
+      const form = input.form || document.body;
+      const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]), select, textarea, button'));
+      const index = focusable.indexOf(input);
+      if (index > -1 && index < focusable.length - 1) {
+        focusable[index + 1].focus();
+      }
+    }
+  }
+}
 
-    function isValidTime(t) { return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(t); }
-    function dateToKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-    function timeToMinutes(t){ if (!t) return -1; const p = t.split(":").map(Number); return p[0]*60 + p[1]; }
-    function minutesToTime(x){ return String(Math.floor(x/60)).padStart(2,"0")+":"+String(x%60).padStart(2,"0"); }
+function isValidTime(t) { return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(t); }
+function dateToKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function timeToMinutes(t){ if (!t) return -1; const p = t.split(":").map(Number); return p[0]*60 + p[1]; }
+function minutesToTime(x){ return String(Math.floor(x/60)).padStart(2,"0")+":"+String(x%60).padStart(2,"0"); }
 
 function generateSlotsWithBreaks(start, end, interval, breaks = []) {
-        const out = [];
-        let t = timeToMinutes(start);
-        let endMin = timeToMinutes(end); // המרת שעת סיום לדקות
-        const step = Number(interval);
-
-        // --- התיקון: טיפול בחצות (00:00) כשעת סיום ---
-        // אם שעת הסיום היא 0 (00:00) ושעת ההתחלה גדולה מ-0,
-        // נתייחס לשעת הסיום כ-24:00 (1440 דקות)
-        if (endMin === 0 && t > 0) {
-            endMin = 1440; 
-        }
-        // ---------------------------------------------
-
-        if (t === -1 || endMin === -1 || !step || step <= 0 || t > endMin) return [];
-
-        // מיפוי ומיון הפסקות (בדקות)
-        const brs = (breaks || [])
-            .map(b => ({ start: timeToMinutes(b.start), end: timeToMinutes(b.end) }))
-            .filter(b => b.start !== -1 && b.end !== -1 && b.end > b.start)
-            .sort((a,b) => a.start - b.start);
-
-        while (t < endMin) { // שים לב: שיניתי ל- < במקום <= כדי לא ליצור תור בול ב-00:00 של מחר
-
-// ----------------------------------------------------
-            // **שינוי לפי דרישה: התור הראשון לאחר הפסקה מתחיל מיד**
-            // ----------------------------------------------------
-            const inBr = brs.find(b => t >= b.start && t < b.end);
-            if (inBr) {
-                t = inBr.end; // דלג לסוף ההפסקה
-
-                // בדיקה: האם הדילוג החדש עדיין לפני שעת הסיום?
-                // אם כן, אנו דוחפים תור שמתחיל *בדיוק* בסיום ההפסקה (inBr.end)
-                if (t + step <= endMin) { 
-                    out.push(minutesToTime(t)); 
-                    t += step; // מתקדם לאינטרוול הבא, וחוזר ללולאה
-                    continue; // ממשיך ללולאה הבאה (לא רוצים להפעיל את קטע ה"דחיפה" הרגיל)
-                }
-
-                continue; // אם אין מקום לתור מלא, רק מדלג
-            }
-            // ----------------------------------------------------
-
-            // המרה חזרה לשעה (למשל 1440 -> 00:00 זה לא רלוונטי כאן כי זה הסוף)
-            // אבל חשוב לוודא שלא חורגים
-            if (t + step <= endMin) {
-                out.push(minutesToTime(t));
-            }
-
-            t += step;
-        }
-
-        return out;
+  const out = [];
+  let t = timeToMinutes(start);
+  let endMin = timeToMinutes(end); // המרת שעת סיום לדקות
+  const step = Number(interval);
+  
+  // --- התיקון: טיפול בחצות (00:00) כשעת סיום ---
+  // אם שעת הסיום היא 0 (00:00) ושעת ההתחלה גדולה מ-0,
+  // נתייחס לשעת הסיום כ-24:00 (1440 דקות)
+  if (endMin === 0 && t > 0) {
+    endMin = 1440;
+  }
+  // ---------------------------------------------
+  
+  if (t === -1 || endMin === -1 || !step || step <= 0 || t > endMin) return [];
+  
+  // מיפוי ומיון הפסקות (בדקות)
+  const brs = (breaks || [])
+  .map(b => ({ start: timeToMinutes(b.start), end: timeToMinutes(b.end) }))
+  .filter(b => b.start !== -1 && b.end !== -1 && b.end > b.start)
+  .sort((a,b) => a.start - b.start);
+  
+  while (t < endMin) { // שים לב: שיניתי ל- < במקום <= כדי לא ליצור תור בול ב-00:00 של מחר
+  
+  // ----------------------------------------------------
+  // **שינוי לפי דרישה: התור הראשון לאחר הפסקה מתחיל מיד**
+  // ----------------------------------------------------
+  const inBr = brs.find(b => t >= b.start && t < b.end);
+  if (inBr) {
+    t = inBr.end; // דלג לסוף ההפסקה
+    
+    // בדיקה: האם הדילוג החדש עדיין לפני שעת הסיום?
+    // אם כן, אנו דוחפים תור שמתחיל *בדיוק* בסיום ההפסקה (inBr.end)
+    if (t + step <= endMin) {
+      out.push(minutesToTime(t));
+      t += step; // מתקדם לאינטרוול הבא, וחוזר ללולאה
+      continue; // ממשיך ללולאה הבאה (לא רוצים להפעיל את קטע ה"דחיפה" הרגיל)
     }
+    
+    continue; // אם אין מקום לתור מלא, רק מדלג
+  }
+  // ----------------------------------------------------
+  
+  // המרה חזרה לשעה (למשל 1440 -> 00:00 זה לא רלוונטי כאן כי זה הסוף)
+  // אבל חשוב לוודא שלא חורגים
+  if (t + step <= endMin) {
+    out.push(minutesToTime(t));
+  }
+  
+  t += step;
+}
 
-    function removeManualSlot(dateKey, time) {
-        if(!confirm("למחוק את התור הנוסף הזה?")) return;
-        db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
-            let list = s.val() || [];
-            const idx = list.findIndex(a => a.time === time && a.status === 'MANUAL');
-            if (idx > -1) {
-                list.splice(idx, 1);
-                db.ref(`appointments/${dateKey}/appointments`).set(list);
-            }
-        });
+return out;
+}
+
+function removeManualSlot(dateKey, time) {
+  if(!confirm("למחוק את התור הנוסף הזה?")) return;
+  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
+    let list = s.val() || [];
+    const idx = list.findIndex(a => a.time === time && a.status === 'MANUAL');
+    if (idx > -1) {
+      list.splice(idx, 1);
+      db.ref(`appointments/${dateKey}/appointments`).set(list);
     }
+  });
+}
 
 function renderSlots(dateKey) {
-
-    if (!dateKey) dateKey = dateToKey(new Date());
-    selectedDate = dateKey;
-    document.getElementById("selectedDateDisplay").innerText = dateKey;
-
-    const today = new Date(new Date().toDateString());
-    const dateToCheck = new Date(dateKey);
-
-    // סימון היום בלוח
-    document.querySelectorAll('.day').forEach(d => d.classList.remove('selected-day'));
-    document.querySelector(`[data-date="${selectedDate}"]`)?.classList.add('selected-day');
-
-    const slotsDiv = document.getElementById("slotsContainer");
-    slotsDiv.innerHTML = '';
-
-    const day = globalData[dateKey] || {};
-    const isPast = dateToCheck < today;
-    const configForm = document.getElementById("configForm");
-
-    // מילוי טופס ההגדרות אם זה לא עבר
-    if (configForm && !isPast) {
-        const s = day.settings || {};
-        document.getElementById('range1Start').value = s.range1Start || "";
-        document.getElementById('range1End').value = s.range1End || "";
-        document.getElementById('range1Interval').value = s.range1Interval || "10";
-        document.getElementById('maxSlots').value = s.maxSlots || "1";
-        renderBreaksConfig(s.breaks || []);
-    }
-
-    // אם עבר ולא במצב היסטוריה: תצוגת ארכיון
-    if (isPast && !historyMode) {
-        slotsDiv.innerHTML = `
-            <div style="text-align:center; padding:20px; color:var(--text-muted);">
-                <h3>ארכיון: ${dateKey}</h3>
-                <p>כדי לצפות, הפעל את "הצג היסטוריה".</p>
-            </div>`;
-        return;
-    }
-
+  
+  if (!dateKey) dateKey = dateToKey(new Date());
+  selectedDate = dateKey;
+  document.getElementById("selectedDateDisplay").innerText = dateKey;
+  
+  const today = new Date(new Date().toDateString());
+  const dateToCheck = new Date(dateKey);
+  
+  // סימון היום בלוח
+  document.querySelectorAll('.day').forEach(d => d.classList.remove('selected-day'));
+  document.querySelector(`[data-date="${selectedDate}"]`)?.classList.add('selected-day');
+  
+  const slotsDiv = document.getElementById("slotsContainer");
+  slotsDiv.innerHTML = '';
+  
+  const day = globalData[dateKey] || {};
+  const isPast = dateToCheck < today;
+  const configForm = document.getElementById("configForm");
+  
+  // מילוי טופס ההגדרות אם זה לא עבר
+  if (configForm && !isPast) {
     const s = day.settings || {};
-    const globalCapacity = parseInt(s.maxSlots) || 1;
-
-    // כל הפעילות (הוזמן/מבוטל/ידני/חסום)
-    const activeAppointments = day.appointments || [];
-
-/* ────────────────────────────────────────────
-   ⭐⭐⭐ מצב היסטוריה — מציג רק מה שבאמת קרה ⭐⭐⭐
-──────────────────────────────────────────── */
-if (historyMode && isPast) {
-
-  const historicAppointments = activeAppointments.filter(a =>
-    a.time &&
-    (
-      a.status === 'BOOKED' ||
-      a.status === 'CANCELLED' ||
-      a.status === 'CANCELLED_BY_ADMIN'
-    )
-  );
-
-  slotsDiv.innerHTML = "";
-
-  if (historicAppointments.length === 0) {
+    document.getElementById('range1Start').value = s.range1Start || "";
+    document.getElementById('range1End').value = s.range1End || "";
+    document.getElementById('range1Interval').value = s.range1Interval || "10";
+    document.getElementById('maxSlots').value = s.maxSlots || "1";
+    renderBreaksConfig(s.breaks || []);
+  }
+  
+  // אם עבר ולא במצב היסטוריה: תצוגת ארכיון
+  if (isPast && !historyMode) {
     slotsDiv.innerHTML = `
-      <div style="text-align:center; padding:20px; color:var(--text-muted);">
-        <p>לא היו תורים ביום זה</p>
-      </div>`;
+    <div style="text-align:center; padding:20px; color:var(--text-muted);">
+    <h3>ארכיון: ${dateKey}</h3>
+    <p>כדי לצפות, הפעל את "הצג היסטוריה".</p>
+    </div>`;
     return;
   }
-
-  historicAppointments
+  
+  const s = day.settings || {};
+  const globalCapacity = parseInt(s.maxSlots) || 1;
+  
+  // כל הפעילות (הוזמן/מבוטל/ידני/חסום)
+  const activeAppointments = day.appointments || [];
+  
+  /* ────────────────────────────────────────────
+  ⭐⭐⭐ מצב היסטוריה — מציג רק מה שבאמת קרה ⭐⭐⭐
+  ──────────────────────────────────────────── */
+  if (historyMode && isPast) {
+    
+    const historicAppointments = activeAppointments.filter(a =>
+    a.time &&
+    (
+    a.status === 'BOOKED' ||
+    a.status === 'CANCELLED' ||
+    a.status === 'CANCELLED_BY_ADMIN'
+    )
+    );
+    
+    slotsDiv.innerHTML = "";
+    
+    if (historicAppointments.length === 0) {
+      slotsDiv.innerHTML = `
+      <div style="text-align:center; padding:20px; color:var(--text-muted);">
+      <p>לא היו תורים ביום זה</p>
+      </div>`;
+      return;
+    }
+    
+    historicAppointments
     .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
     .forEach(a => {
-
+      
       const div = document.createElement("div");
       div.className = "slot history-slot";
-
+      
       let statusText = "";
       let statusClass = "";
-
+      
       switch (a.status) {
         case 'BOOKED':
-          statusText = "✔ בוצע";
-          statusClass = "history-booked";
-          break;
-
+        statusText = "✔ בוצע";
+        statusClass = "history-booked";
+        break;
+        
         case 'CANCELLED':
-          statusText = "❌ בוטל ע״י לקוח";
-          statusClass = "history-cancelled-client";
-          break;
-
+        statusText = "❌ בוטל ע״י לקוח";
+        statusClass = "history-cancelled-client";
+        break;
+        
         case 'CANCELLED_BY_ADMIN':
-          statusText = "🛠️ בוטל ע״י מנהל";
-          statusClass = "history-cancelled-admin";
-          break;
+        statusText = "🛠️ בוטל ע״י מנהל";
+        statusClass = "history-cancelled-admin";
+        break;
       }
-
+      
       div.classList.add(statusClass);
-
-div.innerHTML = `
-  <div>
-    <strong>${a.time}</strong>
-
-    <div style="font-size:0.85em; margin-top:2px;">
-      ${statusText}
-    </div>
-
-    ${
-      a.first || a.last
-        ? `<div style="font-size:0.85em; margin-top:4px;">
-             👤 ${a.first || ''} ${a.last || ''}
-           </div>`
+      
+      div.innerHTML = `
+      <div class="history-compact">
+      
+      <div class="history-line-1">
+      <strong>${a.time}</strong>
+      <span class="history-status">${statusText}</span>
+      </div>
+      
+      ${
+        a.first || a.last || a.phone
+        ? `<div class="history-line-2">
+        ${a.first || ''} ${a.last || ''}
+        ${a.phone ? `· ${a.phone}` : ''}
+        </div>`
         : ''
-    }
-
-    ${
-      a.phone
+      }
+      
+      </div>
+      
+      ${
+        a.phone
         ? `<div style="font-size:0.8em; opacity:0.8;">
-             📞 ${a.phone}
-           </div>`
+        📞 ${a.phone}
+        </div>`
         : ''
-    }
-  </div>
-`;
-
-
+      }
+      </div>
+      `;
+      
       slotsDiv.appendChild(div);
     });
-
-  return;
+    
+    return;
+  }
+  
+  /* ────────────────────────────────────────────
+  ⭐⭐⭐ מכאן והלאה — מצב רגיל בלבד ⭐⭐⭐
+  ────────────────────────────────────────────
+  */
+  
+  // יצירת תורים בסיסיים עם הפסקות
+  let base = (s.range1Start && s.range1End)
+  ? generateSlotsWithBreaks(s.range1Start, s.range1End, s.range1Interval, s.breaks || [])
+  : [];
+  
+  const allActivityTimes = activeAppointments.map(a => a.time);
+  const combined = [...new Set([...base, ...allActivityTimes])].sort();
+  
+  if (combined.length === 0) {
+    slotsDiv.innerHTML = `
+    <p style="text-align:center; color:var(--text-muted); margin-top:20px;">
+    אין תורים.
+    </p>`;
+    return;
+  }
+  
+  const isToday = (dateKey === dateToKey(new Date()));
+  const currentMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+  
+  // ────────────────────────────────────────────
+  // תיקון חדש: חישוב "סוף יום אפקטיבי" (זיהוי חסימות בסוף)
+  // ────────────────────────────────────────────
+  let effectiveEndIndex = combined.length;
+  
+  // רצים אחורה כדי למצוא רצף חסימות
+  for (let i = combined.length - 1; i >= 0; i--) {
+    const t = combined[i];
+    // בדיקה אם התור חסום (DELETED או BLOCKED)
+    const isBlocked = activeAppointments.some(a => a.time === t && (a.status === 'DELETED' || a.status === 'BLOCKED'));
+    
+    if (isBlocked) {
+      effectiveEndIndex = i; // סוף היום זז אחורה
+    } else {
+      break; // ברגע שפוגשים תור לא חסום, עוצרים
+    }
+  }
+  
+  // ────────────────────────────────────────────
+  // לולאה על כל התורים
+  // ────────────────────────────────────────────
+  
+  combined.forEach((time, index) => {
+    
+    // 🟢 תיקון חדש: הצגת סימן סוף יום מוקדם אם הגענו לנקודת החסימה
+    if (index === effectiveEndIndex) {
+      const separator = document.createElement("div");
+      separator.className = "break-separator";
+      separator.style.cssText = "border-color: var(--accent-red); color: var(--accent-red); background: rgba(239, 68, 68, 0.05); margin-top: 12px;";
+      separator.textContent = `-------- סוף יום (${time}) - יום מקוצר --------`;
+      slotsDiv.appendChild(separator);
+    }
+    
+    const tMin = timeToMinutes(time);
+    const prevTime = index > 0 ? combined[index - 1] : null;
+    
+    // הפסקות מוגדרות
+    if (prevTime) {
+      const prevMin = timeToMinutes(prevTime);
+      if (s.breaks) s.breaks.forEach(br => {
+        const bs = timeToMinutes(br.start), be = timeToMinutes(br.end);
+        if (prevMin < bs && tMin >= be) {
+          slotsDiv.innerHTML += `
+          <div class="break-separator">
+          ☕ הפסקה (${br.start} - ${br.end})
+          </div>`;
+        }
+      });
+    }
+    
+    // תוספות מכסה (תורים ידניים)
+    const extrasHere = activeAppointments.filter(a =>
+    a.time === time && a.status === 'EXTRA_CAPACITY'
+    ).length;
+    
+    const baseCap = base.includes(time) ? globalCapacity : 0;
+    const totalCapacity = baseCap + extrasHere;
+    
+    if (totalCapacity === 0 && !activeAppointments.some(a => a.time === time)) return;
+    
+    // דילוג על עבר של היום הנוכחי
+    if (isToday && tMin < currentMinutes) {
+      const hasActive = activeAppointments.some(x =>
+      x.time === time &&
+      x.status !== 'DELETED' &&
+      x.status !== 'EXTRA_CAPACITY'
+      );
+      if (!hasActive) return;
+    }
+    
+    // תוספת מכסה — הצגה
+    if (extrasHere > 0) {
+      slotsDiv.innerHTML += `
+      <div class="slot" style="border:1px dashed var(--text-muted); padding:5px;">
+      <div style="font-size:0.9em; color:var(--text-muted);">
+      ➕ תוספת מכסה (${extrasHere}) לשעה ${time}
+      </div>
+      ${!isPast ? `<button class="del-btn" onclick="removeExtraSlot('${dateKey}', '${time}')">בטל תוספת</button>` : ''}
+      </div>`;
+    }
+    
+    // תורים מוזמנים
+    const bookings = activeAppointments.filter(x =>
+    x.time === time && x.phone && x.status !== 'DELETED'
+    );
+    
+    bookings.forEach(appt => {
+      slotsDiv.innerHTML += `
+      <div class="slot booked">
+      <div><strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small></div>
+      ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+      </div>`;
+    });
+    
+    // חסומים
+    const blocked = activeAppointments.filter(x =>
+    x.time === time && x.status === 'DELETED'
+    );
+    
+    blocked.forEach(blk => {
+      slotsDiv.innerHTML += `
+      <div class="slot blocked">
+      <div style="text-decoration:line-through;"><strong>${time}</strong> — חסום</div>
+      ${!isPast ? `<button class="restore-btn" onclick="restoreSlot('${dateKey}', '${time}')">שחזר</button>` : ''}
+      </div>`;
+    });
+    
+    // חישוב פנויים
+    const used = bookings.length + blocked.length;
+    const remaining = totalCapacity - used;
+    
+    // תורים פנויים
+    if (remaining > 0 && (!isToday || tMin > currentMinutes)) {
+      for (let i = 0; i < remaining; i++) {
+        const countText = totalCapacity > 1 ? ` (${i + 1})` : '';
+        
+        slotsDiv.innerHTML += `
+        <div class="slot free" onclick="openBookingWindow('${time}')" style="cursor: pointer;" title="לחץ להזמנת תור">
+        <div>
+        <div style="font-weight:bold;">${time}</div>
+        <div style="font-size:0.85em; opacity:0.8;">פנוי - לחץ להזמנה ${countText}</div>
+        </div>
+        
+        <div style="z-index: 10;">
+        ${!isPast ? `
+        <button class="del-free-slot-btn"
+        onclick="event.stopPropagation(); blockFreeSlot('${dateKey}', '${time}')"
+        title="חסום תור זה">
+        ❌
+        </button>` : ''}
+        </div>
+        </div>`;
+      }
+    }
+    
+    // ────────────────────────────────────────────
+    // הפסקה בין סוף יום לתור ידני
+    // ────────────────────────────────────────────
+    const nextTime = combined[index + 1];
+    const nextMin = nextTime ? timeToMinutes(nextTime) : null;
+    const endOfDayMin = timeToMinutes(s.range1End);
+    
+    const isNextManual = activeAppointments.some(
+    a => a.time === nextTime && a.status === 'EXTRA_CAPACITY'
+    );
+    
+    if (tMin < endOfDayMin && nextMin > endOfDayMin && isNextManual) {
+      slotsDiv.innerHTML += `
+      <div class="break-separator">
+      ⏸️ הפסקה (${s.range1End} - ${nextTime})
+      </div>`;
+    } else {
+      if (index < combined.length - 1) {
+        slotsDiv.innerHTML += `<div class="time-separator"></div>`;
+      }
+    }
+    
+  });
+  
+  // ────────────────────────────────────────────
+  // סוף יום (רגיל) - יוצג רק אם *לא* היה קיצור יום
+  // ────────────────────────────────────────────
+  // 🟢 תיקון חדש: התנאי effectiveEndIndex === combined.length
+  if (combined.length > 0 && effectiveEndIndex === combined.length) {
+    const lastTime = combined[combined.length - 1];
+    const interval = parseInt(s.range1Interval) || 10;
+    const lastMins = timeToMinutes(lastTime);
+    const endMins = lastMins + interval;
+    
+    const endHour = String(Math.floor(endMins / 60)).padStart(2, '0');
+    const endMin = String(endMins % 60).padStart(2, '0');
+    
+    const finalEnd = `${endHour}:${endMin}`;
+    
+    const div = document.createElement("div");
+    div.className = "break-separator end-of-day";
+    div.style.marginTop = "12px";
+    div.textContent = `-------- סוף יום (${finalEnd}) --------`;
+    slotsDiv.appendChild(div);
+  }
 }
 
-
-    /* ────────────────────────────────────────────
-      ⭐⭐⭐ מכאן והלאה — מצב רגיל בלבד ⭐⭐⭐
-    ────────────────────────────────────────────
-    */
-
-    // יצירת תורים בסיסיים עם הפסקות
-    let base = (s.range1Start && s.range1End)
-        ? generateSlotsWithBreaks(s.range1Start, s.range1End, s.range1Interval, s.breaks || [])
-        : [];
-
-    const allActivityTimes = activeAppointments.map(a => a.time);
-    const combined = [...new Set([...base, ...allActivityTimes])].sort();
-
-    if (combined.length === 0) {
-        slotsDiv.innerHTML = `
-            <p style="text-align:center; color:var(--text-muted); margin-top:20px;">
-                אין תורים.
-            </p>`;
-        return;
-    }
-
-    const isToday = (dateKey === dateToKey(new Date()));
-    const currentMinutes = new Date().getHours() * 60 + new Date().getMinutes();
-
-    // ────────────────────────────────────────────
-    // תיקון חדש: חישוב "סוף יום אפקטיבי" (זיהוי חסימות בסוף)
-    // ────────────────────────────────────────────
-    let effectiveEndIndex = combined.length;
-
-    // רצים אחורה כדי למצוא רצף חסימות
-    for (let i = combined.length - 1; i >= 0; i--) {
-        const t = combined[i];
-        // בדיקה אם התור חסום (DELETED או BLOCKED)
-        const isBlocked = activeAppointments.some(a => a.time === t && (a.status === 'DELETED' || a.status === 'BLOCKED'));
-
-        if (isBlocked) {
-            effectiveEndIndex = i; // סוף היום זז אחורה
-        } else {
-            break; // ברגע שפוגשים תור לא חסום, עוצרים
-        }
-    }
-
-    // ────────────────────────────────────────────
-    // לולאה על כל התורים
-    // ────────────────────────────────────────────
-
-    combined.forEach((time, index) => {
-
-        // 🟢 תיקון חדש: הצגת סימן סוף יום מוקדם אם הגענו לנקודת החסימה
-        if (index === effectiveEndIndex) {
-            const separator = document.createElement("div");
-            separator.className = "break-separator";
-            separator.style.cssText = "border-color: var(--accent-red); color: var(--accent-red); background: rgba(239, 68, 68, 0.05); margin-top: 12px;";
-            separator.textContent = `-------- סוף יום (${time}) - יום מקוצר --------`;
-            slotsDiv.appendChild(separator);
-        }
-
-        const tMin = timeToMinutes(time);
-        const prevTime = index > 0 ? combined[index - 1] : null;
-
-        // הפסקות מוגדרות
-        if (prevTime) {
-            const prevMin = timeToMinutes(prevTime);
-            if (s.breaks) s.breaks.forEach(br => {
-                const bs = timeToMinutes(br.start), be = timeToMinutes(br.end);
-                if (prevMin < bs && tMin >= be) {
-                    slotsDiv.innerHTML += `
-                        <div class="break-separator">
-                            ☕ הפסקה (${br.start} - ${br.end})
-                        </div>`;
-                }
-            });
-        }
-
-        // תוספות מכסה (תורים ידניים)
-        const extrasHere = activeAppointments.filter(a =>
-            a.time === time && a.status === 'EXTRA_CAPACITY'
-        ).length;
-
-        const baseCap = base.includes(time) ? globalCapacity : 0;
-        const totalCapacity = baseCap + extrasHere;
-
-        if (totalCapacity === 0 && !activeAppointments.some(a => a.time === time)) return;
-
-        // דילוג על עבר של היום הנוכחי
-        if (isToday && tMin < currentMinutes) {
-            const hasActive = activeAppointments.some(x =>
-                x.time === time &&
-                x.status !== 'DELETED' &&
-                x.status !== 'EXTRA_CAPACITY'
-            );
-            if (!hasActive) return;
-        }
-
-        // תוספת מכסה — הצגה
-        if (extrasHere > 0) {
-            slotsDiv.innerHTML += `
-                <div class="slot" style="border:1px dashed var(--text-muted); padding:5px;">
-                    <div style="font-size:0.9em; color:var(--text-muted);">
-                        ➕ תוספת מכסה (${extrasHere}) לשעה ${time}
-                    </div>
-                    ${!isPast ? `<button class="del-btn" onclick="removeExtraSlot('${dateKey}', '${time}')">בטל תוספת</button>` : ''}
-                </div>`;
-        }
-
-        // תורים מוזמנים
-        const bookings = activeAppointments.filter(x =>
-            x.time === time && x.phone && x.status !== 'DELETED'
-        );
-
-        bookings.forEach(appt => {
-            slotsDiv.innerHTML += `
-                <div class="slot booked">
-                    <div><strong>${time}</strong> — ${appt.first} ${appt.last}
-                    <br><small>📞 ${appt.phone}</small></div>
-                    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
-                </div>`;
-        });
-
-        // חסומים
-        const blocked = activeAppointments.filter(x =>
-            x.time === time && x.status === 'DELETED'
-        );
-
-        blocked.forEach(blk => {
-            slotsDiv.innerHTML += `
-                <div class="slot blocked">
-                    <div style="text-decoration:line-through;"><strong>${time}</strong> — חסום</div>
-                    ${!isPast ? `<button class="restore-btn" onclick="restoreSlot('${dateKey}', '${time}')">שחזר</button>` : ''}
-                </div>`;
-        });
-
-        // חישוב פנויים
-        const used = bookings.length + blocked.length;
-        const remaining = totalCapacity - used;
-
-        // תורים פנויים
-        if (remaining > 0 && (!isToday || tMin > currentMinutes)) {
-            for (let i = 0; i < remaining; i++) {
-                const countText = totalCapacity > 1 ? ` (${i + 1})` : '';
-
-                slotsDiv.innerHTML += `
-                <div class="slot free" onclick="openBookingWindow('${time}')" style="cursor: pointer;" title="לחץ להזמנת תור">
-                    <div>
-                        <div style="font-weight:bold;">${time}</div>
-                        <div style="font-size:0.85em; opacity:0.8;">פנוי - לחץ להזמנה ${countText}</div>
-                    </div>
-
-                    <div style="z-index: 10;">
-                        ${!isPast ? `
-                        <button class="del-free-slot-btn" 
-                                onclick="event.stopPropagation(); blockFreeSlot('${dateKey}', '${time}')" 
-                                title="חסום תור זה">
-                            ❌
-                        </button>` : ''}
-                    </div>
-                </div>`;
-            } 
-        } 
-
-        // ────────────────────────────────────────────
-        // הפסקה בין סוף יום לתור ידני
-        // ────────────────────────────────────────────
-        const nextTime = combined[index + 1];
-        const nextMin = nextTime ? timeToMinutes(nextTime) : null;
-        const endOfDayMin = timeToMinutes(s.range1End);
-
-        const isNextManual = activeAppointments.some(
-            a => a.time === nextTime && a.status === 'EXTRA_CAPACITY'
-        );
-
-        if (tMin < endOfDayMin && nextMin > endOfDayMin && isNextManual) {
-            slotsDiv.innerHTML += `
-                <div class="break-separator">
-                    ⏸️ הפסקה (${s.range1End} - ${nextTime})
-                </div>`;
-        } else {
-            if (index < combined.length - 1) {
-                slotsDiv.innerHTML += `<div class="time-separator"></div>`;
-            }
-        }
-
-    }); 
-
-    // ────────────────────────────────────────────
-    // סוף יום (רגיל) - יוצג רק אם *לא* היה קיצור יום
-    // ────────────────────────────────────────────
-    // 🟢 תיקון חדש: התנאי effectiveEndIndex === combined.length
-    if (combined.length > 0 && effectiveEndIndex === combined.length) {
-        const lastTime = combined[combined.length - 1];
-        const interval = parseInt(s.range1Interval) || 10;
-        const lastMins = timeToMinutes(lastTime);
-        const endMins = lastMins + interval;
-
-        const endHour = String(Math.floor(endMins / 60)).padStart(2, '0');
-        const endMin = String(endMins % 60).padStart(2, '0');
-
-        const finalEnd = `${endHour}:${endMin}`;
-
-        const div = document.createElement("div");
-        div.className = "break-separator end-of-day";
-        div.style.marginTop = "12px";
-        div.textContent = `-------- סוף יום (${finalEnd}) --------`;
-        slotsDiv.appendChild(div);
-    }
+function addManualSlotFromUI() {
+  const time = document.getElementById("manualSlotTime").value;
+  if (!isValidTime(time) || !selectedDate) return alert("בדוק תאריך ושעה");
+  updateAppt(selectedDate, { time: time, status: 'EXTRA_CAPACITY' });
+  document.getElementById("manualSlotTime").value = "";
 }
-
-    function addManualSlotFromUI() {
-        const time = document.getElementById("manualSlotTime").value;
-        if (!isValidTime(time) || !selectedDate) return alert("בדוק תאריך ושעה");
-        updateAppt(selectedDate, { time: time, status: 'EXTRA_CAPACITY' });
-        document.getElementById("manualSlotTime").value = ""; 
-    }
 
 /* =====================================================
-    פונקציה לאיפוס הגדרות (ימים קדימה / תאריכים נבחרים)
+פונקציה לאיפוס הגדרות (ימים קדימה / תאריכים נבחרים)
 ===================================================== */
 async function resetSettings() {
-
-    if (!selectedDate) {
-        alert("בחר תאריך תחילה");
-        return;
+  
+  if (!selectedDate) {
+    alert("בחר תאריך תחילה");
+    return;
+  }
+  
+  let datesToReset = [];
+  
+  /* ===== קביעת תאריכים לאיפוס ===== */
+  
+  if (applyMode && selectedApplyDates.size > 0) {
+    // 🔵 איפוס לפי תאריכים נבחרים
+    datesToReset = Array.from(selectedApplyDates);
+    
+  } else {
+    // 🟢 איפוס רגיל – ימים קדימה
+    const daysInput = document.getElementById("daysToApply");
+    const days = daysInput ? (parseInt(daysInput.value) || 1) : 1;
+    
+    const start = new Date(selectedDate);
+    
+    for (let i = 0; i < days; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      datesToReset.push(dateToKey(d));
     }
-
-    let datesToReset = [];
-
-    /* ===== קביעת תאריכים לאיפוס ===== */
-
-    if (applyMode && selectedApplyDates.size > 0) {
-        // 🔵 איפוס לפי תאריכים נבחרים
-        datesToReset = Array.from(selectedApplyDates);
-
-    } else {
-        // 🟢 איפוס רגיל – ימים קדימה
-        const daysInput = document.getElementById("daysToApply");
-        const days = daysInput ? (parseInt(daysInput.value) || 1) : 1;
-
-        const start = new Date(selectedDate);
-
-        for (let i = 0; i < days; i++) {
-            const d = new Date(start);
-            d.setDate(start.getDate() + i);
-            datesToReset.push(dateToKey(d));
-        }
+  }
+  
+  if (datesToReset.length === 0) {
+    alert("לא נבחרו תאריכים לאיפוס");
+    return;
+  }
+  
+  if (!confirm(`האם אתה בטוח שברצונך למחוק הגדרות ותורים פנויים ל-${datesToReset.length} תאריכים?`)) {
+    return;
+  }
+  
+  const updates = {};
+  
+  /* ===== בניית עדכונים ===== */
+  
+  datesToReset.forEach(k => {
+    
+    const day = globalData[k];
+    
+    // שומרים תורים שיש להם טלפון (לא מוחקים הזמנות אמיתיות)
+    const kept = (day && day.appointments)
+    ? day.appointments.filter(a => a.phone && a.status !== 'DELETED')
+    : null;
+    
+    updates[`appointments/${k}/settings`] = null;
+    updates[`appointments/${k}/appointments`] = (kept && kept.length) ? kept : null;
+    
+    // עדכון זיכרון מקומי
+    if (globalData[k]) {
+      delete globalData[k].settings;
+      globalData[k].appointments = kept && kept.length ? kept : null;
     }
-
-    if (datesToReset.length === 0) {
-        alert("לא נבחרו תאריכים לאיפוס");
-        return;
+  });
+  
+  if (typeof db === 'undefined') {
+    alert("שגיאה קריטית: אין חיבור למסד הנתונים.");
+    return;
+  }
+  
+  /* ===== ביצוע האיפוס ===== */
+  
+  try {
+    await db.ref().update(updates);
+    
+    alert("ההגדרות אופסו בהצלחה!");
+    
+    // ניקוי מצב החלה
+    applyMode = false;
+    selectedApplyDates.clear();
+    
+    const daysInput = document.getElementById("daysToApply");
+    if (daysInput) {
+      daysInput.disabled = false;
+      daysInput.style.opacity = "1";
     }
-
-    if (!confirm(`האם אתה בטוח שברצונך למחוק הגדרות ותורים פנויים ל-${datesToReset.length} תאריכים?`)) {
-        return;
-    }
-
-    const updates = {};
-
-    /* ===== בניית עדכונים ===== */
-
-    datesToReset.forEach(k => {
-
-        const day = globalData[k];
-
-        // שומרים תורים שיש להם טלפון (לא מוחקים הזמנות אמיתיות)
-        const kept = (day && day.appointments)
-            ? day.appointments.filter(a => a.phone && a.status !== 'DELETED')
-            : null;
-
-        updates[`appointments/${k}/settings`] = null;
-        updates[`appointments/${k}/appointments`] = (kept && kept.length) ? kept : null;
-
-        // עדכון זיכרון מקומי
-        if (globalData[k]) {
-            delete globalData[k].settings;
-            globalData[k].appointments = kept && kept.length ? kept : null;
-        }
-    });
-
-    if (typeof db === 'undefined') {
-        alert("שגיאה קריטית: אין חיבור למסד הנתונים.");
-        return;
-    }
-
-    /* ===== ביצוע האיפוס ===== */
-
-    try {
-        await db.ref().update(updates);
-
-        alert("ההגדרות אופסו בהצלחה!");
-
-        // ניקוי מצב החלה
-        applyMode = false;
-        selectedApplyDates.clear();
-
-        const daysInput = document.getElementById("daysToApply");
-        if (daysInput) {
-            daysInput.disabled = false;
-            daysInput.style.opacity = "1";
-        }
-
-        const hint = document.getElementById("applyDatesHint");
-        if (hint) hint.style.display = "none";
-
-        buildCalendar();
-        renderSlots(selectedDate);
-
-    } catch (e) {
-        alert("שגיאה באיפוס: " + e.message);
-    }
+    
+    const hint = document.getElementById("applyDatesHint");
+    if (hint) hint.style.display = "none";
+    
+    buildCalendar();
+    renderSlots(selectedDate);
+    
+  } catch (e) {
+    alert("שגיאה באיפוס: " + e.message);
+  }
 }
 
 function addBreakRow(s='', e='') {
-    const div = document.createElement("div"); 
-    div.className = "break-row"; 
-    div.style.cssText = "display:flex; gap:5px; margin-bottom:5px;";
-
-    // יצירת ה-HTML הפנימי (עם התיקון של ה-tabindex לכפתור)
-    div.innerHTML = `
-        <input type="text" class="break-start time-input" placeholder="התחלה" value="${s}" maxlength="5" style="width:40%" oninput="autoFormatTime(this)">
-        <span>-</span>
-        <input type="text" class="break-end time-input" placeholder="סיום" value="${e}" maxlength="5" style="width:40%" oninput="autoFormatTime(this)">
-        <button tabindex="-1" onclick="this.parentElement.remove()" style="background:transparent; border:1px solid #dc3545; color:#dc3545; border-radius:4px; cursor:pointer;">x</button>
-    `;
-
-    document.getElementById("breaksContainer").appendChild(div);
-
-    // --- ניהול הפוקוס והמעברים ---
-
-    // 1. הגדרת שדה התחלה (כרגיל)
-    addSmartFocus(div.querySelector('.break-start'));
-
-    // 2. הגדרת שדה סיום
-    const endInput = div.querySelector('.break-end');
-
-    // חדש: ברגע שהפוקוס מגיע לשדה סיום (משדה התחלה או בלחיצה) - סמן את הטקסט
-    endInput.addEventListener('focus', function() {
-        this.select(); 
-    });
-
-    // הלוגיקה הקודמת: בסיום הקלדה, דלג לשדה "ימים קדימה"
-    endInput.addEventListener('input', function() {
-        if (this.value.length === 5) {
-            const daysInput = document.getElementById('daysToApply');
-            if (daysInput) {
-                daysInput.focus();
-                daysInput.select();
-            }
-        }
-    });
-}
-    function renderBreaksConfig(breaks=[]) { document.getElementById("breaksContainer").innerHTML=''; breaks.forEach(b=>addBreakRow(b.start, b.end)); }
-
-    function adminCancel(dateKey, time, phoneToCancel) {
-        const dayData = globalData[dateKey];
-        let clientPhone = phoneToCancel || "";
-        let clientName = "לקוח";
-        if (dayData && dayData.appointments) {
-            const appt = dayData.appointments.find(a => a.time === time && a.phone === phoneToCancel);
-            if (appt) clientName = appt.first || "לקוח";
-        }
-
-        if(!confirm("האם לבטל את התור הזה?")) return;
-updateAppt(dateKey, {
-  time,
-  phone: phoneToCancel,
-  status: 'CANCELLED_BY_ADMIN',
-  timestamp: Date.now()
-});
-
-
-        if (clientPhone && clientPhone.length > 5) {
-            let cleanPhone = clientPhone.replace(/\D/g, '');
-            if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
-            const titleElement = document.getElementById("calendarTitleSetting");
-            const serviceName = (titleElement && titleElement.value) ? titleElement.value : "העסק";
-            const message = `${clientName} שלום, \n` +
-                            `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
-                            `אנא הסר/י את התור מהיומן שלך במידה ונקבע.\n` +
-                            `הינך מוזמן לקבוע תור חדש בקישור: https://torimapp.netlify.app/`;
-            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-            const waBtn = document.getElementById("waModalBtn");
-            waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
-            document.getElementById('waModal').style.display = 'flex';
-        }
+  const div = document.createElement("div");
+  div.className = "break-row";
+  div.style.cssText = "display:flex; gap:5px; margin-bottom:5px;";
+  
+  // יצירת ה-HTML הפנימי (עם התיקון של ה-tabindex לכפתור)
+  div.innerHTML = `
+  <input type="text" class="break-start time-input" placeholder="התחלה" value="${s}" maxlength="5" style="width:40%" oninput="autoFormatTime(this)">
+  <span>-</span>
+  <input type="text" class="break-end time-input" placeholder="סיום" value="${e}" maxlength="5" style="width:40%" oninput="autoFormatTime(this)">
+  <button tabindex="-1" onclick="this.parentElement.remove()" style="background:transparent; border:1px solid #dc3545; color:#dc3545; border-radius:4px; cursor:pointer;">x</button>
+  `;
+  
+  document.getElementById("breaksContainer").appendChild(div);
+  
+  // --- ניהול הפוקוס והמעברים ---
+  
+  // 1. הגדרת שדה התחלה (כרגיל)
+  addSmartFocus(div.querySelector('.break-start'));
+  
+  // 2. הגדרת שדה סיום
+  const endInput = div.querySelector('.break-end');
+  
+  // חדש: ברגע שהפוקוס מגיע לשדה סיום (משדה התחלה או בלחיצה) - סמן את הטקסט
+  endInput.addEventListener('focus', function() {
+    this.select();
+  });
+  
+  // הלוגיקה הקודמת: בסיום הקלדה, דלג לשדה "ימים קדימה"
+  endInput.addEventListener('input', function() {
+    if (this.value.length === 5) {
+      const daysInput = document.getElementById('daysToApply');
+      if (daysInput) {
+        daysInput.focus();
+        daysInput.select();
+      }
     }
+  });
+}
+function renderBreaksConfig(breaks=[]) { document.getElementById("breaksContainer").innerHTML=''; breaks.forEach(b=>addBreakRow(b.start, b.end)); }
 
-    // פונקציה לחסימת תור פנוי (הופכת אותו ל-DELETED)
+function adminCancel(dateKey, time, phoneToCancel) {
+  const dayData = globalData[dateKey];
+  let clientPhone = phoneToCancel || "";
+  let clientName = "לקוח";
+  if (dayData && dayData.appointments) {
+    const appt = dayData.appointments.find(a => a.time === time && a.phone === phoneToCancel);
+    if (appt) clientName = appt.first || "לקוח";
+  }
+  
+  if(!confirm("האם לבטל את התור הזה?")) return;
+  updateAppt(dateKey, {
+    time,
+    phone: phoneToCancel,
+    status: 'CANCELLED_BY_ADMIN',
+    timestamp: Date.now()
+  });
+  
+  if (clientPhone && clientPhone.length > 5) {
+    let cleanPhone = clientPhone.replace(/\D/g, '');
+    if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
+    const titleElement = document.getElementById("calendarTitleSetting");
+    const serviceName = (titleElement && titleElement.value) ? titleElement.value : "העסק";
+    const message = `${clientName} שלום, \n` +
+    `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
+    `אנא הסר/י את התור מהיומן שלך במידה ונקבע.\n` +
+    `הינך מוזמן לקבוע תור חדש בקישור: https://torimapp.netlify.app/`;
+    const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    const waBtn = document.getElementById("waModalBtn");
+    waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
+    document.getElementById('waModal').style.display = 'flex';
+  }
+}
+
+// פונקציה לחסימת תור פנוי (הופכת אותו ל-DELETED)
 function blockFreeSlot(dateKey, time) {
-    if (!confirm('האם אתה בטוח שברצונך לחסום את התור בשעה ' + time + '?')) return;
-
-    const ref = db.ref(`appointments/${dateKey}/appointments`);
-
-    ref.once('value', snapshot => {
-        let list = snapshot.val() || [];
-
-        // הוספת רשומה מסוג DELETED שחוסמת את השעה הזו
-        list.push({
-            time: time,
-            status: 'DELETED',
-            timestamp: Date.now()
-        });
-
-        ref.set(list)
-           .then(() => {
-               // רענון התצוגה (אופציונלי, ה-Listener אמור לעשות זאת אוטומטית)
-               console.log(`Slot ${time} blocked successfully`);
-           })
-           .catch(err => alert('שגיאה בחסימת התור: ' + err.message));
+  if (!confirm('האם אתה בטוח שברצונך לחסום את התור בשעה ' + time + '?')) return;
+  
+  const ref = db.ref(`appointments/${dateKey}/appointments`);
+  
+  ref.once('value', snapshot => {
+    let list = snapshot.val() || [];
+    
+    // הוספת רשומה מסוג DELETED שחוסמת את השעה הזו
+    list.push({
+      time: time,
+      status: 'DELETED',
+      timestamp: Date.now()
     });
+    
+    ref.set(list)
+    .then(() => {
+      // רענון התצוגה (אופציונלי, ה-Listener אמור לעשות זאת אוטומטית)
+      console.log(`Slot ${time} blocked successfully`);
+    })
+    .catch(err => alert('שגיאה בחסימת התור: ' + err.message));
+  });
 }
 
-    function deleteFreeSlot(k, t) { updateAppt(k, { time: t, status: "DELETED" }); }
+function deleteFreeSlot(k, t) { updateAppt(k, { time: t, status: "DELETED" }); }
 
-    function restoreSlot(k, t) { 
-        if(confirm("לשחזר סלוט אחד?")) {
-            db.ref(`appointments/${k}/appointments`).once('value', s => {
-                let list = s.val() || [];
-                const idx = list.findIndex(a => a.time === t && a.status === 'DELETED');
-                if (idx > -1) {
-                    list.splice(idx, 1);
-                    db.ref(`appointments/${k}/appointments`).set(list);
-                }
-            });
-        }
+function restoreSlot(k, t) {
+  if(confirm("לשחזר סלוט אחד?")) {
+    db.ref(`appointments/${k}/appointments`).once('value', s => {
+      let list = s.val() || [];
+      const idx = list.findIndex(a => a.time === t && a.status === 'DELETED');
+      if (idx > -1) {
+        list.splice(idx, 1);
+        db.ref(`appointments/${k}/appointments`).set(list);
+      }
+    });
+  }
+}
+
+function updateAppt(k, newAppt) {
+  db.ref(`appointments/${k}/appointments`).once('value', s => {
+    let list = s.val() || [];
+    list.push(newAppt);
+    db.ref(`appointments/${k}/appointments`).set(list);
+  });
+}
+
+function removeFromDb(k, t, phone) {
+  db.ref(`appointments/${k}/appointments`).once('value', s => {
+    let list = s.val() || [];
+    list = list.filter(a => !(a.time === t && a.phone === phone));
+    db.ref(`appointments/${k}/appointments`).set(list);
+  });
+}
+
+function exportExcelReport() {
+  if(!selectedDate) { alert("יש לבחור יום מהלוח תחילה."); return; }
+  const dayData = globalData[selectedDate];
+  if(!dayData || !dayData.appointments) { alert("אין נתונים ליום זה."); return; }
+  const booked = dayData.appointments.filter(a => a.phone && a.status !== 'DELETED');
+  booked.sort((a,b) => a.time.localeCompare(b.time));
+  if(booked.length === 0) { alert("אין תורים מוזמנים ביום זה."); return; }
+  const data = booked.map((a, index) => ({ "מס'": index + 1, "שעה": a.time, "שם פרטי": a.first, "שם משפחה": a.last, "טלפון": a.phone }));
+  const ws = XLSX.utils.json_to_sheet(data, { origin: "A3" });
+  ws['!cols'] = [ { wch: 6 }, { wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 15 } ];
+  
+  const titleElement = document.getElementById("calendarTitleSetting");
+  const mainTitle = (titleElement && titleElement.value) ? titleElement.value : "דוח תורים";
+  const subTitle = `תאריך: ${selectedDate} | סה"כ תורים: ${booked.length}`;
+  XLSX.utils.sheet_add_aoa(ws, [[mainTitle]], { origin: "A1" });
+  XLSX.utils.sheet_add_aoa(ws, [[subTitle]], { origin: "A2" });
+  ws["!merges"] = [ { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } } ];
+  
+  const borderStyle = { top: { style: 'thin', color: { rgb: "000000" } }, bottom: { style: 'thin', color: { rgb: "000000" } }, left: { style: 'thin', color: { rgb: "000000" } }, right: { style: 'thin', color: { rgb: "000000" } } };
+  const titleStyle = { font: { bold: true, sz: 20, color: { rgb: "000000" }, name: "Segoe UI" }, alignment: { horizontal: "center", vertical: "center" }, fill: { fgColor: { rgb: "FFFFFF" } } };
+  const subTitleStyle = { font: { sz: 12, color: { rgb: "444444" }, name: "Segoe UI" }, alignment: { horizontal: "center", vertical: "center" }, fill: { fgColor: { rgb: "FFFFFF" } } };
+  const headerStyle = { font: { bold: true, color: { rgb: "FFFFFF" }, sz: 12, name: "Segoe UI" }, fill: { fgColor: { rgb: "4472C4" } }, border: borderStyle, alignment: { horizontal: "center", vertical: "center" } };
+  const cellStyle = { border: borderStyle, alignment: { horizontal: "right", vertical: "center" }, font: { sz: 11, name: "Segoe UI" } };
+  const centerCellStyle = { border: borderStyle, alignment: { horizontal: "center", vertical: "center" }, font: { sz: 11, name: "Segoe UI" } };
+  
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cell_address = XLSX.utils.encode_cell({r: R, c: C});
+      if (!ws[cell_address]) continue;
+      if (R === 0) ws[cell_address].s = titleStyle;
+      else if (R === 1) ws[cell_address].s = subTitleStyle;
+      else if (R === 2) ws[cell_address].s = headerStyle;
+      else { if (C === 0 || C === 1 || C === 4) ws[cell_address].s = centerCellStyle; else ws[cell_address].s = cellStyle; }
     }
-
-    function updateAppt(k, newAppt) {
-        db.ref(`appointments/${k}/appointments`).once('value', s => {
-            let list = s.val() || [];
-            list.push(newAppt);
-            db.ref(`appointments/${k}/appointments`).set(list);
-        });
-    }
-
-    function removeFromDb(k, t, phone) {
-        db.ref(`appointments/${k}/appointments`).once('value', s => {
-            let list = s.val() || [];
-            list = list.filter(a => !(a.time === t && a.phone === phone));
-            db.ref(`appointments/${k}/appointments`).set(list);
-        });
-    }
-
-    function exportExcelReport() {
-        if(!selectedDate) { alert("יש לבחור יום מהלוח תחילה."); return; }
-        const dayData = globalData[selectedDate];
-        if(!dayData || !dayData.appointments) { alert("אין נתונים ליום זה."); return; }
-        const booked = dayData.appointments.filter(a => a.phone && a.status !== 'DELETED');
-        booked.sort((a,b) => a.time.localeCompare(b.time));
-        if(booked.length === 0) { alert("אין תורים מוזמנים ביום זה."); return; }
-        const data = booked.map((a, index) => ({ "מס'": index + 1, "שעה": a.time, "שם פרטי": a.first, "שם משפחה": a.last, "טלפון": a.phone }));
-        const ws = XLSX.utils.json_to_sheet(data, { origin: "A3" });
-        ws['!cols'] = [ { wch: 6 }, { wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 15 } ];
-
-        const titleElement = document.getElementById("calendarTitleSetting");
-        const mainTitle = (titleElement && titleElement.value) ? titleElement.value : "דוח תורים";
-        const subTitle = `תאריך: ${selectedDate} | סה"כ תורים: ${booked.length}`;
-        XLSX.utils.sheet_add_aoa(ws, [[mainTitle]], { origin: "A1" });
-        XLSX.utils.sheet_add_aoa(ws, [[subTitle]], { origin: "A2" });
-        ws["!merges"] = [ { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } } ];
-
-        const borderStyle = { top: { style: 'thin', color: { rgb: "000000" } }, bottom: { style: 'thin', color: { rgb: "000000" } }, left: { style: 'thin', color: { rgb: "000000" } }, right: { style: 'thin', color: { rgb: "000000" } } };
-        const titleStyle = { font: { bold: true, sz: 20, color: { rgb: "000000" }, name: "Segoe UI" }, alignment: { horizontal: "center", vertical: "center" }, fill: { fgColor: { rgb: "FFFFFF" } } };
-        const subTitleStyle = { font: { sz: 12, color: { rgb: "444444" }, name: "Segoe UI" }, alignment: { horizontal: "center", vertical: "center" }, fill: { fgColor: { rgb: "FFFFFF" } } };
-        const headerStyle = { font: { bold: true, color: { rgb: "FFFFFF" }, sz: 12, name: "Segoe UI" }, fill: { fgColor: { rgb: "4472C4" } }, border: borderStyle, alignment: { horizontal: "center", vertical: "center" } };
-        const cellStyle = { border: borderStyle, alignment: { horizontal: "right", vertical: "center" }, font: { sz: 11, name: "Segoe UI" } };
-        const centerCellStyle = { border: borderStyle, alignment: { horizontal: "center", vertical: "center" }, font: { sz: 11, name: "Segoe UI" } };
-
-        const range = XLSX.utils.decode_range(ws['!ref']);
-        for (let R = range.s.r; R <= range.e.r; ++R) {
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-                const cell_address = XLSX.utils.encode_cell({r: R, c: C});
-                if (!ws[cell_address]) continue;
-                if (R === 0) ws[cell_address].s = titleStyle;
-                else if (R === 1) ws[cell_address].s = subTitleStyle;
-                else if (R === 2) ws[cell_address].s = headerStyle;
-                else { if (C === 0 || C === 1 || C === 4) ws[cell_address].s = centerCellStyle; else ws[cell_address].s = cellStyle; }
-            }
-        }
-
-        const wb = XLSX.utils.book_new(); wb.Workbook = { Views: [{ RTL: true }] };
-        XLSX.utils.book_append_sheet(wb, ws, "דוח תורים");
-        XLSX.writeFile(wb, `Report_${selectedDate}.xlsx`);
-    }
+  }
+  
+  const wb = XLSX.utils.book_new(); wb.Workbook = { Views: [{ RTL: true }] };
+  XLSX.utils.book_append_sheet(wb, ws, "דוח תורים");
+  XLSX.writeFile(wb, `Report_${selectedDate}.xlsx`);
+}
 
 function buildCalendar() {
-
-    const cal = document.getElementById("calendar");
-    cal.innerHTML = "";
-
-    const y = currentMonthDate.getFullYear();
-    const m = currentMonthDate.getMonth();
-
-    document.getElementById("monthYearDisplay").innerText =
-        `${["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"][m]} ${y}`;
-
-    const first = new Date(y, m, 1).getDay();
-    const days  = new Date(y, m + 1, 0).getDate();
-
-    const todayKey = dateToKey(new Date());
-
-    const hInput = document.getElementById("historyDays");
-    let ret = (hInput && hInput.value) ? parseInt(hInput.value) : 30;
-
-    const cut = new Date();
-    cut.setDate(cut.getDate() - ret);
-    const cutKey = dateToKey(cut);
-
-    for (let i = 0; i < first; i++) {
-        cal.appendChild(document.createElement("div"));
+  
+  const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
+  
+  const y = currentMonthDate.getFullYear();
+  const m = currentMonthDate.getMonth();
+  
+  document.getElementById("monthYearDisplay").innerText =
+  `${["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"][m]} ${y}`;
+  
+  const first = new Date(y, m, 1).getDay();
+  const days  = new Date(y, m + 1, 0).getDate();
+  
+  const todayKey = dateToKey(new Date());
+  
+  const hInput = document.getElementById("historyDays");
+  let ret = (hInput && hInput.value) ? parseInt(hInput.value) : 30;
+  
+  const cut = new Date();
+  cut.setDate(cut.getDate() - ret);
+  const cutKey = dateToKey(cut);
+  
+  for (let i = 0; i < first; i++) {
+    cal.appendChild(document.createElement("div"));
+  }
+  
+  for (let d = 1; d <= days; d++) {
+    
+    const k = dateToKey(new Date(y, m, d));
+    const div = document.createElement("div");
+    
+    div.className = "day";
+    div.innerText = d;
+    div.setAttribute("data-date", k);
+    
+    if (globalData[k] && globalData[k].settings) {
+      div.classList.add("has-slots");
     }
-
-    for (let d = 1; d <= days; d++) {
-
-        const k = dateToKey(new Date(y, m, d));
-        const div = document.createElement("div");
-
-        div.className = "day";
-        div.innerText = d;
-        div.setAttribute("data-date", k);
-
-        if (globalData[k] && globalData[k].settings) {
-            div.classList.add("has-slots");
-        }
-
-        /* ===== ימים בעבר ===== */
-        if (k < todayKey) {
-
-            if (!historyMode) {
-                div.classList.add("disabled");
-                div.onclick = null;
-
-            } else if (k < cutKey) {
-                div.classList.add("disabled");
-                div.onclick = null;
-
-            } else {
-                div.classList.add("past", "history-available");
-                div.onclick = () => {
-                    if (applyMode) {
-                        toggleApplyDate(k, div);
-                    } else {
-                        renderSlots(k);
-                    }
-                };
-            }
-
-        /* ===== היום והעתיד ===== */
+    
+    /* ===== ימים בעבר ===== */
+    if (k < todayKey) {
+      
+      if (!historyMode) {
+        div.classList.add("disabled");
+        div.onclick = null;
+        
+      } else if (k < cutKey) {
+        div.classList.add("disabled");
+        div.onclick = null;
+        
+      } else {
+        div.classList.add("past", "history-available");
+        div.onclick = () => {
+          if (applyMode) {
+            toggleApplyDate(k, div);
+          } else {
+            renderSlots(k);
+          }
+        };
+      }
+      
+      /* ===== היום והעתיד ===== */
+    } else {
+      
+      if (k === todayKey) {
+        div.style.border = "2px solid #FFC107";
+      }
+      
+      div.onclick = () => {
+        if (applyMode) {
+          toggleApplyDate(k, div);
         } else {
-
-            if (k === todayKey) {
-                div.style.border = "2px solid #FFC107";
-            }
-
-            div.onclick = () => {
-                if (applyMode) {
-                    toggleApplyDate(k, div);
-                } else {
-                    renderSlots(k);
-                }
-            };
+          renderSlots(k);
         }
-
-        /* ===== סימונים ===== */
-
-        if (selectedApplyDates.has(k)) {
-            div.classList.add("apply-selected");
-        }
-
-        if (k === selectedDate) {
-            div.classList.add("selected-day");
-        }
-
-        cal.appendChild(div);
+      };
     }
+    
+    /* ===== סימונים ===== */
+    
+    if (selectedApplyDates.has(k)) {
+      div.classList.add("apply-selected");
+    }
+    
+    if (k === selectedDate) {
+      div.classList.add("selected-day");
+    }
+    
+    cal.appendChild(div);
+  }
 }
 
-    function prevMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth()-1); buildCalendar(); }
-    function nextMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth()+1); buildCalendar(); }
-    /* =====================================================
-       פונקציה למיתוג מצב היסטוריה (עם איפוס להיום בכיבוי)
-    ===================================================== */
-    function toggleHistoryMode() {
-        const toggle = document.getElementById("historyToggle");
-        historyMode = toggle.checked;
+function prevMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth()-1); buildCalendar(); }
+function nextMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth()+1); buildCalendar(); }
+/* =====================================================
+פונקציה למיתוג מצב היסטוריה (עם איפוס להיום בכיבוי)
+===================================================== */
+function toggleHistoryMode() {
+  const toggle = document.getElementById("historyToggle");
+  historyMode = toggle.checked;
+  
+  // לוגיקה חדשה: אם כיבינו את ההיסטוריה -> חזור להיום
+  if (!historyMode) {
+    const now = new Date();
+    selectedDate = dateToKey(now);      // עדכון התאריך הנבחר להיום
+    currentMonthDate = new Date();      // החזרת הלוח שנה לחודש הנוכחי
+  }
+  
+  // רענון מלא של הממשק
+  buildCalendar();       // בונה מחדש את הלוח (עם החודש הנכון)
+  renderSlots(selectedDate); // מציג את התורים של התאריך (היום)
+}
+function saveSystemSettings() {
+  db.ref().update({ 'settings/historyRetentionDays': document.getElementById("historyDays").value, 'settings/calendarTitle': document.getElementById("calendarTitleSetting").value }).then(()=>alert("נשמר"));
+}
 
-        // לוגיקה חדשה: אם כיבינו את ההיסטוריה -> חזור להיום
-        if (!historyMode) {
-            const now = new Date();
-            selectedDate = dateToKey(now);      // עדכון התאריך הנבחר להיום
-            currentMonthDate = new Date();      // החזרת הלוח שנה לחודש הנוכחי
-        }
+function initRealtimeListener() {
+  const overlay = document.getElementById("loadingOverlay");
+  db.ref('settings').once('value', s => {
+    const v = s.val() || {};
+    if(v.historyRetentionDays) document.getElementById("historyDays").value = v.historyRetentionDays;
+    if(v.calendarTitle) document.getElementById("calendarTitleSetting").value = v.calendarTitle;
+  });
+  
+  db.ref('appointments').on('value', (s) => {
+    globalData = s.val() || {};
+    overlay.style.display = 'none';
+    try { const today = new Date().toDateString(); if (localStorage.getItem('lastClean') !== today) { performHistoryCleanup(globalData); localStorage.setItem('lastClean', today); } } catch(e) {}
+    if (!selectedDate) { selectedDate = dateToKey(new Date()); currentMonthDate = new Date(); }
+    buildCalendar(); renderSlots(selectedDate);
+  }, () => overlay.style.display = 'none');
+}
 
-        // רענון מלא של הממשק
-        buildCalendar();       // בונה מחדש את הלוח (עם החודש הנכון)
-        renderSlots(selectedDate); // מציג את התורים של התאריך (היום)
+function performHistoryCleanup(allData) {
+  if(!allData) return;
+  const inp = document.getElementById("historyDays");
+  let ret = (inp && inp.value) ? parseInt(inp.value) : 30;
+  if (!ret || ret < 1) ret = 30;
+  const cut = new Date(); cut.setDate(cut.getDate() - ret); const cutKey = dateToKey(cut);
+  let updates = {}, count = 0;
+  Object.keys(allData).forEach(k => { if (k.match(/^\d{4}-\d{2}-\d{2}$/) && k < cutKey) { updates[`appointments/${k}`] = null; count++; } });
+  if (count > 0) db.ref().update(updates);
+}
+
+setInterval(() => { if (selectedDate && selectedDate === dateToKey(new Date())) renderSlots(selectedDate); }, 60000);
+initRealtimeListener();
+
+function removeExtraSlot(dateKey, time) {
+  if(!confirm("להסיר את הגדלת המכסה לשעה זו?")) return;
+  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
+    let list = s.val() || [];
+    const idx = list.findIndex(a => a.time === time && a.status === 'EXTRA_CAPACITY');
+    if (idx > -1) {
+      list.splice(idx, 1);
+      db.ref(`appointments/${dateKey}/appointments`).set(list);
     }
-    function saveSystemSettings() { 
-        db.ref().update({ 'settings/historyRetentionDays': document.getElementById("historyDays").value, 'settings/calendarTitle': document.getElementById("calendarTitleSetting").value }).then(()=>alert("נשמר")); 
-    }
-
-    function initRealtimeListener() {
-        const overlay = document.getElementById("loadingOverlay");
-        db.ref('settings').once('value', s => {
-            const v = s.val() || {};
-            if(v.historyRetentionDays) document.getElementById("historyDays").value = v.historyRetentionDays;
-            if(v.calendarTitle) document.getElementById("calendarTitleSetting").value = v.calendarTitle;
-        });
-
-        db.ref('appointments').on('value', (s) => {
-            globalData = s.val() || {};
-            overlay.style.display = 'none';
-            try { const today = new Date().toDateString(); if (localStorage.getItem('lastClean') !== today) { performHistoryCleanup(globalData); localStorage.setItem('lastClean', today); } } catch(e) {}
-            if (!selectedDate) { selectedDate = dateToKey(new Date()); currentMonthDate = new Date(); }
-            buildCalendar(); renderSlots(selectedDate);
-        }, () => overlay.style.display = 'none');
-    }
-
-    function performHistoryCleanup(allData) {
-        if(!allData) return;
-        const inp = document.getElementById("historyDays");
-        let ret = (inp && inp.value) ? parseInt(inp.value) : 30;
-        if (!ret || ret < 1) ret = 30;
-        const cut = new Date(); cut.setDate(cut.getDate() - ret); const cutKey = dateToKey(cut);
-        let updates = {}, count = 0;
-        Object.keys(allData).forEach(k => { if (k.match(/^\d{4}-\d{2}-\d{2}$/) && k < cutKey) { updates[`appointments/${k}`] = null; count++; } });
-        if (count > 0) db.ref().update(updates);
-    }
-
-    setInterval(() => { if (selectedDate && selectedDate === dateToKey(new Date())) renderSlots(selectedDate); }, 60000);
-    initRealtimeListener();
-
-    function removeExtraSlot(dateKey, time) {
-            if(!confirm("להסיר את הגדלת המכסה לשעה זו?")) return;
-        db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
-            let list = s.val() || [];
-            const idx = list.findIndex(a => a.time === time && a.status === 'EXTRA_CAPACITY');
-            if (idx > -1) {
-                list.splice(idx, 1);
-                db.ref(`appointments/${dateKey}/appointments`).set(list);
-            }
-        });
-    }
+  });
+}
 
 /* =====================================================
-   ולידציה בזמן אמת (מונע טעויות מיד בהקלדה)
+ולידציה בזמן אמת (מונע טעויות מיד בהקלדה)
 ===================================================== */
 document.addEventListener('change', function(e) {
-
-    // 1. בדיקה לטווח השעות הראשי (התחלה/סיום)
-    if (e.target.id === 'range1Start' || e.target.id === 'range1End') {
-        const startInput = document.getElementById('range1Start');
-        const endInput = document.getElementById('range1End');
-
-        // בודקים רק אם שני השדות מלאים
-        if (startInput.value && endInput.value) {
-            if (!isValidTimeCheck(startInput.value, endInput.value)) {
-                alert("שגיאה: שעת הסיום חייבת להיות מאוחרת משעת ההתחלה.");
-                endInput.value = ""; // מוחק את שעת הסיום השגויה
-            }
-        }
+  
+  // 1. בדיקה לטווח השעות הראשי (התחלה/סיום)
+  if (e.target.id === 'range1Start' || e.target.id === 'range1End') {
+    const startInput = document.getElementById('range1Start');
+    const endInput = document.getElementById('range1End');
+    
+    // בודקים רק אם שני השדות מלאים
+    if (startInput.value && endInput.value) {
+      if (!isValidTimeCheck(startInput.value, endInput.value)) {
+        alert("שגיאה: שעת הסיום חייבת להיות מאוחרת משעת ההתחלה.");
+        endInput.value = ""; // מוחק את שעת הסיום השגויה
+      }
     }
-
-    // 2. בדיקה להפסקות (מזהה דינמית כל שורה של הפסקה)
-    if (e.target.classList.contains('break-start') || e.target.classList.contains('break-end')) {
-        // מוצאים את השורה הספציפית שבה בוצע השינוי
-        const row = e.target.closest('.break-row');
-        const startInput = row.querySelector('.break-start');
-        const endInput = row.querySelector('.break-end');
-
-        if (startInput.value && endInput.value) {
-            if (!isValidTimeCheck(startInput.value, endInput.value)) {
-                alert("שגיאה בהפסקה: שעת הסיום קודמת לשעת ההתחלה.");
-
-                endInput.value = ""; // מוחק את שעת הסיום השגויה
-            }
-        }
+  }
+  
+  // 2. בדיקה להפסקות (מזהה דינמית כל שורה של הפסקה)
+  if (e.target.classList.contains('break-start') || e.target.classList.contains('break-end')) {
+    // מוצאים את השורה הספציפית שבה בוצע השינוי
+    const row = e.target.closest('.break-row');
+    const startInput = row.querySelector('.break-start');
+    const endInput = row.querySelector('.break-end');
+    
+    if (startInput.value && endInput.value) {
+      if (!isValidTimeCheck(startInput.value, endInput.value)) {
+        alert("שגיאה בהפסקה: שעת הסיום קודמת לשעת ההתחלה.");
+        
+        endInput.value = ""; // מוחק את שעת הסיום השגויה
+      }
     }
+  }
 });
 
 // פונקציית עזר לבדיקה (כולל תמיכה ב-00:00 כסוף יום)
 function isValidTimeCheck(s, e) {
-    let sMin = timeToMinutes(s);
-    let eMin = timeToMinutes(e);
-
-    // אם שעת סיום היא 00:00 ושעת התחלה היא לא 0 -> נחשב כ-24:00
-    if (eMin === 0 && sMin > 0) eMin = 1440; 
-
-    return eMin > sMin;
+  let sMin = timeToMinutes(s);
+  let eMin = timeToMinutes(e);
+  
+  // אם שעת סיום היא 00:00 ושעת התחלה היא לא 0 -> נחשב כ-24:00
+  if (eMin === 0 && sMin > 0) eMin = 1440;
+  
+  return eMin > sMin;
 }
 
 function saveDayConfig() {
-
-    if (!selectedDate) {
-        alert("בחר תאריך תחילה");
-        return;
-    }
-
-    /* ========= 1. קריאת ערכי הטופס ========= */
-
-    const r1Start = document.getElementById('range1Start').value;
-    const r1End = document.getElementById('range1End').value;
-    const r1Interval = document.getElementById('range1Interval').value;
-    const maxSlotsVal = document.getElementById('maxSlots').value;
-
-    if (!r1Start || !r1End || !r1Interval || !maxSlotsVal) {
-        alert("נא למלא את כל שדות החובה (התחלה, סיום, משך, קיבולת).");
-        return;
-    }
-
-    if (typeof isValidTimeCheck === 'function' && !isValidTimeCheck(r1Start, r1End)) {
-        alert("שגיאה: שעת הסיום חייבת להיות מאוחרת משעת ההתחלה.");
-        return;
-    }
-
-    /* ========= 2. הפסקות ========= */
-
-    const breaks = [];
-    let breaksError = false;
-
-    document.querySelectorAll('.break-row').forEach(row => {
-        const inputs = row.querySelectorAll('.time-input');
-        if (inputs.length === 2) {
-            const valStart = inputs[0].value;
-            const valEnd = inputs[1].value;
-
-            if (valStart && valEnd) {
-                if (typeof isValidTimeCheck === 'function' && !isValidTimeCheck(valStart, valEnd)) {
-                    breaksError = true;
-                } else {
-                    breaks.push({ start: valStart, end: valEnd });
-                }
-            }
+  
+  if (!selectedDate) {
+    alert("בחר תאריך תחילה");
+    return;
+  }
+  
+  /* ========= 1. קריאת ערכי הטופס ========= */
+  
+  const r1Start = document.getElementById('range1Start').value;
+  const r1End = document.getElementById('range1End').value;
+  const r1Interval = document.getElementById('range1Interval').value;
+  const maxSlotsVal = document.getElementById('maxSlots').value;
+  
+  if (!r1Start || !r1End || !r1Interval || !maxSlotsVal) {
+    alert("נא למלא את כל שדות החובה (התחלה, סיום, משך, קיבולת).");
+    return;
+  }
+  
+  if (typeof isValidTimeCheck === 'function' && !isValidTimeCheck(r1Start, r1End)) {
+    alert("שגיאה: שעת הסיום חייבת להיות מאוחרת משעת ההתחלה.");
+    return;
+  }
+  
+  /* ========= 2. הפסקות ========= */
+  
+  const breaks = [];
+  let breaksError = false;
+  
+  document.querySelectorAll('.break-row').forEach(row => {
+    const inputs = row.querySelectorAll('.time-input');
+    if (inputs.length === 2) {
+      const valStart = inputs[0].value;
+      const valEnd = inputs[1].value;
+      
+      if (valStart && valEnd) {
+        if (typeof isValidTimeCheck === 'function' && !isValidTimeCheck(valStart, valEnd)) {
+          breaksError = true;
+        } else {
+          breaks.push({ start: valStart, end: valEnd });
         }
-    });
-
-    if (breaksError) {
-        alert("שגיאה בהפסקות: יש הפסקה שבה שעת הסיום קודמת להתחלה.");
-        return;
+      }
     }
-
-    /* ========= 3. אובייקט הגדרות ========= */
-
-    const settingsObj = {
-        range1Start: r1Start,
-        range1End: r1End,
-        range1Interval: r1Interval,
-        maxSlots: String(maxSlotsVal),
-        breaks: breaks
-    };
-
-    /* ========= 4. קביעת תאריכים להחלה ========= */
-
-    let datesToApply = [];
-
-    if (applyMode && selectedApplyDates.size > 0) {
-        // 🔵 מצב החלה לפי תאריכים נבחרים
-        datesToApply = Array.from(selectedApplyDates);
-
-    } else {
-        // 🟢 מצב רגיל – ימים קדימה
-        const daysInput = document.getElementById("daysToApply");
-        const days = daysInput ? (parseInt(daysInput.value) || 1) : 1;
-
-        const start = new Date(selectedDate);
-
-        for (let i = 0; i < days; i++) {
-            const d = new Date(start);
-            d.setDate(d.getDate() + i);
-            datesToApply.push(dateToKey(d));
-        }
+  });
+  
+  if (breaksError) {
+    alert("שגיאה בהפסקות: יש הפסקה שבה שעת הסיום קודמת להתחלה.");
+    return;
+  }
+  
+  /* ========= 3. אובייקט הגדרות ========= */
+  
+  const settingsObj = {
+    range1Start: r1Start,
+    range1End: r1End,
+    range1Interval: r1Interval,
+    maxSlots: String(maxSlotsVal),
+    breaks: breaks
+  };
+  
+  /* ========= 4. קביעת תאריכים להחלה ========= */
+  
+  let datesToApply = [];
+  
+  if (applyMode && selectedApplyDates.size > 0) {
+    // 🔵 מצב החלה לפי תאריכים נבחרים
+    datesToApply = Array.from(selectedApplyDates);
+    
+  } else {
+    // 🟢 מצב רגיל – ימים קדימה
+    const daysInput = document.getElementById("daysToApply");
+    const days = daysInput ? (parseInt(daysInput.value) || 1) : 1;
+    
+    const start = new Date(selectedDate);
+    
+    for (let i = 0; i < days; i++) {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      datesToApply.push(dateToKey(d));
     }
-
-    if (datesToApply.length === 0) {
-        alert("לא נבחרו תאריכים להחלה");
-        return;
+  }
+  
+  if (datesToApply.length === 0) {
+    alert("לא נבחרו תאריכים להחלה");
+    return;
+  }
+  
+  /* ========= 5. בניית עדכון ========= */
+  
+  const updates = {};
+  
+  datesToApply.forEach(k => {
+    updates[`appointments/${k}/settings`] = settingsObj;
+    
+    if (!globalData[k]) globalData[k] = {};
+    globalData[k].settings = settingsObj;
+  });
+  
+  if (typeof db === 'undefined') {
+    alert("שגיאה קריטית: אין חיבור למסד הנתונים.");
+    return;
+  }
+  
+  /* ========= 6. שמירה ========= */
+  
+  db.ref().update(updates)
+  .then(() => {
+    
+    alert(`ההגדרות נשמרו בהצלחה ל-${datesToApply.length} תאריכים`);
+    
+    // ניקוי מצב החלה
+    applyMode = false;
+    selectedApplyDates.clear();
+    
+    const daysInput = document.getElementById("daysToApply");
+    if (daysInput) {
+      daysInput.disabled = false;
+      daysInput.style.opacity = "1";
     }
-
-    /* ========= 5. בניית עדכון ========= */
-
-    const updates = {};
-
-    datesToApply.forEach(k => {
-        updates[`appointments/${k}/settings`] = settingsObj;
-
-        if (!globalData[k]) globalData[k] = {};
-        globalData[k].settings = settingsObj;
-    });
-
-    if (typeof db === 'undefined') {
-        alert("שגיאה קריטית: אין חיבור למסד הנתונים.");
-        return;
-    }
-
-    /* ========= 6. שמירה ========= */
-
-    db.ref().update(updates)
-        .then(() => {
-
-            alert(`ההגדרות נשמרו בהצלחה ל-${datesToApply.length} תאריכים`);
-
-            // ניקוי מצב החלה
-            applyMode = false;
-            selectedApplyDates.clear();
-
-            const daysInput = document.getElementById("daysToApply");
-            if (daysInput) {
-                daysInput.disabled = false;
-                daysInput.style.opacity = "1";
-            }
-
-            const hint = document.getElementById("applyDatesHint");
-            if (hint) hint.style.display = "none";
-
-            buildCalendar();
-            renderSlots(selectedDate);
-        })
-        .catch(error => {
-            console.error("Error saving settings:", error);
-            alert("שגיאה בשמירה: " + error.message);
-        });
+    
+    const hint = document.getElementById("applyDatesHint");
+    if (hint) hint.style.display = "none";
+    
+    buildCalendar();
+    renderSlots(selectedDate);
+  })
+  .catch(error => {
+    console.error("Error saving settings:", error);
+    alert("שגיאה בשמירה: " + error.message);
+  });
 }
 
 /* =====================================================
-   פונקציה להדפסת דוח יומי - גרסה משופרת ומתוקנת
+פונקציה להדפסת דוח יומי - גרסה משופרת ומתוקנת
 ===================================================== */
 function printDailyReport() {
-    // --- 1. בדיקות מקדימות ---
-    if (typeof selectedDate === 'undefined' || !selectedDate) {
-        alert("יש לבחור יום מהלוח לפני הפקת הדוח.");
-        return;
+  // --- 1. בדיקות מקדימות ---
+  if (typeof selectedDate === 'undefined' || !selectedDate) {
+    alert("יש לבחור יום מהלוח לפני הפקת הדוח.");
+    return;
+  }
+  
+  if (typeof globalData === 'undefined' || !globalData[selectedDate] || !globalData[selectedDate].appointments) {
+    alert("אין נתונים להדפסה ביום זה.");
+    return;
+  }
+  
+  // --- 2. שליפת הנתונים וסינון ---
+  var dayData = globalData[selectedDate];
+  var bookings = [];
+  
+  // שליפת רק תורים פעילים עם טלפון
+  for (var i = 0; i < dayData.appointments.length; i++) {
+    var item = dayData.appointments[i];
+    if (item.phone && item.status !== 'DELETED') {
+      bookings.push(item);
     }
-
-    if (typeof globalData === 'undefined' || !globalData[selectedDate] || !globalData[selectedDate].appointments) {
-        alert("אין נתונים להדפסה ביום זה.");
-        return;
-    }
-
-    // --- 2. שליפת הנתונים וסינון ---
-    var dayData = globalData[selectedDate];
-    var bookings = [];
-
-    // שליפת רק תורים פעילים עם טלפון
-    for (var i = 0; i < dayData.appointments.length; i++) {
-        var item = dayData.appointments[i];
-        if (item.phone && item.status !== 'DELETED') {
-            bookings.push(item);
-        }
-    }
-
-    // מיון לפי שעה
-    bookings.sort(function(a, b) {
-        return (a.time || '').localeCompare(b.time || '');
-    });
-
-    if (bookings.length === 0) {
-        alert("אין תורים מוזמנים ביום זה.");
-        return;
-    }
-
-    // --- 3. הכנת משתנים לכותרת ---
-    var titleEl = document.getElementById("calendarTitleSetting");
-    var businessName = (titleEl && titleEl.value) ? titleEl.value : "דוח תורים";
-    var dateParts = selectedDate.split('-');
-    var displayDate = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
-
-    // --- 4. בניית ה-HTML (באמצעות מערך למניעת שגיאות) ---
-    var htmlParts = [];
-
-    // כותרות ועיצוב CSS
-    htmlParts.push('<!DOCTYPE html><html lang="he" dir="rtl"><head><title>Print Report</title>');
-    htmlParts.push('<style>');
-    htmlParts.push('body { font-family: "Segoe UI", Arial, sans-serif; padding: 20px; direction: rtl; color: #333; }');
-    htmlParts.push('h1 { text-align: center; margin: 0; font-size: 24px; }');
-    htmlParts.push('.meta { text-align: center; margin-bottom: 15px; font-size: 16px; color: #555; }');
-    htmlParts.push('table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }');
-    htmlParts.push('th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: right; }');
-    htmlParts.push('th { background-color: #f2f2f2; font-weight: bold; border-bottom: 2px solid #999; }');
-    htmlParts.push('tr:nth-child(even) { background-color: #fafafa; }');
-    htmlParts.push('@media print { body { -webkit-print-color-adjust: exact; } th { background-color: #eee !important; } }');
-    htmlParts.push('</style></head><body>');
-
-    // תוכן הדף
-    htmlParts.push('<h1>' + businessName + '</h1>');
-    htmlParts.push('<div class="meta">תאריך: <b>' + displayDate + '</b> | סה"כ תורים: <b>' + bookings.length + '</b></div>');
-
-    // כותרות הטבלה (מתוקן: 4 עמודות כולל שם פרטי ושם משפחה)
-    htmlParts.push('<table><thead><tr>');
-    htmlParts.push('<th width="5%">#</th>');
-    htmlParts.push('<th width="15%">שעה</th>');
-    htmlParts.push('<th width="20%">שם פרטי</th>');
-    htmlParts.push('<th width="20%">שם משפחה</th>');
-    htmlParts.push('<th width="40%">טלפון</th>');
-    htmlParts.push('</tr></thead><tbody>');
-
-    // שורות הטבלה
-    for (var j = 0; j < bookings.length; j++) {
-        var appt = bookings[j];
-        var firstName = appt.first || ''; 
-        var lastName = appt.last || '';   
-
-        htmlParts.push('<tr>');
-        htmlParts.push('<td>' + (j + 1) + '</td>');
-        htmlParts.push('<td style="font-weight:bold;">' + (appt.time || '') + '</td>');
-        htmlParts.push('<td>' + firstName + '</td>');
-        htmlParts.push('<td>' + lastName + '</td>');
-        htmlParts.push('<td>' + (appt.phone || '') + '</td>');
-        htmlParts.push('</tr>');
-    }
-
-    htmlParts.push('</tbody></table>');
-
-    // סגירה בטוחה של ה-HTML הפנימי
-    htmlParts.push('<' + '/body><' + '/html>');
-
-    var finalHtml = htmlParts.join('');
-
-    // --- 5. פתיחת חלון והדפסה ---
-    var printWindow = window.open('', '_blank', 'width=900,height=800');
-    if (printWindow) {
-        printWindow.document.write(finalHtml);
-        printWindow.document.close(); // סגירת כתיבה
-
-        // טיימר קצר לוודא טעינה ואז הדפסה
-        setTimeout(function() {
-            printWindow.focus();
-            printWindow.print();
-        }, 500);
-    } else {
-        alert("הדפדפן חסם את החלון הקופץ. יש לאשר חלונות קופצים.");
-    }
+  }
+  
+  // מיון לפי שעה
+  bookings.sort(function(a, b) {
+    return (a.time || '').localeCompare(b.time || '');
+  });
+  
+  if (bookings.length === 0) {
+    alert("אין תורים מוזמנים ביום זה.");
+    return;
+  }
+  
+  // --- 3. הכנת משתנים לכותרת ---
+  var titleEl = document.getElementById("calendarTitleSetting");
+  var businessName = (titleEl && titleEl.value) ? titleEl.value : "דוח תורים";
+  var dateParts = selectedDate.split('-');
+  var displayDate = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
+  
+  // --- 4. בניית ה-HTML (באמצעות מערך למניעת שגיאות) ---
+  var htmlParts = [];
+  
+  // כותרות ועיצוב CSS
+  htmlParts.push('<!DOCTYPE html><html lang="he" dir="rtl"><head><title>Print Report</title>');
+  htmlParts.push('<style>');
+  htmlParts.push('body { font-family: "Segoe UI", Arial, sans-serif; padding: 20px; direction: rtl; color: #333; }');
+  htmlParts.push('h1 { text-align: center; margin: 0; font-size: 24px; }');
+  htmlParts.push('.meta { text-align: center; margin-bottom: 15px; font-size: 16px; color: #555; }');
+  htmlParts.push('table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }');
+  htmlParts.push('th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: right; }');
+  htmlParts.push('th { background-color: #f2f2f2; font-weight: bold; border-bottom: 2px solid #999; }');
+  htmlParts.push('tr:nth-child(even) { background-color: #fafafa; }');
+  htmlParts.push('@media print { body { -webkit-print-color-adjust: exact; } th { background-color: #eee !important; } }');
+  htmlParts.push('</style></head><body>');
+  
+  // תוכן הדף
+  htmlParts.push('<h1>' + businessName + '</h1>');
+  htmlParts.push('<div class="meta">תאריך: <b>' + displayDate + '</b> | סה"כ תורים: <b>' + bookings.length + '</b></div>');
+  
+  // כותרות הטבלה (מתוקן: 4 עמודות כולל שם פרטי ושם משפחה)
+  htmlParts.push('<table><thead><tr>');
+  htmlParts.push('<th width="5%">#</th>');
+  htmlParts.push('<th width="15%">שעה</th>');
+  htmlParts.push('<th width="20%">שם פרטי</th>');
+  htmlParts.push('<th width="20%">שם משפחה</th>');
+  htmlParts.push('<th width="40%">טלפון</th>');
+  htmlParts.push('</tr></thead><tbody>');
+  
+  // שורות הטבלה
+  for (var j = 0; j < bookings.length; j++) {
+    var appt = bookings[j];
+    var firstName = appt.first || '';
+    var lastName = appt.last || '';
+    
+    htmlParts.push('<tr>');
+    htmlParts.push('<td>' + (j + 1) + '</td>');
+    htmlParts.push('<td style="font-weight:bold;">' + (appt.time || '') + '</td>');
+    htmlParts.push('<td>' + firstName + '</td>');
+    htmlParts.push('<td>' + lastName + '</td>');
+    htmlParts.push('<td>' + (appt.phone || '') + '</td>');
+    htmlParts.push('</tr>');
+  }
+  
+  htmlParts.push('</tbody></table>');
+  
+  // סגירה בטוחה של ה-HTML הפנימי
+  htmlParts.push('<' + '/body><' + '/html>');
+  
+  var finalHtml = htmlParts.join('');
+  
+  // --- 5. פתיחת חלון והדפסה ---
+  var printWindow = window.open('', '_blank', 'width=900,height=800');
+  if (printWindow) {
+    printWindow.document.write(finalHtml);
+    printWindow.document.close(); // סגירת כתיבה
+    
+    // טיימר קצר לוודא טעינה ואז הדפסה
+    setTimeout(function() {
+      printWindow.focus();
+      printWindow.print();
+    }, 500);
+  } else {
+    alert("הדפדפן חסם את החלון הקופץ. יש לאשר חלונות קופצים.");
+  }
 }
 // --- פונקציות לניהול חלון הדוחות ---
 
 function openReportModal() {
-    // הצגת החלון (שים לב: ייתכן שאצלך זה block או flex, השארתי את ברירת המחדל)
-    document.getElementById('reportModal').style.display = 'flex';
-
-    // --- חישוב התאריך של היום ---
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // חודשים מתחילים ב-0
-    const day = String(now.getDate()).padStart(2, '0');
-
-    // פורמט שמתאים לשדות תאריך ב-HTML: YYYY-MM-DD
-    const todayStr = `${year}-${month}-${day}`;
-
-    // --- איפוס השדות ---
-    document.getElementById('repStart').value = todayStr; // התחלה: היום
-    document.getElementById('repEnd').value = todayStr;   // סיום: היום
-    document.getElementById('repPhone').value = '';       // טלפון: נקי
+  // הצגת החלון (שים לב: ייתכן שאצלך זה block או flex, השארתי את ברירת המחדל)
+  document.getElementById('reportModal').style.display = 'flex';
+  
+  // --- חישוב התאריך של היום ---
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // חודשים מתחילים ב-0
+  const day = String(now.getDate()).padStart(2, '0');
+  
+  // פורמט שמתאים לשדות תאריך ב-HTML: YYYY-MM-DD
+  const todayStr = `${year}-${month}-${day}`;
+  
+  // --- איפוס השדות ---
+  document.getElementById('repStart').value = todayStr; // התחלה: היום
+  document.getElementById('repEnd').value = todayStr;   // סיום: היום
+  document.getElementById('repPhone').value = '';       // טלפון: נקי
 }
 
 function closeReportModal() {
-    // הסתרת החלון
-    document.getElementById('reportModal').style.display = 'none';
-
-    // ניקוי שדה הטלפון כדי שיהיה ריק בפעם הבאה
-    document.getElementById('repPhone').value = '';
+  // הסתרת החלון
+  document.getElementById('reportModal').style.display = 'none';
+  
+  // ניקוי שדה הטלפון כדי שיהיה ריק בפעם הבאה
+  document.getElementById('repPhone').value = '';
 }
 
 async function printRangeReport() {
-    const startVal = document.getElementById('repStart').value;
-    const endVal = document.getElementById('repEnd').value;
-    const phoneVal = document.getElementById('repPhone').value.trim();
-
-    if (!startVal || !endVal || !phoneVal) {
-        alert("נא למלא תאריך התחלה, תאריך סיום ומספר טלפון.");
-        return;
+  const startVal = document.getElementById('repStart').value;
+  const endVal = document.getElementById('repEnd').value;
+  const phoneVal = document.getElementById('repPhone').value.trim();
+  
+  if (!startVal || !endVal || !phoneVal) {
+    alert("נא למלא תאריך התחלה, תאריך סיום ומספר טלפון.");
+    return;
+  }
+  
+  const startDate = new Date(startVal);
+  const endDate = new Date(endVal);
+  
+  if (startDate > endDate) {
+    alert("תאריך ההתחלה חייב להיות לפני תאריך הסיום.");
+    return;
+  }
+  
+  // הצגת טוען (אופציונלי, אם יש לך אלמנט כזה)
+  const loading = document.getElementById('loadingOverlay');
+  if (loading) loading.style.display = 'flex';
+  
+  const foundAppointments = [];
+  const loopDate = new Date(startDate);
+  
+  // לולאה על כל התאריכים בטווח
+  while (loopDate <= endDate) {
+    const dateKey = loopDate.toISOString().split('T')[0];
+    
+    // שליפת נתונים מהפיירבייס (כדי להבטיח שיש לנו הכל, גם אם לא נטען מקומית)
+    try {
+      const snapshot = await db.ref('appointments/' + dateKey).once('value');
+      const dayData = snapshot.val();
+      
+      if (dayData && dayData.appointments) {
+        // מעבר על התורים של אותו יום
+        dayData.appointments.forEach(appt => {
+          // בדיקה אם הטלפון מכיל את המספר שהוזן (התאמה חלקית או מלאה)
+          if (appt && appt.phone && appt.phone.includes(phoneVal) && appt.status !== 'DELETED') {
+            foundAppointments.push({
+              date: dateKey,
+              time: appt.time,
+              name: (appt.first || '') + ' ' + (appt.last || ''),
+              phone: appt.phone
+            });
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching date: " + dateKey, err);
     }
-
-    const startDate = new Date(startVal);
-    const endDate = new Date(endVal);
-
-    if (startDate > endDate) {
-        alert("תאריך ההתחלה חייב להיות לפני תאריך הסיום.");
-        return;
-    }
-
-    // הצגת טוען (אופציונלי, אם יש לך אלמנט כזה)
-    const loading = document.getElementById('loadingOverlay');
-    if (loading) loading.style.display = 'flex';
-
-    const foundAppointments = [];
-    const loopDate = new Date(startDate);
-
-    // לולאה על כל התאריכים בטווח
-    while (loopDate <= endDate) {
-        const dateKey = loopDate.toISOString().split('T')[0];
-
-        // שליפת נתונים מהפיירבייס (כדי להבטיח שיש לנו הכל, גם אם לא נטען מקומית)
-        try {
-            const snapshot = await db.ref('appointments/' + dateKey).once('value');
-            const dayData = snapshot.val();
-
-            if (dayData && dayData.appointments) {
-                // מעבר על התורים של אותו יום
-                dayData.appointments.forEach(appt => {
-                    // בדיקה אם הטלפון מכיל את המספר שהוזן (התאמה חלקית או מלאה)
-                    if (appt && appt.phone && appt.phone.includes(phoneVal) && appt.status !== 'DELETED') {
-                        foundAppointments.push({
-                            date: dateKey,
-                            time: appt.time,
-                            name: (appt.first || '') + ' ' + (appt.last || ''),
-                            phone: appt.phone
-                        });
-                    }
-                });
-            }
-        } catch (err) {
-            console.error("Error fetching date: " + dateKey, err);
-        }
-
-        // קידום ליום הבא
-        loopDate.setDate(loopDate.getDate() + 1);
-    }
-
-    if (loading) loading.style.display = 'none';
-    closeReportModal();
-
-    if (foundAppointments.length === 0) {
-        alert("לא נמצאו תורים למספר זה בטווח התאריכים שנבחר.");
-        return;
-    }
-
-    // --- יצירת ה-HTML להדפסה ---
-    const htmlParts = [];
-    htmlParts.push('<html><head><title>דוח תורים מרוכז</title>');
-    htmlParts.push('<style>');
-    htmlParts.push('body { font-family: "Segoe UI", sans-serif; direction: rtl; padding: 20px; }');
-    htmlParts.push('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-    htmlParts.push('th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }');
-    htmlParts.push('th { background-color: #f0f0f0; }');
-    htmlParts.push('.header { text-align: center; margin-bottom: 20px; }');
-    htmlParts.push('</style></head><body>');
-
-    htmlParts.push('<div class="header">');
-    htmlParts.push('<h1>דוח תורים מרוכז</h1>');
-    htmlParts.push(`<p>עבור טלפון: <strong>${phoneVal}</strong></p>`);
-    htmlParts.push(`<p>טווח: ${startVal} - ${endVal}</p>`);
-    htmlParts.push('</div>');
-
-    htmlParts.push('<table>');
-    htmlParts.push('<thead><tr><th>תאריך</th><th>שעה</th><th>שם הלקוח</th><th>טלפון</th></tr></thead>');
-    htmlParts.push('<tbody>');
-
-    // מיון התוצאות לפי תאריך ושעה
-    foundAppointments.sort((a, b) => {
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return a.time.localeCompare(b.time);
-    });
-
-    foundAppointments.forEach(item => {
-        // המרת תאריך לפורמט יפה יותר (DD/MM/YYYY)
-        const dateParts = item.date.split('-');
-        const prettyDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-
-        htmlParts.push('<tr>');
-        htmlParts.push(`<td>${prettyDate}</td>`);
-        htmlParts.push(`<td>${item.time}</td>`);
-        htmlParts.push(`<td>${item.name}</td>`);
-        htmlParts.push(`<td>${item.phone}</td>`);
-        htmlParts.push('</tr>');
-    });
-
-    htmlParts.push('</tbody></table>');
-    htmlParts.push('<div style="margin-top:20px; text-align:center;"><button onclick="window.print()">הדפס דוח</button></div>');
-    htmlParts.push('<' + '/body><' + '/html>');
-
-    const printWindow = window.open('', '_blank', 'width=900,height=800');
-    printWindow.document.write(htmlParts.join(''));
-    printWindow.document.close();
+    
+    // קידום ליום הבא
+    loopDate.setDate(loopDate.getDate() + 1);
+  }
+  
+  if (loading) loading.style.display = 'none';
+  closeReportModal();
+  
+  if (foundAppointments.length === 0) {
+    alert("לא נמצאו תורים למספר זה בטווח התאריכים שנבחר.");
+    return;
+  }
+  
+  // --- יצירת ה-HTML להדפסה ---
+  const htmlParts = [];
+  htmlParts.push('<html><head><title>דוח תורים מרוכז</title>');
+  htmlParts.push('<style>');
+  htmlParts.push('body { font-family: "Segoe UI", sans-serif; direction: rtl; padding: 20px; }');
+  htmlParts.push('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+  htmlParts.push('th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }');
+  htmlParts.push('th { background-color: #f0f0f0; }');
+  htmlParts.push('.header { text-align: center; margin-bottom: 20px; }');
+  htmlParts.push('</style></head><body>');
+  
+  htmlParts.push('<div class="header">');
+  htmlParts.push('<h1>דוח תורים מרוכז</h1>');
+  htmlParts.push(`<p>עבור טלפון: <strong>${phoneVal}</strong></p>`);
+  htmlParts.push(`<p>טווח: ${startVal} - ${endVal}</p>`);
+  htmlParts.push('</div>');
+  
+  htmlParts.push('<table>');
+  htmlParts.push('<thead><tr><th>תאריך</th><th>שעה</th><th>שם הלקוח</th><th>טלפון</th></tr></thead>');
+  htmlParts.push('<tbody>');
+  
+  // מיון התוצאות לפי תאריך ושעה
+  foundAppointments.sort((a, b) => {
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    return a.time.localeCompare(b.time);
+  });
+  
+  foundAppointments.forEach(item => {
+    // המרת תאריך לפורמט יפה יותר (DD/MM/YYYY)
+    const dateParts = item.date.split('-');
+    const prettyDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    
+    htmlParts.push('<tr>');
+    htmlParts.push(`<td>${prettyDate}</td>`);
+    htmlParts.push(`<td>${item.time}</td>`);
+    htmlParts.push(`<td>${item.name}</td>`);
+    htmlParts.push(`<td>${item.phone}</td>`);
+    htmlParts.push('</tr>');
+  });
+  
+  htmlParts.push('</tbody></table>');
+  htmlParts.push('<div style="margin-top:20px; text-align:center;"><button onclick="window.print()">הדפס דוח</button></div>');
+  htmlParts.push('<' + '/body><' + '/html>');
+  
+  const printWindow = window.open('', '_blank', 'width=900,height=800');
+  printWindow.document.write(htmlParts.join(''));
+  printWindow.document.close();
 }
 function logoutAdmin() {
-    firebase.auth().signOut().then(() => {
-        // התנתקות הצליחה - העברה לדף הכניסה
-        window.location.href = 'admin-login.html';
-    }).catch((error) => {
-        console.error("Logout error:", error);
-        alert('שגיאה בהתנתקות');
-    });
+  firebase.auth().signOut().then(() => {
+    // התנתקות הצליחה - העברה לדף הכניסה
+    window.location.href = 'admin-login.html';
+  }).catch((error) => {
+    console.error("Logout error:", error);
+    alert('שגיאה בהתנתקות');
+  });
 }
 /* ==========================================
-   מנגנון הזמנת תור למנהל (ללא הגבלה)
-   ========================================== */
+מנגנון הזמנת תור למנהל (ללא הגבלה)
+========================================== */
 
 // משתנים לשמירת פרטי הלקוח בין הזמנות
 // משתנים גלובליים לניהול הזמנות מנהל
@@ -2252,200 +2279,197 @@ let currentBookingTime = null;
 
 // פונקציה לפתיחת החלון (תופעל בלחיצה על תור פנוי)
 function openBookingWindow(time) {
-    currentBookingTime = time;
-    document.getElementById('bookingTimeDisplay').value = time;
-
-    // אם יש פרטים בזיכרון (מהזמנה שבוצעה ב-5 הדקות האחרונות)
-    if (cachedClient.phone && cachedClient.phone !== '') {
-        document.getElementById('bookFirstName').value = cachedClient.first;
-        document.getElementById('bookLastName').value = cachedClient.last;
-        document.getElementById('bookPhone').value = cachedClient.phone;
-    } else {
-        // אין פרטים - מנקים
-        document.getElementById('bookFirstName').value = '';
-        document.getElementById('bookLastName').value = '';
-        document.getElementById('bookPhone').value = '';
-    }
-
-    document.getElementById('adminBookingModal').style.display = 'flex';
-
-    // אם השם ריק, שים עליו פוקוס
-    if(!document.getElementById('bookFirstName').value) {
-        document.getElementById('bookFirstName').focus();
-    }
+  currentBookingTime = time;
+  document.getElementById('bookingTimeDisplay').value = time;
+  
+  // אם יש פרטים בזיכרון (מהזמנה שבוצעה ב-5 הדקות האחרונות)
+  if (cachedClient.phone && cachedClient.phone !== '') {
+    document.getElementById('bookFirstName').value = cachedClient.first;
+    document.getElementById('bookLastName').value = cachedClient.last;
+    document.getElementById('bookPhone').value = cachedClient.phone;
+  } else {
+    // אין פרטים - מנקים
+    document.getElementById('bookFirstName').value = '';
+    document.getElementById('bookLastName').value = '';
+    document.getElementById('bookPhone').value = '';
+  }
+  
+  document.getElementById('adminBookingModal').style.display = 'flex';
+  
+  // אם השם ריק, שים עליו פוקוס
+  if(!document.getElementById('bookFirstName').value) {
+    document.getElementById('bookFirstName').focus();
+  }
 }
 
 // סגירת החלון
 function closeBookingModal() {
-    document.getElementById('adminBookingModal').style.display = 'none';
+  document.getElementById('adminBookingModal').style.display = 'none';
 }
 
 // ביצוע ההזמנה ושמירה לפיירבייס
 function submitAdminBooking() {
-    const first = document.getElementById('bookFirstName').value.trim();
-    const last = document.getElementById('bookLastName').value.trim();
-    let phone = document.getElementById('bookPhone').value.trim();
-    const time = currentBookingTime;
-
-    phone = phone.replace(/\D/g, ''); // ניקוי תווים לא רצויים
-
-    // בדיקות תקינות
-    if (!first || !time) {
-        alert("חובה למלא שם פרטי");
-        return;
-    }
-
-    if (phone.length !== 10) {
-        alert("מספר הטלפון חייב להכיל 10 ספרות בדיוק");
-        return;
-    }
-
-    // יצירת אובייקט התור
-    const newAppt = {
-        time: time,
-        first: first,
-        last: last,
-        phone: phone,
-        status: "BOOKED",
-        bookedBy: "ADMIN",
-        timestamp: Date.now()
-    };
-
-    // שליחה לפיירבייס
-    db.ref(`appointments/${selectedDate}/appointments`).once('value', snapshot => {
-        let list = snapshot.val() || [];
-        list.push(newAppt);
-
-        db.ref(`appointments/${selectedDate}/appointments`).set(list)
-        .then(() => {
-            // === ניהול זיכרון אוטומטי (תמיד פועל) ===
-
-            // איפוס טיימר קודם אם קיים
-            if (clientCacheTimer) clearTimeout(clientCacheTimer);
-
-            // שמירת פרטים בזיכרון
-            cachedClient = { first, last, phone };
-
-            // הפעלת טיימר ל-5 דקות למחיקת הזיכרון
-            clientCacheTimer = setTimeout(() => {
-                cachedClient = { first: '', last: '', phone: '' }; 
-                console.log("פרטי הלקוח נמחקו מהזיכרון (עברו 5 דקות)");
-            }, 300000); 
-
-            closeBookingModal();
-        })
-        .catch(err => {
-            alert("שגיאה בשמירה: " + err.message);
-        });
-    });
-}
-</script>  
-<script>
-    // ==========================================
-    // חלק 1: לוגיקת מסך מלא (ללא שינוי)
-    // ==========================================
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.log("שגיאה בכניסה למסך מלא:", err);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-        }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-        const fullScreenBtn = document.getElementById('fullscreenBtn');
-        if (fullScreenBtn) {
-            if (document.fullscreenElement) {
-                fullScreenBtn.style.display = 'none'; 
-            } else {
-                fullScreenBtn.style.display = 'inline-flex'; 
-            }
-        }
-    });
-
-    // ==========================================
-    // חלק 2: רישום Service Worker (חובה!)
-    // ==========================================
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-            .then(() => console.log('Service Worker Registered'))
-            .catch(err => console.log('SW Error:', err));
-    }
-
-    // ==========================================
-    // חלק 3: לוגיקת התקנה החדשה (התיקון)
-    // ==========================================
-    let deferredPrompt = null;
-    const installBtn = document.getElementById('installAppBtn');
-
-    // א. האזנה ללחיצה על הכפתור (במקום onclick ב-HTML)
-    if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) {
-                return;
-            }
-            // הפעלת החלונית
-            deferredPrompt.prompt();
-            // המתנה לתשובת המשתמש
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response: ${outcome}`);
-
-            deferredPrompt = null;
-
-            if (outcome === 'accepted') {
-                installBtn.style.display = 'none';
-            }
-        });
-    }
-
-    // ב. זיהוי שהדפדפן מוכן להתקנה
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        // הצגת הכפתור
-        if (installBtn) {
-            installBtn.style.display = 'block'; 
-            console.log('Install button is visible');
-        }
-    });
-
-    // ג. הסתרה אם כבר מותקן
-    window.addEventListener('DOMContentLoaded', () => {
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                             window.navigator.standalone || 
-                             document.referrer.includes('android-app://');
-
-        if (isStandalone) {
-            if (installBtn) installBtn.remove();
-        }
-    });
-
-    // ד. אירוע הצלחה
-    window.addEventListener('appinstalled', () => {
-        if (installBtn) installBtn.style.display = 'none';
-    });
-
-
-
+  const first = document.getElementById('bookFirstName').value.trim();
+  const last = document.getElementById('bookLastName').value.trim();
+  let phone = document.getElementById('bookPhone').value.trim();
+  const time = currentBookingTime;
+  
+  phone = phone.replace(/\D/g, ''); // ניקוי תווים לא רצויים
+  
+  // בדיקות תקינות
+  if (!first || !time) {
+    alert("חובה למלא שם פרטי");
+    return;
+  }
+  
+  if (phone.length !== 10) {
+    alert("מספר הטלפון חייב להכיל 10 ספרות בדיוק");
+    return;
+  }
+  
+  // יצירת אובייקט התור
+  const newAppt = {
+    time: time,
+    first: first,
+    last: last,
+    phone: phone,
+    status: "BOOKED",
+    bookedBy: "ADMIN",
+    timestamp: Date.now()
+  };
+  
+  // שליחה לפיירבייס
+  db.ref(`appointments/${selectedDate}/appointments`).once('value', snapshot => {
+    let list = snapshot.val() || [];
+    list.push(newAppt);
     
-    function toggleApplyDate(dateKey, dayElement) {
+    db.ref(`appointments/${selectedDate}/appointments`).set(list)
+    .then(() => {
+      // === ניהול זיכרון אוטומטי (תמיד פועל) ===
+      
+      // איפוס טיימר קודם אם קיים
+      if (clientCacheTimer) clearTimeout(clientCacheTimer);
+      
+      // שמירת פרטים בזיכרון
+      cachedClient = { first, last, phone };
+      
+      // הפעלת טיימר ל-5 דקות למחיקת הזיכרון
+      clientCacheTimer = setTimeout(() => {
+        cachedClient = { first: '', last: '', phone: '' };
+        console.log("פרטי הלקוח נמחקו מהזיכרון (עברו 5 דקות)");
+      }, 300000);
+      
+      closeBookingModal();
+    })
+    .catch(err => {
+      alert("שגיאה בשמירה: " + err.message);
+    });
+  });
+}
+</script>
+<script>
+// ==========================================
+// חלק 1: לוגיקת מסך מלא (ללא שינוי)
+// ==========================================
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {
+      console.log("שגיאה בכניסה למסך מלא:", err);
+    });
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}
 
-                if (selectedApplyDates.has(dateKey)) {
-        selectedApplyDates.delete(dateKey);
-        dayElement.classList.remove("apply-selected");
+document.addEventListener('fullscreenchange', () => {
+  const fullScreenBtn = document.getElementById('fullscreenBtn');
+  if (fullScreenBtn) {
+    if (document.fullscreenElement) {
+      fullScreenBtn.style.display = 'none';
     } else {
-        selectedApplyDates.add(dateKey);
-            dayElement.classList.add("apply-selected");
-      }
+      fullScreenBtn.style.display = 'inline-flex';
+    }
+  }
+});
 
+// ==========================================
+// חלק 2: רישום Service Worker (חובה!)
+// ==========================================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+  .then(() => console.log('Service Worker Registered'))
+  .catch(err => console.log('SW Error:', err));
+}
+
+// ==========================================
+// חלק 3: לוגיקת התקנה החדשה (התיקון)
+// ==========================================
+let deferredPrompt = null;
+const installBtn = document.getElementById('installAppBtn');
+
+// א. האזנה ללחיצה על הכפתור (במקום onclick ב-HTML)
+if (installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      return;
+    }
+    // הפעלת החלונית
+    deferredPrompt.prompt();
+    // המתנה לתשובת המשתמש
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response: ${outcome}`);
+    
+    deferredPrompt = null;
+    
+    if (outcome === 'accepted') {
+      installBtn.style.display = 'none';
+    }
+  });
+}
+
+// ב. זיהוי שהדפדפן מוכן להתקנה
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // הצגת הכפתור
+  if (installBtn) {
+    installBtn.style.display = 'block';
+    console.log('Install button is visible');
+  }
+});
+
+// ג. הסתרה אם כבר מותקן
+window.addEventListener('DOMContentLoaded', () => {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+  window.navigator.standalone ||
+  document.referrer.includes('android-app://');
+  
+  if (isStandalone) {
+    if (installBtn) installBtn.remove();
+  }
+});
+
+// ד. אירוע הצלחה
+window.addEventListener('appinstalled', () => {
+  if (installBtn) installBtn.style.display = 'none';
+});
+
+function toggleApplyDate(dateKey, dayElement) {
+  
+  if (selectedApplyDates.has(dateKey)) {
+    selectedApplyDates.delete(dateKey);
+    dayElement.classList.remove("apply-selected");
+  } else {
+    selectedApplyDates.add(dateKey);
+    dayElement.classList.add("apply-selected");
+  }
+  
 }
 
 </script>
 
-</body>    
-1
-</html> 
+</body>
+
+</html>
