@@ -1140,10 +1140,17 @@ function renderSlots(dateKey) {
       let statusClass = "";
       
       switch (a.status) {
-        case 'BOOKED':
-        statusText = "✔ בוצע";
-        statusClass = "history-booked";
-        break;
+
+case 'BOOKED':
+  if (a.fulfilled === true) {
+    statusText = "✔ בוצע";
+    statusClass = "history-booked";
+  } else {
+    statusText = "הוזמן";
+    statusClass = "history-booked";
+  }
+  break;
+
         
         case 'CANCELLED':
         statusText = "❌ בוטל ע״י לקוח";
@@ -1934,13 +1941,15 @@ function saveDayConfig() {
   
   /* ========= 3. אובייקט הגדרות ========= */
   
-  const settingsObj = {
-    range1Start: r1Start,
-    range1End: r1End,
-    range1Interval: r1Interval,
-    maxSlots: String(maxSlotsVal),
-    breaks: breaks
-  };
+const settingsObj = {
+  range1Start: r1Start,
+  range1End: r1End,
+  range1Interval: r1Interval,
+  maxSlots: String(maxSlotsVal),
+  breaks: breaks,
+  enableFulfillment: document.getElementById('enableFulfillment')?.checked || false
+};
+
   
   /* ========= 4. קביעת תאריכים להחלה ========= */
   
