@@ -1060,7 +1060,8 @@ function removeManualSlot(dateKey, time) {
 }
 
 function renderSlots(dateKey) {
-  
+  const daySettings = globalData[dateKey]?.settings || {};
+  const enableFulfillment = daySettings.enableFulfillment === true;  
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
   document.getElementById("selectedDateDisplay").innerText = dateKey;
