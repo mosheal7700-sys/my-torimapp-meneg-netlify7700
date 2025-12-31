@@ -548,9 +548,21 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 /* שינוי צבע סלוט כשהתור מומש */
+/* סלוט מומש */
 .slot.booked.fulfilled {
-  background: #f1fbf4;
+  background: #f1fbf4;       /* ירוק בהיר מאוד */
   border-color: #4caf50;
+  color: #1b5e20;            /* טקסט כהה */
+}
+/* שם + טלפון בתוך סלוט מומש */
+.slot.booked.fulfilled small,
+.slot.booked.fulfilled strong {
+  color: #1b5e20;
+}
+
+/* אם יש טקסט רגיל (span / div) */
+.slot.booked.fulfilled div {
+  color: #1b5e20;
 }
 
 /* מובייל */
