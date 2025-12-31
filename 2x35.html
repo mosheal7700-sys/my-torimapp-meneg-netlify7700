@@ -1310,14 +1310,29 @@ case 'BOOKED':
     x.time === time && x.phone && x.status !== 'DELETED'
     );
     
-    bookings.forEach(appt => {
-      slotsDiv.innerHTML += `
-      <div class="slot booked">
-      <div><strong>${time}</strong> — ${appt.first} ${appt.last}
-      <br><small>📞 ${appt.phone}</small></div>
-      ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
-      </div>`;
-    });
+bookings.forEach(appt => {
+  slotsDiv.innerHTML += `
+  <div class="slot booked">
+    <div>
+      <strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small>
+      
+      ${
+        enableFulfillment
+          ? `<label style="display:flex; align-items:center; gap:4px; font-size:0.8em; margin-top:4px;">
+               <input type="checkbox"
+                      ${appt.fulfilled ? 'checked' : ''}
+                      onchange="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', this.checked)">
+               מומש
+             </label>`
+          : ''
+      }
+    </div>
+
+    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+  </div>`;
+});
+
     
     // חסומים
     const blocked = activeAppointments.filter(x =>
@@ -1583,6 +1598,21 @@ function adminCancel(dateKey, time, phoneToCancel) {
     waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
     document.getElementById('waModal').style.display = 'flex';
   }
+}
+function toggleFulfilled(dateKey, time, phone, checked) {
+  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
+    const list = s.val() || [];
+
+    const idx = list.findIndex(a =>
+      a.time === time && a.phone === phone
+    );
+
+    if (idx === -1) return;
+
+    list[idx].fulfilled = checked;
+
+    db.ref(`appointments/${dateKey}/appointments`).set(list);
+  });
 }
 
 // פונקציה לחסימת תור פנוי (הופכת אותו ל-DELETED)
