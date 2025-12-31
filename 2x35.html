@@ -1060,8 +1060,7 @@ function removeManualSlot(dateKey, time) {
 }
 
 function renderSlots(dateKey) {
-  const daySettings = globalData[dateKey]?.settings || {};
-  const enableFulfillment = daySettings.enableFulfillment === true;  
+  
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
   document.getElementById("selectedDateDisplay").innerText = dateKey;
@@ -1141,17 +1140,10 @@ function renderSlots(dateKey) {
       let statusClass = "";
       
       switch (a.status) {
-
-case 'BOOKED':
-  if (a.fulfilled === true) {
-    statusText = "✔ בוצע";
-    statusClass = "history-booked";
-  } else {
-    statusText = "הוזמן";
-    statusClass = "history-booked";
-  }
-  break;
-
+        case 'BOOKED':
+        statusText = "✔ בוצע";
+        statusClass = "history-booked";
+        break;
         
         case 'CANCELLED':
         statusText = "❌ בוטל ע״י לקוח";
@@ -1311,29 +1303,14 @@ case 'BOOKED':
     x.time === time && x.phone && x.status !== 'DELETED'
     );
     
-bookings.forEach(appt => {
-  slotsDiv.innerHTML += `
-  <div class="slot booked">
-    <div>
-      <strong>${time}</strong> — ${appt.first} ${appt.last}
-      <br><small>📞 ${appt.phone}</small>
-      
-      ${
-        enableFulfillment
-          ? `<label style="display:flex; align-items:center; gap:4px; font-size:0.8em; margin-top:4px;">
-               <input type="checkbox"
-                      ${appt.fulfilled ? 'checked' : ''}
-                      onchange="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', this.checked)">
-               מומש
-             </label>`
-          : ''
-      }
-    </div>
-
-    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
-  </div>`;
-});
-
+    bookings.forEach(appt => {
+      slotsDiv.innerHTML += `
+      <div class="slot booked">
+      <div><strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small></div>
+      ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+      </div>`;
+    });
     
     // חסומים
     const blocked = activeAppointments.filter(x =>
@@ -1599,21 +1576,6 @@ function adminCancel(dateKey, time, phoneToCancel) {
     waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
     document.getElementById('waModal').style.display = 'flex';
   }
-}
-function toggleFulfilled(dateKey, time, phone, checked) {
-  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
-    const list = s.val() || [];
-
-    const idx = list.findIndex(a =>
-      a.time === time && a.phone === phone
-    );
-
-    if (idx === -1) return;
-
-    list[idx].fulfilled = checked;
-
-    db.ref(`appointments/${dateKey}/appointments`).set(list);
-  });
 }
 
 // פונקציה לחסימת תור פנוי (הופכת אותו ל-DELETED)
@@ -1972,15 +1934,13 @@ function saveDayConfig() {
   
   /* ========= 3. אובייקט הגדרות ========= */
   
-const settingsObj = {
-  range1Start: r1Start,
-  range1End: r1End,
-  range1Interval: r1Interval,
-  maxSlots: String(maxSlotsVal),
-  breaks: breaks,
-  enableFulfillment: document.getElementById('enableFulfillment')?.checked || false
-};
-
+  const settingsObj = {
+    range1Start: r1Start,
+    range1End: r1End,
+    range1Interval: r1Interval,
+    maxSlots: String(maxSlotsVal),
+    breaks: breaks
+  };
   
   /* ========= 4. קביעת תאריכים להחלה ========= */
   
