@@ -1571,37 +1571,65 @@ function addBreakRow(s='', e='') {
 function renderBreaksConfig(breaks=[]) { document.getElementById("breaksContainer").innerHTML=''; breaks.forEach(b=>addBreakRow(b.start, b.end)); }
 
 function adminCancel(dateKey, time, phoneToCancel) {
+
   const dayData = globalData[dateKey];
   let clientPhone = phoneToCancel || "";
   let clientName = "לקוח";
+
   if (dayData && dayData.appointments) {
-    const appt = dayData.appointments.find(a => a.time === time && a.phone === phoneToCancel);
+    const appt = dayData.appointments.find(
+      a => a.time === time && a.phone === phoneToCancel
+    );
     if (appt) clientName = appt.first || "לקוח";
   }
-  
-  if(!confirm("האם לבטל את התור הזה?")) return;
-  updateAppt(dateKey, {
-    time,
-    phone: phoneToCancel,
-    status: 'CANCELLED_BY_ADMIN',
-    timestamp: Date.now()
+
+  if (!confirm("האם לבטל את התור הזה?")) return;
+
+  // 🔴 מחיקה אמיתית של התור (בלי סטטוס, בלי יצירה)
+  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
+    let list = s.val() || [];
+
+    list = list.filter(a =>
+      !(a.time === time && a.phone === phoneToCancel)
+    );
+
+    db.ref(`appointments/${dateKey}/appointments`).set(list)
+      .then(() => {
+        // עדכון מקומי למניעת רינדור כפול
+        if (globalData[dateKey]) {
+          globalData[dateKey].appointments = list;
+        }
+        renderSlots(dateKey);
+      });
   });
-  
+
+  // --- שליחת וואטסאפ (נשאר כמו שהיה) ---
   if (clientPhone && clientPhone.length > 5) {
     let cleanPhone = clientPhone.replace(/\D/g, '');
     if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
+
     const titleElement = document.getElementById("calendarTitleSetting");
-    const serviceName = (titleElement && titleElement.value) ? titleElement.value : "העסק";
-    const message = `${clientName} שלום, \n` +
-    `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
-    `אנא הסר/י את התור מהיומן שלך במידה ונקבע.\n` +
-    `הינך מוזמן לקבוע תור חדש בקישור: https://torimapp.netlify.app/`;
+    const serviceName =
+      (titleElement && titleElement.value) ? titleElement.value : "העסק";
+
+    const message =
+      `${clientName} שלום,\n` +
+      `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
+      `הינך מוזמן לקבוע תור חדש בקישור:\n` +
+      `https://torimapp.netlify.app/`;
+
     const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     const waBtn = document.getElementById("waModalBtn");
-    waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
+
+    waBtn.onclick = function () {
+      window.open(url, '_blank');
+      document.getElementById('waModal').style.display = 'none';
+    };
+
     document.getElementById('waModal').style.display = 'flex';
   }
 }
+
 function toggleFulfilled(dateKey, time, phone, checked) {
   db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
     const list = s.val() || [];
