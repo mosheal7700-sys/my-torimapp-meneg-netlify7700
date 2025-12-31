@@ -499,6 +499,31 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   white-space: nowrap;
 }
 
+.fulfill-btn {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #999;
+  border-radius: 50%;
+  margin: 0 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fulfill-btn.on {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+@media (max-width: 600px) {
+  .fulfill-btn {
+    width: 12px;
+    height: 12px;
+    margin: 0 4px;
+  }
+}
+
+
 </style>
 
 <style>
@@ -1320,16 +1345,16 @@ bookings.forEach(appt => {
       <strong>${time}</strong> — ${appt.first} ${appt.last}
       <br><small>📞 ${appt.phone}</small>
       
-      ${
-        enableFulfillment
-          ? `<label style="display:flex; align-items:center; gap:4px; font-size:0.8em; margin-top:4px;">
-               <input type="checkbox"
-                      ${appt.fulfilled ? 'checked' : ''}
-                      onchange="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', this.checked)">
-               מומש
-             </label>`
-          : ''
-      }
+${
+  enableFulfillment
+    ? `<span
+         class="fulfill-btn ${appt.fulfilled ? 'on' : ''}"
+         onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})"
+         title="${appt.fulfilled ? 'סומן כמומש' : 'סמן כמומש'}">
+       </span>`
+    : ''
+}
+
     </div>
 
     ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
