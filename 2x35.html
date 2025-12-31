@@ -523,6 +523,45 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   }
 }
 
+.fulfill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  padding: 0 6px;
+  margin: 0 6px;
+  font-size: 10px;
+  font-weight: 600;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  color: #777;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.fulfill-badge.on {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
+}
+
+/* שינוי צבע סלוט כשהתור מומש */
+.slot.booked.fulfilled {
+  background: #f1fbf4;
+  border-color: #4caf50;
+}
+
+/* מובייל */
+@media (max-width: 600px) {
+  .fulfill-badge {
+    height: 14px;
+    padding: 0 5px;
+    font-size: 9px;
+    margin: 0 4px;
+  }
+}
 
 </style>
 
@@ -1339,27 +1378,34 @@ case 'BOOKED':
     );
     
 bookings.forEach(appt => {
+
+  const fulfilledClass = appt.fulfilled ? 'fulfilled' : '';
+
   slotsDiv.innerHTML += `
-  <div class="slot booked">
+  <div class="slot booked ${fulfilledClass}">
     <div>
       <strong>${time}</strong> — ${appt.first} ${appt.last}
       <br><small>📞 ${appt.phone}</small>
-      
-${
-  enableFulfillment
-    ? `<span
-         class="fulfill-btn ${appt.fulfilled ? 'on' : ''}"
-         onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})"
-         title="${appt.fulfilled ? 'סומן כמומש' : 'סמן כמומש'}">
-       </span>`
-    : ''
-}
 
+      ${
+        enableFulfillment
+          ? `<span
+               class="fulfill-badge ${appt.fulfilled ? 'on' : ''}"
+               onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})">
+               מומש
+             </span>`
+          : ''
+      }
     </div>
 
-    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+    ${!isPast
+      ? `<button class="del-btn"
+          onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>`
+      : ''
+    }
   </div>`;
 });
+
 
     
     // חסומים
