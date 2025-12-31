@@ -1621,23 +1621,12 @@ function updateAppt(k, newAppt) {
 }
 
 function removeFromDb(k, t, phone) {
-    db.ref(`appointments/${k}/appointments`).once('value', s => {
-        let list = s.val() || [];
-
-        const idx = list.findIndex(a =>
-            a.time === t && a.phone === phone
-        );
-
-        if (idx === -1) return;
-
-        // שינוי סטטוס במקום מחיקה
-        list[idx].status = 'CANCELLED';
-        list[idx].cancelledAt = Date.now();
-
-        db.ref(`appointments/${k}/appointments`).set(list);
-    });
+  db.ref(`appointments/${k}/appointments`).once('value', s => {
+    let list = s.val() || [];
+    list = list.filter(a => !(a.time === t && a.phone === phone));
+    db.ref(`appointments/${k}/appointments`).set(list);
+  });
 }
-
 
 function exportExcelReport() {
   if(!selectedDate) { alert("יש לבחור יום מהלוח תחילה."); return; }
