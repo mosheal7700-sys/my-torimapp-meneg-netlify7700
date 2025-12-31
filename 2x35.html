@@ -485,17 +485,17 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1em;
+  font-size: 0.9em;
 }
 
 .history-line-2 {
-  font-size: 1em;
+  font-size: 0.8em;
   opacity: 0.85;
   margin-top: 2px;
 }
 
 .history-status {
-  font-size: 1em;
+  font-size: 0.8em;
   white-space: nowrap;
 }
 
@@ -607,8 +607,14 @@ button.history-btn.active {
 <div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
 </div>
 <div style="display: flex; gap: 8px;">
+<label style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+    <input type="checkbox" id="enableFulfillment">
+    מימוש תור
+</label>
 <div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
-<div style="flex:1"><label>קיבולת:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
+<div style="flex:1"><label>קיבולת תורים:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
+
+
 </div>
 
 <hr style="border-color: var(--border-color); opacity:0.3;">
@@ -1054,6 +1060,9 @@ function removeManualSlot(dateKey, time) {
 }
 
 function renderSlots(dateKey) {
+  const daySettings = globalData[dateKey]?.settings || {};
+  const enableFulfillment = daySettings.enableFulfillment === true;
+
   
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
@@ -1134,10 +1143,17 @@ function renderSlots(dateKey) {
       let statusClass = "";
       
       switch (a.status) {
-        case 'BOOKED':
-        statusText = "✔ בוצע";
-        statusClass = "history-booked";
-        break;
+
+case 'BOOKED':
+  if (a.fulfilled === true) {
+    statusText = "✔ בוצע";
+    statusClass = "history-booked";
+  } else {
+    statusText = "הוזמן";
+    statusClass = "history-booked";
+  }
+  break;
+
         
         case 'CANCELLED':
         statusText = "❌ בוטל ע״י לקוח";
@@ -1297,14 +1313,29 @@ function renderSlots(dateKey) {
     x.time === time && x.phone && x.status !== 'DELETED'
     );
     
-    bookings.forEach(appt => {
-      slotsDiv.innerHTML += `
-      <div class="slot booked">
-      <div><strong>${time}</strong> — ${appt.first} ${appt.last}
-      <br><small>📞 ${appt.phone}</small></div>
-      ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
-      </div>`;
-    });
+bookings.forEach(appt => {
+  slotsDiv.innerHTML += `
+  <div class="slot booked">
+    <div>
+      <strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small>
+      
+      ${
+        enableFulfillment
+          ? `<label style="display:flex; align-items:center; gap:4px; font-size:0.8em; margin-top:4px;">
+               <input type="checkbox"
+                      ${appt.fulfilled ? 'checked' : ''}
+                      onchange="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', this.checked)">
+               מומש
+             </label>`
+          : ''
+      }
+    </div>
+
+    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+  </div>`;
+});
+
     
     // חסומים
     const blocked = activeAppointments.filter(x =>
@@ -1570,6 +1601,21 @@ function adminCancel(dateKey, time, phoneToCancel) {
     waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
     document.getElementById('waModal').style.display = 'flex';
   }
+}
+function toggleFulfilled(dateKey, time, phone, checked) {
+  db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
+    const list = s.val() || [];
+
+    const idx = list.findIndex(a =>
+      a.time === time && a.phone === phone
+    );
+
+    if (idx === -1) return;
+
+    list[idx].fulfilled = checked;
+
+    db.ref(`appointments/${dateKey}/appointments`).set(list);
+  });
 }
 
 // פונקציה לחסימת תור פנוי (הופכת אותו ל-DELETED)
@@ -1928,13 +1974,15 @@ function saveDayConfig() {
   
   /* ========= 3. אובייקט הגדרות ========= */
   
-  const settingsObj = {
-    range1Start: r1Start,
-    range1End: r1End,
-    range1Interval: r1Interval,
-    maxSlots: String(maxSlotsVal),
-    breaks: breaks
-  };
+const settingsObj = {
+  range1Start: r1Start,
+  range1End: r1End,
+  range1Interval: r1Interval,
+  maxSlots: String(maxSlotsVal),
+  breaks: breaks,
+  enableFulfillment: document.getElementById('enableFulfillment')?.checked || false
+};
+
   
   /* ========= 4. קביעת תאריכים להחלה ========= */
   
