@@ -611,7 +611,7 @@ button.history-btn.active {
 <div style="flex:1"><label>קיבולת:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
 <label style="display:flex; align-items:center; gap:6px; margin-top:6px;">
     <input type="checkbox" id="enableFulfillment">
-    סמן מימוש תור
+    מימוש תור
 </label>
 
 </div>
@@ -1894,17 +1894,7 @@ function saveDayConfig() {
   const r1End = document.getElementById('range1End').value;
   const r1Interval = document.getElementById('range1Interval').value;
   const maxSlotsVal = document.getElementById('maxSlots').value;
-  const settings = {
-    duration,
-    capacity,
-    enableFulfillment: document.getElementById('enableFulfillment').checked
-};
-
-document.getElementById('enableFulfillment').checked =
-    !!settings.enableFulfillment;
-
-
-db.ref(`appointments/${dateKey}/settings`).set(settings);
+  
   if (!r1Start || !r1End || !r1Interval || !maxSlotsVal) {
     alert("נא למלא את כל שדות החובה (התחלה, סיום, משך, קיבולת).");
     return;
