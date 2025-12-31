@@ -485,17 +485,17 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 .history-line-2 {
-  font-size: 0.8em;
+  font-size: 1em;
   opacity: 0.85;
   margin-top: 2px;
 }
 
 .history-status {
-  font-size: 0.8em;
+  font-size: 1em;
   white-space: nowrap;
 }
 
@@ -607,14 +607,8 @@ button.history-btn.active {
 <div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
 </div>
 <div style="display: flex; gap: 8px;">
-<label style="display:flex; align-items:center; gap:6px; margin-top:6px;">
-    <input type="checkbox" id="enableFulfillment">
-    מימוש תור
-</label>
 <div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
-<div style="flex:1"><label>קיבולת תורים:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
-
-
+<div style="flex:1"><label>קיבולת:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
 </div>
 
 <hr style="border-color: var(--border-color); opacity:0.3;">
