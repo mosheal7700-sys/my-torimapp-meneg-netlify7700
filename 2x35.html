@@ -1061,9 +1061,7 @@ function removeManualSlot(dateKey, time) {
 
 function renderSlots(dateKey) {
   const daySettings = globalData[dateKey]?.settings || {};
-  const enableFulfillment = daySettings.enableFulfillment === true;
-
-  
+  const enableFulfillment = daySettings.enableFulfillment === true;  
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
   document.getElementById("selectedDateDisplay").innerText = dateKey;
@@ -1316,31 +1314,25 @@ case 'BOOKED':
 bookings.forEach(appt => {
   slotsDiv.innerHTML += `
   <div class="slot booked">
-
-    <div class="slot-header">
-      <strong>${time}</strong>
-
+    <div>
+      <strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small>
+      
       ${
         enableFulfillment
-          ? `<label class="fulfilled-toggle">
+          ? `<label style="display:flex; align-items:center; gap:4px; font-size:0.8em; margin-top:4px;">
                <input type="checkbox"
                       ${appt.fulfilled ? 'checked' : ''}
                       onchange="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', this.checked)">
-               <span>מומש</span>
+               מומש
              </label>`
           : ''
       }
-
-      <span class="slot-name">${appt.first} ${appt.last}</span>
     </div>
 
-    <div class="slot-phone">📞 ${appt.phone}</div>
-
-    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌</button>` : ''}
-
+    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
   </div>`;
 });
-
 
     
     // חסומים
