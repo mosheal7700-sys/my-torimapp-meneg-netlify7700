@@ -1332,7 +1332,8 @@ bookings.forEach(appt => {
       }
     </div>
 
-${!isPast ? `<button class="del-btn" onclick="adminCancel(event, '${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}  </div>`;
+    ${!isPast ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` : ''}
+  </div>`;
 });
 
     
@@ -1569,26 +1570,16 @@ function addBreakRow(s='', e='') {
 }
 function renderBreaksConfig(breaks=[]) { document.getElementById("breaksContainer").innerHTML=''; breaks.forEach(b=>addBreakRow(b.start, b.end)); }
 
-function adminCancel(event, dateKey, time, phoneToCancel) {
-  // --- התיקון הקריטי: עצירת הבעבוע ---
-  if (event) {
-    event.stopPropagation();
-    event.preventDefault(); // מונע התנהגות ברירת מחדל אם יש
-  }
-
-  // --- המשך הלוגיקה המקורית שלך ---
+function adminCancel(dateKey, time, phoneToCancel) {
   const dayData = globalData[dateKey];
   let clientPhone = phoneToCancel || "";
   let clientName = "לקוח";
-  
   if (dayData && dayData.appointments) {
     const appt = dayData.appointments.find(a => a.time === time && a.phone === phoneToCancel);
     if (appt) clientName = appt.first || "לקוח";
   }
   
   if(!confirm("האם לבטל את התור הזה?")) return;
-
-  // ביצוע העדכון
   updateAppt(dateKey, {
     time,
     phone: phoneToCancel,
@@ -1596,29 +1587,19 @@ function adminCancel(event, dateKey, time, phoneToCancel) {
     timestamp: Date.now()
   });
   
-  // לוגיקת וואטסאפ (נשארה זהה)
   if (clientPhone && clientPhone.length > 5) {
     let cleanPhone = clientPhone.replace(/\D/g, '');
     if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
-    
     const titleElement = document.getElementById("calendarTitleSetting");
     const serviceName = (titleElement && titleElement.value) ? titleElement.value : "העסק";
-    
     const message = `${clientName} שלום, \n` +
     `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
     `אנא הסר/י את התור מהיומן שלך במידה ונקבע.\n` +
     `הינך מוזמן לקבוע תור חדש בקישור: https://torimapp.netlify.app/`;
-    
     const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-    
     const waBtn = document.getElementById("waModalBtn");
-    if (waBtn) {
-        waBtn.onclick = function() { 
-            window.open(url, '_blank'); 
-            document.getElementById('waModal').style.display='none'; 
-        };
-        document.getElementById('waModal').style.display = 'flex';
-    }
+    waBtn.onclick = function() { window.open(url, '_blank'); document.getElementById('waModal').style.display='none'; };
+    document.getElementById('waModal').style.display = 'flex';
   }
 }
 function toggleFulfilled(dateKey, time, phone, checked) {
@@ -2375,51 +2356,63 @@ function closeBookingModal() {
 }
 
 // ביצוע ההזמנה ושמירה לפיירבייס
-// --- פונקציית שמירה חדשה ותקינה ---
 function submitAdminBooking() {
-    // 1. קריאת הערכים מהשדות (לפי ה-ID שראיתי בקובץ שלך)
-    const firstName = document.getElementById('bookFirstName').value.trim();
-    const lastName = document.getElementById('bookLastName').value.trim();
-    const phone = document.getElementById('bookPhone').value.trim();
+  const first = document.getElementById('bookFirstName').value.trim();
+  const last = document.getElementById('bookLastName').value.trim();
+  let phone = document.getElementById('bookPhone').value.trim();
+  const time = currentBookingTime;
+  
+  phone = phone.replace(/\D/g, ''); // ניקוי תווים לא רצויים
+  
+  // בדיקות תקינות
+  if (!first || !time) {
+    alert("חובה למלא שם פרטי");
+    return;
+  }
+  
+  if (phone.length !== 10) {
+    alert("מספר הטלפון חייב להכיל 10 ספרות בדיוק");
+    return;
+  }
+  
+  // יצירת אובייקט התור
+  const newAppt = {
+    time: time,
+    first: first,
+    last: last,
+    phone: phone,
+    status: "BOOKED",
+    bookedBy: "ADMIN",
+    timestamp: Date.now()
+  };
+  
+  // שליחה לפיירבייס
+  db.ref(`appointments/${selectedDate}/appointments`).once('value', snapshot => {
+    let list = snapshot.val() || [];
+    list.push(newAppt);
     
-    // איתור הזמן - מנסים לקחת מהכותרת או ממשתנה גלובלי
-    let timeStr = document.getElementById('bookingTimeDisplay').value; 
-    
-    // בדיקות תקינות
-    if (!timeStr) {
-        alert('שגיאה: לא נבחרה שעה');
-        return;
-    }
-    if (!firstName) {
-        alert('חובה להזין שם פרטי');
-        return;
-    }
-
-    // יצירת הנתיב ב-Firebase
-    // שימוש ב-selectedDateStr אם קיים, אחרת מנסים לנחש תאריך (וודא שהמשתנה selectedDateStr קיים אצלך בקוד)
-    const dateKey = (typeof selectedDateStr !== 'undefined') ? selectedDateStr : new Date().toISOString().split('T')[0]; 
-    const dbRef = firebase.database().ref('appointments').child(dateKey).child(timeStr);
-
-    // נתונים לשמירה
-    const bookingData = {
-        clientName: firstName + ' ' + lastName, // שילוב השמות כדי למנוע undefined
-        clientPhone: phone || '',
-        serviceType: 'ניהול ידני',
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    // ביצוע השמירה
-    dbRef.update(bookingData)
-        .then(() => {
-            // סגירת המודל וניקוי
-            closeBookingModal();
-            alert('התור נשמר בהצלחה!');
-            // אם יש פונקציה לרענון התצוגה, היא תיקרא כאן (בדרך כלל loadSlots או listener אוטומטי)
-        })
-        .catch((error) => {
-            console.error(error);
-            alert('אירעה שגיאה בשמירה: ' + error.message);
-        });
+    db.ref(`appointments/${selectedDate}/appointments`).set(list)
+    .then(() => {
+      // === ניהול זיכרון אוטומטי (תמיד פועל) ===
+      
+      // איפוס טיימר קודם אם קיים
+      if (clientCacheTimer) clearTimeout(clientCacheTimer);
+      
+      // שמירת פרטים בזיכרון
+      cachedClient = { first, last, phone };
+      
+      // הפעלת טיימר ל-5 דקות למחיקת הזיכרון
+      clientCacheTimer = setTimeout(() => {
+        cachedClient = { first: '', last: '', phone: '' };
+        console.log("פרטי הלקוח נמחקו מהזיכרון (עברו 5 דקות)");
+      }, 300000);
+      
+      closeBookingModal();
+    })
+    .catch(err => {
+      alert("שגיאה בשמירה: " + err.message);
+    });
+  });
 }
 </script>
 <script>
@@ -2522,25 +2515,7 @@ function toggleApplyDate(dateKey, dayElement) {
   }
   
 }
-// פונקציית מחיקה שמונעת שכפול
-function deleteAppointment(event, timeStr) {
-    // הפקודה הזו קריטית! היא עוצרת את הלחיצה מלהגיע לשאר השורה
-    if (event) event.stopPropagation(); 
 
-    if (!confirm('האם למחוק את התור בשעה ' + timeStr + '?')) return;
-
-    // וודא שהתאריך מוגדר
-    const dateKey = (typeof selectedDateStr !== 'undefined') ? selectedDateStr : new Date().toISOString().split('T')[0];
-
-    firebase.database().ref('appointments')
-        .child(dateKey)
-        .child(timeStr)
-        .remove()
-        .then(() => {
-            console.log('נמחק בהצלחה');
-        })
-        .catch(err => alert('שגיאה במחיקה: ' + err.message));
-}
 </script>
 
 </body>
