@@ -597,6 +597,7 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   border-color: #4caf50;
   color: #fff;
 }
+
 /* שורת ההגדרות הראשית */
 .config-main-row {
   display: flex;
@@ -631,30 +632,39 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   min-width: 0;
 }
 
+
+.capacity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.capacity-row input {
+  flex: 1;
+  height: 36px;
+}
+
 /* כפתור מימוש */
 .toggle-input {
-  flex-shrink: 0;          /* ❗ קריטי */
+  flex-shrink: 0;
   height: 36px;
-  padding: 0 14px;
+  padding: 0 12px;
 
   font-size: 13px;
   font-weight: 600;
 
-  border: 1px solid #ccc;
   border-radius: 6px;
-  background: #f9f9f9;
-  color: #555;
+  border: 1px solid #3a4a5e;
+  background: #2c3e50;
+  color: #fff;
 
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .toggle-input.on {
   background: #4caf50;
   border-color: #4caf50;
-  color: #fff;
 }
-
 
 </style>
 
@@ -773,27 +783,25 @@ button.history-btn.active {
   </div>
 
   <!-- קיבולת + מימוש -->
-  <div class="config-col">
-    <label>קיבולת תורים:</label>
+<div class="config-col">
+  <label>קיבולת תורים:</label>
 
-    <div class="config-row">
-      <input
-        type="number"
-        id="maxSlots"
-        min="1"
-        max="20"
-        value="1"
-      >
+  <div class="capacity-row">
+    <input type="number" id="maxSlots" min="1" max="20" value="1">
 
-      <span
-        id="enableFulfillmentBtn"
-        class="toggle-input"
-        onclick="toggleEnableFulfillment()">
-        מימוש תורים
-      </span>
-    </div>
+    <span
+      id="enableFulfillmentBtn"
+      class="toggle-input"
+      onclick="toggleEnableFulfillment()">
+      מימוש תורים
+    </span>
   </div>
 </div>
+
+
+
+
+
 
 <hr style="border-color: var(--border-color); opacity:0.3;">
 <label>הפסקות:</label>
