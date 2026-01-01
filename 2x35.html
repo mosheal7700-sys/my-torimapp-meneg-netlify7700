@@ -603,9 +603,11 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 #enableFulfillmentBtn {
-  flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .triple-row {
   display: flex;
   gap: 8px;
@@ -633,10 +635,9 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 .apply-mode-btn {
   text-align: center;
 }
-  .day-settings-row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
+.day-settings-row > * {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .field-col {
@@ -646,13 +647,15 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 .field-col label {
-  height: 22px;
+  line-height: 1.4;
+  margin-bottom: 8px;
 }
 
 .field-col input,
-.fulfillment-btn {
-  height: 38px;
+#enableFulfillmentBtn {
+  height: 40px;
 }
+
 
 .fulfillment-btn {
   background: var(--bg-input);
@@ -671,6 +674,11 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   .apply-mode-btn + * {
     min-width: 0;
   }
+}
+#enableFulfillmentBtn.on {
+  background: var(--accent-blue) !important;
+  color: #fff !important;
+  border-color: var(--accent-blue) !important;
 }
 
 </style>
