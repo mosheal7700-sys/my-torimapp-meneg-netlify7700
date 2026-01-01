@@ -662,12 +662,14 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   cursor: pointer;
 }
 label {
-  line-height: 1.25;
+  line-height: 1.45;      /* היה 1.25 – עוד קצת אוויר */
+  margin-bottom: 8px;     /* היה 4px */
 }
 
 label + input {
-  margin-top: 8px;
+  margin-top: 4px;        /* ריווח נוסף בין label ל-input */
 }
+
 
   @media (max-width: 600px) {
 
