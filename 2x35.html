@@ -633,6 +633,35 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 .apply-mode-btn {
   text-align: center;
 }
+  .day-settings-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.field-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-col label {
+  height: 22px;
+}
+
+.field-col input,
+.fulfillment-btn {
+  height: 38px;
+}
+
+.fulfillment-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--accent-blue);
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>
 
 <style>
@@ -742,30 +771,41 @@ button.history-btn.active {
 </div>
 <div style="display: flex; gap: 8px;">
 
-<div class="triple-row">
 
-  <div class="triple-col">
+
+<div class="day-settings-row">
+
+  <div class="field-col">
     <label>משך תור (דק'):</label>
-    <input type="number" id="range1Interval" min="5" max="120" value="10">
+    <input type="number"
+           id="range1Interval"
+           min="5"
+           max="120"
+           value="10">
   </div>
 
-  <div class="triple-col">
+  <div class="field-col">
     <label>קיבולת תורים:</label>
-    <input type="number" id="maxSlots" min="1" max="20" value="1">
+    <input type="number"
+           id="maxSlots"
+           min="1"
+           max="20"
+           value="1">
   </div>
 
-  <div class="triple-col">
+  <div class="field-col">
     <label>&nbsp;</label>
     <button
       type="button"
       id="enableFulfillmentBtn"
-      class="apply-mode-btn"
+      class="fulfillment-btn"
       onclick="toggleEnableFulfillment()">
       מימוש תורים
     </button>
   </div>
 
 </div>
+
 
 </div>
 
