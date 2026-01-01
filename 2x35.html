@@ -550,9 +550,9 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 /* שינוי צבע סלוט כשהתור מומש */
 /* סלוט מומש */
 .slot.booked.fulfilled {
-  background: #f5f5f5;
-  border-color: #999;
-  color: #333;
+  background: #f1fbf4;       /* ירוק בהיר מאוד */
+  border-color: #4caf50;
+  color: #1b5e20;            /* טקסט כהה */
 }
 /* שם + טלפון בתוך סלוט מומש */
 .slot.booked.fulfilled small,
@@ -574,6 +574,30 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
     margin: 0 4px;
   }
 }
+.toggle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  color: #666;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  margin-inline-start: 8px;
+}
+
+.toggle-badge.on {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
+}
+
 
 </style>
 
@@ -683,10 +707,12 @@ button.history-btn.active {
 <div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
 </div>
 <div style="display: flex; gap: 8px;">
-<label style="display:flex; align-items:center; gap:6px; margin-top:6px;">
-    <input type="checkbox" id="enableFulfillment">
-    מימוש תור
-</label>
+<span
+  id="enableFulfillmentBtn"
+  class="toggle-badge"
+  onclick="toggleEnableFulfillment()">
+  מימוש תורים
+</span>
 <div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
 <div style="flex:1"><label>קיבולת תורים:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
 
@@ -937,7 +963,7 @@ let globalData = {};
 let selectedDate = null;
 let currentMonthDate = new Date();
 let historyMode = false;
-
+let enableFulfillment = false;
 let applyMode = false;                 // מצב בחירת תאריכים להחלה
 let selectedApplyDates = new Set();    // תאריכים שנבחרו להחלה
 
@@ -1136,14 +1162,19 @@ function removeManualSlot(dateKey, time) {
 }
 
 function renderSlots(dateKey) {
-  const daySettings = globalData[dateKey]?.settings || {};
-  const enableFulfillment = daySettings.enableFulfillment === true;
 
-  
+  const daySettings = globalData[dateKey]?.settings || {};
+  enableFulfillment = daySettings.enableFulfillment === true;
+
+  const btn = document.getElementById('enableFulfillmentBtn');
+  if (btn) {
+    btn.classList.toggle('on', enableFulfillment);
+  }
+
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
   document.getElementById("selectedDateDisplay").innerText = dateKey;
-  
+
   const today = new Date(new Date().toDateString());
   const dateToCheck = new Date(dateKey);
   
@@ -2625,6 +2656,16 @@ function toggleApplyDate(dateKey, dayElement) {
     dayElement.classList.add("apply-selected");
   }
   
+}
+function toggleEnableFulfillment() {
+  enableFulfillment = !enableFulfillment;
+
+  const btn = document.getElementById('enableFulfillmentBtn');
+  if (enableFulfillment) {
+    btn.classList.add('on');
+  } else {
+    btn.classList.remove('on');
+  }
 }
 
 </script>
