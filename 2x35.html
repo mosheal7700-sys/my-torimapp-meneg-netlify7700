@@ -598,73 +598,6 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   color: #fff;
 }
 
-/* שורת ההגדרות הראשית */
-.config-main-row {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-}
-
-/* עמודה */
-.config-col {
-  flex: 1;
-  min-width: 0;
-}
-
-/* label */
-.config-col label {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 0.9em;
-}
-
-/* שורה של input + כפתור */
-.config-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* שדה קלט */
-.config-row input {
-  flex: 1;
-  height: 36px;
-  min-width: 0;
-}
-
-
-.capacity-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.capacity-row input {
-  flex: 1;
-  height: 36px;
-}
-
-/* כפתור מימוש */
-.toggle-input {
-  flex-shrink: 0;
-  height: 36px;
-  padding: 0 12px;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  border-radius: 6px;
-  border: 1px solid #3a4a5e;
-  background: #2c3e50;
-  color: #fff;
-
-  cursor: pointer;
-}
-
-.toggle-input.on {
-  background: #4caf50;
-  border-color: #4caf50;
-}
 
 </style>
 
@@ -774,34 +707,17 @@ button.history-btn.active {
 <div style="flex:1"><label>סיום:</label><input type="text" class="time-input" id="range1End" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"></div>
 </div>
 <div style="display: flex; gap: 8px;">
+<span
+  id="enableFulfillmentBtn"
+  class="toggle-badge"
+  onclick="toggleEnableFulfillment()">
+  מימוש תורים
+</span>
+<div style="flex:1"><label>משך תור (דק'):</label><input type="number" id="range1Interval" min="5" max="120" value="10"></div>
+<div style="flex:1"><label>קיבולת תורים:</label><input type="number" id="maxSlots" min="1" max="20" value="1"></div>
 
-<div class="config-main-row">
-  <!-- משך תור -->
-  <div class="config-col">
-    <label>משך תור (דק'):</label>
-    <input type="number" id="range1Interval" min="5" max="120" value="10">
-  </div>
 
-  <!-- קיבולת + מימוש -->
-<div class="config-col">
-  <label>קיבולת תורים:</label>
-
-  <div class="capacity-row">
-    <input type="number" id="maxSlots" min="1" max="20" value="1">
-
-    <span
-      id="enableFulfillmentBtn"
-      class="toggle-input"
-      onclick="toggleEnableFulfillment()">
-      מימוש תורים
-    </span>
-  </div>
 </div>
-
-
-
-
-
 
 <hr style="border-color: var(--border-color); opacity:0.3;">
 <label>הפסקות:</label>
