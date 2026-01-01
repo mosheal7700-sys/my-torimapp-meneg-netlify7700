@@ -734,17 +734,17 @@ label + input {
 .fulfillment-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 
+  padding: 6px 10px;
   background: var(--bg-input);
   border: 1px solid var(--accent-blue);
   border-radius: 6px;
-  padding: 6px 10px;
 
   font-weight: bold;
   cursor: pointer;
 
-  color: #9ca3af; /* צבע כבוי */
+  color: #94a3b8; /* צבע כבוי */
 }
 
 /* הסמלון יורש צבע מהכפתור */
@@ -756,6 +756,19 @@ label + input {
 .fulfillment-btn.on {
   color: #4caf50;
   border-color: #4caf50;
+}
+.fulfillment-btn .power-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;   /* 🔥 זה העיקר */
+  flex-shrink: 0;
+}
+
+/* מצב מופעל */
+.fulfillment-btn.on {
+  background: #2563eb;
+  color: #22c55e;       /* ירוק */
+  border-color: #22c55e;
 }
 
 </style>
@@ -897,16 +910,16 @@ button.history-btn.active {
   class="fulfillment-btn"
   onclick="toggleEnableFulfillment()">
 
-  <svg class="power-icon"
+  <svg
+    class="power-icon"
     xmlns="http://www.w3.org/2000/svg"
-    height="20px"
-    viewBox="0 -960 960 960"
-    width="20px">
+    viewBox="0 -960 960 960">
     <path d="M480.21-480q-15.21 0-25.71-10.35T444-516v-312q0-15.3 10.29-25.65Q464.58-864 479.79-864t25.71 10.35Q516-843.3 516-828v312q0 15.3-10.29 25.65Q495.42-480 480.21-480ZM480-144q-70 0-131.13-26.6-61.14-26.6-106.4-71.87-45.27-45.26-71.87-106.4Q144-410 144-480q0-58.57 20-113.79Q184-649 221-694q10-13 25-14.5t26 9.5q10 11 11 25.5t-7 25.5q-29.45 36-44.73 79Q216-526 216-480q0 110.31 76.78 187.16 76.78 76.84 187 76.84T667-292.84q77-76.85 77-187.16 0-47-16-89.5T683-649q-9-11-8-25.5t12-25.5q10-11 25-9t25.78 14.36Q776-649 796-594t20 114q0 70-26.6 131.13-26.6 61.14-71.87 106.4-45.26 45.27-106.4 71.87Q550-144 480-144Z"/>
   </svg>
 
   מימוש תורים
 </button>
+
 
   </div>
 
