@@ -633,31 +633,33 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 .apply-mode-btn {
   text-align: center;
 }
-@media (max-width: 600px) {
-
   .day-settings-row {
-    width: 100%;
-  }
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
 
-  .field-col {
-    flex: 1 1 0;
-    min-width: 0; /* קריטי ל-Flex במובייל */
-  }
+.field-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-  .field-col label {
-    font-size: 0.8em;
-    line-height: 1.2;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.field-col label {
+  height: 22px;
+}
 
-  .field-col input,
-  .fulfillment-btn {
-    height: 40px;
-    font-size: 0.95em;
-  }
+.field-col input,
+.fulfillment-btn {
+  height: 38px;
+}
+
+.fulfillment-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--accent-blue);
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 </style>
@@ -769,10 +771,12 @@ button.history-btn.active {
 </div>
 <div style="display: flex; gap: 8px;">
 
+
+
 <div class="day-settings-row">
 
   <div class="field-col">
-    <label>משך תור (דק)</label>
+    <label>משך תור (דק'):</label>
     <input type="number"
            id="range1Interval"
            min="5"
@@ -803,7 +807,7 @@ button.history-btn.active {
 </div>
 
 
-
+</div>
 
 
 
