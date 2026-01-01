@@ -597,6 +597,63 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   border-color: #4caf50;
   color: #fff;
 }
+/* שורת ההגדרות הראשית */
+.config-main-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* עמודה */
+.config-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* label */
+.config-col label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.9em;
+}
+
+/* שורה של input + כפתור */
+.config-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* שדה קלט */
+.config-row input {
+  flex: 1;
+  height: 36px;
+  min-width: 0;
+}
+
+/* כפתור מימוש */
+.toggle-input {
+  flex-shrink: 0;          /* ❗ קריטי */
+  height: 36px;
+  padding: 0 14px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  color: #555;
+
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.toggle-input.on {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
+}
 
 
 </style>
