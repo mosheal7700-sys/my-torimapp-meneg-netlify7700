@@ -603,11 +603,9 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 #enableFulfillmentBtn {
+  flex-shrink: 0;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-
 .triple-row {
   display: flex;
   gap: 8px;
@@ -635,9 +633,10 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 .apply-mode-btn {
   text-align: center;
 }
-.day-settings-row > * {
-  flex: 1 1 0;
-  min-width: 0;
+  .day-settings-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
 }
 
 .field-col {
@@ -647,15 +646,13 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 .field-col label {
-  line-height: 1.4;
-  margin-bottom: 8px;
+  height: 22px;
 }
 
 .field-col input,
-#enableFulfillmentBtn {
-  height: 40px;
+.fulfillment-btn {
+  height: 38px;
 }
-
 
 .fulfillment-btn {
   background: var(--bg-input);
@@ -664,7 +661,17 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
   font-weight: bold;
   cursor: pointer;
 }
-@media (max-width: 600px) {
+label {
+  line-height: 1.2;      /* היה 1.25 – עוד קצת אוויר */
+  margin-bottom: 4px;     /* היה 4px */
+}
+
+label + input {
+  margin-top: 4px;        /* ריווח נוסף בין label ל-input */
+}
+
+
+  @media (max-width: 600px) {
 
   .apply-mode-btn {
     flex: 1;
@@ -675,10 +682,32 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
     min-width: 0;
   }
 }
+@media (max-width: 600px) {
+
+  .day-settings-row {
+    width: 100%;
+  }
+
+  .day-settings-row > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+/* מצב כבוי – ברירת מחדל */
+#enableFulfillmentBtn {
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+/* מצב מופעל */
 #enableFulfillmentBtn.on {
-  background: var(--accent-blue) !important;
-  color: #fff !important;
-  border-color: var(--accent-blue) !important;
+  background: var(--accent-blue);
+  color: #ffffff;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
+  font-weight: 700;
 }
 
 </style>
@@ -1277,14 +1306,10 @@ function renderSlots(dateKey) {
   const daySettings = globalData[dateKey]?.settings || {};
   enableFulfillment = daySettings.enableFulfillment === true;
 
-const btn = document.getElementById('enableFulfillmentBtn');
-if (btn) {
-  btn.classList.toggle('on', enableFulfillment);
-  btn.textContent = enableFulfillment
-    ? 'מימוש תורים פעיל'
-    : 'מימוש תורים כבוי';
-}
-
+  const btn = document.getElementById('enableFulfillmentBtn');
+  if (btn) {
+    btn.classList.toggle('on', enableFulfillment);
+  }
 
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
@@ -2776,15 +2801,12 @@ function toggleEnableFulfillment() {
   enableFulfillment = !enableFulfillment;
 
   const btn = document.getElementById('enableFulfillmentBtn');
-  if (!btn) return;
-
-  btn.classList.toggle('on', enableFulfillment);
-
-  btn.textContent = enableFulfillment
-    ? 'מימוש תורים פעיל'
-    : 'מימוש תורים כבוי';
+  if (enableFulfillment) {
+    btn.classList.add('on');
+  } else {
+    btn.classList.remove('on');
+  }
 }
-
 
 </script>
 
