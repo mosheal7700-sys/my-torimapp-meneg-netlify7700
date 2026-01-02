@@ -753,26 +753,31 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
-/* --- פתרון סופי בשיטת GRID - עובד בכל מצב --- */
+/* --- תיקון גובה ועיצוב סופי לשורה --- */
 
 .day-settings-row {
   display: grid !important;
-  /* יוצר 3 עמודות: הראשונה (כפתור) גדולה פי 2 מהאחרות */
   grid-template-columns: 2fr 1fr 1fr !important; 
   gap: 10px !important;
   width: 100% !important;
-  max-width: 100% !important;
   align-items: end !important;
-  box-sizing: border-box !important;
   margin-top: 15px !important;
 }
 
-/* איפוס מוחלט לכפתור */
+/* הגדרת גובה אחיד לכפתור ולשדות */
+#enableFulfillmentBtn,
+.fulfillment-btn,
+.field-col input {
+  height: 34px !important; /* גובה מעט נמוך יותר למראה נקי */
+  padding: 4px 8px !important;
+  box-sizing: border-box !important;
+  font-size: 13px !important;
+}
+
+/* וידוא שהכפתור ממלא את העמודה שלו */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  grid-column: 1 / 2 !important; /* תופס את העמודה הראשונה */
-  width: 100% !important;        /* נמתח לכל רוחב העמודה שהקצנו לו */
-  height: 38px !important;
+  width: 100% !important;
   margin: 0 !important;
   display: flex !important;
   justify-content: center !important;
@@ -780,44 +785,25 @@ body {
   white-space: nowrap !important;
 }
 
-/* איפוס מוחלט לעמודות השדות */
-.field-col {
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* וידוא שהאינפוטים בפנים לא "בורחים" */
-.field-col input {
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 38px !important;
-  box-sizing: border-box !important;
-}
-
-/* ביטול הגדרות רוחב ישנות שחלות על כל האינפוטים בפאנל ההגדרות */
-#configPanelWrapper input, 
-#configPanelWrapper button {
-  max-width: none !important;
-  min-width: 0 !important;
-}
-
-/* התאמה למובייל - צמצום רווחים */
-@media (max-width: 600px) {
-  .day-settings-row {
-    gap: 5px !important;
-  }
-}
-  /* ביטול החיצים בשדות מספר בדפדפני כרום, ספארי ו-Edge */
+/* ביטול חיצי המספרים (Spinners) */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* ביטול החיצים בדפדפן פיירפוקס */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* התאמה למובייל */
+@media (max-width: 600px) {
+  .day-settings-row {
+    gap: 5px !important;
+  }
+  #enableFulfillmentBtn, .fulfillment-btn, .field-col input {
+    height: 32px !important; /* עוד קצת יותר נמוך בטלפון */
+    font-size: 12px !important;
+  }
 }
 </style>
 
