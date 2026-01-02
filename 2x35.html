@@ -752,49 +752,7 @@ body {
     white-space: nowrap;            /* לא ייגזר טקסט במובייל */
   }
 }
-/* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
 
-.day-settings-row {
-  display: flex;
-  flex-direction: row; /* מחייב שזה יהיה שורה ולא טור */
-  gap: 10px;          /* רווח אחיד בין האלמנטים */
-  align-items: flex-end;
-  width: 100%;        /* חובה! מותח את השורה לכל הרוחב */
-  box-sizing: border-box;
-}
-
-/* הגדרת הכפתור הגדול (מימוש תורים) */
-#enableFulfillmentBtn,
-.fulfillment-btn {
-  flex: 2;        /* יחס גדילה: תופס פי 2 מקום מהשדות הקטנים */
-  width: auto !important; /* דורס הגדרות קודמות של רוחב קבוע */
-  min-width: 0;   /* מונע שבירה במסכים קטנים מאוד */
-}
-
-/* הגדרת העמודות של השדות הקטנים (משך תור / קיבולת) */
-.field-col {
-  flex: 1;        /* יחס גדילה: תופס יחידה אחת */
-  width: auto;
-  min-width: 0;
-}
-
-/* מוודא שהאינפוט בתוך העמודה נמתח עד הסוף */
-.field-col input {
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
-/* --- תיקון ספציפי למובייל (דריסת הגדרות קודמות שמפריעות) --- */
-@media (max-width: 600px) {
-  .fulfillment-btn {
-    width: auto !important; /* ביטול רוחב 100% שהוגדר קודם */
-    justify-content: center; /* מירכוז הטקסט בכפתור */
-  }
-  
-  .day-settings-row {
-    padding: 0 5px; /* מרווח קטן מהצדדים בטלפון */
-  }
-}
 </style>
 
 <style>
