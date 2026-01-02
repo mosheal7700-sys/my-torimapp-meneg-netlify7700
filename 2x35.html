@@ -755,7 +755,9 @@ body {
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
 /* --- קוד מאוחד: פריסה מלאה, גובה נמוך וביטול חיצים --- */
 
-/* 1. הגדרת מבנה השורה (Grid) וגובה כללי */
+/* --- קוד סופי: גובה אחיד ומושלם לכל המכשירים --- */
+
+/* 1. הגדרת מבנה השורה */
 .day-settings-row {
   display: grid !important;
   grid-template-columns: 2fr 1fr 1fr !important; 
@@ -766,30 +768,32 @@ body {
   box-sizing: border-box !important;
 }
 
-/* 2. השוואת גבהים לשורה שמעל (מחשב + טלפון) */
+/* 2. גובה אחיד של 35px - מתאים בדיוק לשורה שמעל */
 .day-settings-row #enableFulfillmentBtn,
 .day-settings-row .fulfillment-btn,
 .day-settings-row .field-col input {
-  height: 32px !important;      /* גובה נמוך שתואם לשדות למעלה */
-  min-height: 32px !important;
-  max-height: 32px !important;
-  padding: 0 8px !important;    /* פדינג מינימלי למניעת ניפוח */
-  line-height: 32px !important; /* מירכוז טקסט אנכית */
+  height: 35px !important;      
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 8px !important;
+  line-height: 35px !important; 
   font-size: 13px !important;
   box-sizing: border-box !important;
   margin: 0 !important;
+  border-radius: 6px !important;
 }
 
-/* 3. הגדרות ספציפיות לכפתור */
+/* 3. הגדרות כפתור */
 #enableFulfillmentBtn, .fulfillment-btn {
   width: 100% !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   white-space: nowrap !important;
+  cursor: pointer !important;
 }
 
-/* 4. ביטול חיצי המספרים (Spinners) */
+/* 4. ביטול חיצים בשדות מספר */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -799,17 +803,19 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* 5. התאמת רווח של הלייבלים (הכותרות הקטנות) */
+/* 5. התאמת הכותרות (Labels) */
 .field-col label {
-  margin-bottom: 2px !important;
-  font-size: 11px !important;
-  line-height: 1.2 !important;
+  margin-bottom: 4px !important; /* רווח קטן ואסתטי */
+  font-size: 12px !important;
+  color: var(--text-muted);
+  display: block;
 }
 
-/* 6. התאמה למובייל - צמצום רווחים קל */
+/* 6. התאמה למובייל - רק צמצום רווחים, בלי שינוי גובה */
 @media (max-width: 600px) {
   .day-settings-row {
-    gap: 5px !important;
+    gap: 6px !important;
+    padding: 0 2px !important;
   }
 }
 </style>
