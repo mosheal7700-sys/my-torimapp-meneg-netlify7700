@@ -753,8 +753,9 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
-/* --- תיקון גובה ועיצוב סופי לשורה --- */
+/* --- קוד מאוחד: פריסה מלאה, גובה נמוך וביטול חיצים --- */
 
+/* 1. הגדרת מבנה השורה (Grid) וגובה כללי */
 .day-settings-row {
   display: grid !important;
   grid-template-columns: 2fr 1fr 1fr !important; 
@@ -762,30 +763,33 @@ body {
   width: 100% !important;
   align-items: end !important;
   margin-top: 15px !important;
-}
-
-/* הגדרת גובה אחיד לכפתור ולשדות */
-#enableFulfillmentBtn,
-.fulfillment-btn,
-.field-col input {
-  height: 34px !important; /* גובה מעט נמוך יותר למראה נקי */
-  padding: 4px 8px !important;
   box-sizing: border-box !important;
-  font-size: 13px !important;
 }
 
-/* וידוא שהכפתור ממלא את העמודה שלו */
-#enableFulfillmentBtn,
-.fulfillment-btn {
-  width: 100% !important;
+/* 2. השוואת גבהים לשורה שמעל (מחשב + טלפון) */
+.day-settings-row #enableFulfillmentBtn,
+.day-settings-row .fulfillment-btn,
+.day-settings-row .field-col input {
+  height: 32px !important;      /* גובה נמוך שתואם לשדות למעלה */
+  min-height: 32px !important;
+  max-height: 32px !important;
+  padding: 0 8px !important;    /* פדינג מינימלי למניעת ניפוח */
+  line-height: 32px !important; /* מירכוז טקסט אנכית */
+  font-size: 13px !important;
+  box-sizing: border-box !important;
   margin: 0 !important;
+}
+
+/* 3. הגדרות ספציפיות לכפתור */
+#enableFulfillmentBtn, .fulfillment-btn {
+  width: 100% !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   white-space: nowrap !important;
 }
 
-/* ביטול חיצי המספרים (Spinners) */
+/* 4. ביטול חיצי המספרים (Spinners) */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -795,14 +799,17 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* התאמה למובייל */
+/* 5. התאמת רווח של הלייבלים (הכותרות הקטנות) */
+.field-col label {
+  margin-bottom: 2px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+/* 6. התאמה למובייל - צמצום רווחים קל */
 @media (max-width: 600px) {
   .day-settings-row {
     gap: 5px !important;
-  }
-  #enableFulfillmentBtn, .fulfillment-btn, .field-col input {
-    height: 32px !important; /* עוד קצת יותר נמוך בטלפון */
-    font-size: 12px !important;
   }
 }
 </style>
