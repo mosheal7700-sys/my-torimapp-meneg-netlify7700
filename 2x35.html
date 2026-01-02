@@ -753,56 +753,60 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
-/* --- תיקון סופי ואחיד למחשב ולנייד --- */
+/* --- פתרון סופי בשיטת GRID - עובד בכל מצב --- */
 
-/* 1. איפוס והגדרת מיכל השורה */
 .day-settings-row {
-  display: flex !important;
-  flex-direction: row !important;
+  display: grid !important;
+  /* יוצר 3 עמודות: הראשונה (כפתור) גדולה פי 2 מהאחרות */
+  grid-template-columns: 2fr 1fr 1fr !important; 
+  gap: 10px !important;
   width: 100% !important;
   max-width: 100% !important;
-  gap: 10px !important;
-  align-items: flex-end !important;
+  align-items: end !important;
   box-sizing: border-box !important;
   margin-top: 15px !important;
-  padding: 0 !important;
 }
 
-/* 2. הכפתור - ביטול הגדרות רוחב קשיחות מהמחשב */
+/* איפוס מוחלט לכפתור */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  flex: 2 !important;            /* יחס גדילה גדול יותר מהשדות */
-  width: auto !important;         /* ביטול width: 100% או px קבוע */
-  min-width: 0 !important;        /* מאפשר גמישות */
+  grid-column: 1 / 2 !important; /* תופס את העמודה הראשונה */
+  width: 100% !important;        /* נמתח לכל רוחב העמודה שהקצנו לו */
   height: 38px !important;
+  margin: 0 !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   white-space: nowrap !important;
-  margin: 0 !important;
 }
 
-/* 3. עמודות השדות הקטנים */
+/* איפוס מוחלט לעמודות השדות */
 .field-col {
-  flex: 1 !important;            /* יחס גדילה שווה ביניהם */
-  min-width: 0 !important;
-  width: auto !important;         /* ביטול הגדרות קבועות מהמחשב */
+  width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
 }
 
-/* 4. איפוס האינפוטים עצמם בתוך העמודות */
+/* וידוא שהאינפוטים בפנים לא "בורחים" */
 .field-col input {
-  width: 100% !important;         /* מילוי העמודה בלבד */
-  max-width: 100% !important;
+  width: 100% !important;
   min-width: 0 !important;
   height: 38px !important;
   box-sizing: border-box !important;
 }
 
-/* 5. תיקון ספציפי למחשב: מונע מהפאנל הצידי להצר את השורה */
-#configPanelWrapper {
-  overflow-x: hidden !important;
+/* ביטול הגדרות רוחב ישנות שחלות על כל האינפוטים בפאנל ההגדרות */
+#configPanelWrapper input, 
+#configPanelWrapper button {
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+/* התאמה למובייל - צמצום רווחים */
+@media (max-width: 600px) {
+  .day-settings-row {
+    gap: 5px !important;
+  }
 }
 </style>
 
