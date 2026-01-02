@@ -753,54 +753,60 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
+/* --- פתרון סופי בשיטת GRID - עובד בכל מצב --- */
 
-/* --- תיקון סופי שמתאים גם למחשב וגם לטלפון --- */
-
-/* פנייה ישירה למיכל בתוך הפאנל כדי לוודא פריסה מלאה */
-#configPanelWrapper .day-settings-row,
 .day-settings-row {
-  display: flex !important;
-  flex-direction: row !important;
+  display: grid !important;
+  /* יוצר 3 עמודות: הראשונה (כפתור) גדולה פי 2 מהאחרות */
+  grid-template-columns: 2fr 1fr 1fr !important; 
+  gap: 10px !important;
   width: 100% !important;
   max-width: 100% !important;
-  gap: 10px !important;
-  align-items: flex-end !important;
+  align-items: end !important;
   box-sizing: border-box !important;
-  margin-top: 15px;
+  margin-top: 15px !important;
 }
 
-/* הגדרת הכפתור - במחשב ובנייד */
+/* איפוס מוחלט לכפתור */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  flex: 2 !important;      /* לוקח את החלק המרכזי של השורה */
+  grid-column: 1 / 2 !important; /* תופס את העמודה הראשונה */
+  width: 100% !important;        /* נמתח לכל רוחב העמודה שהקצנו לו */
   height: 38px !important;
-  min-width: 0 !important;
-  width: auto !important;
-  margin: 0 !important;    /* מבטל מרווחים שדוחפים אותו */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  white-space: nowrap !important;
 }
 
-/* הגדרת העמודות של השדות */
+/* איפוס מוחלט לעמודות השדות */
 .field-col {
-  flex: 1 !important;      /* מתחלקים בשארית המקום באופן שווה */
-  min-width: 0 !important;
-  display: flex;
-  flex-direction: column;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-/* וידוא שהאינפוטים בפנים ממלאים את העמודה שלהם */
+/* וידוא שהאינפוטים בפנים לא "בורחים" */
 .field-col input {
   width: 100% !important;
+  min-width: 0 !important;
   height: 38px !important;
   box-sizing: border-box !important;
 }
 
-/* מחיקת הגדרות ישנות שעלולות להפריע במחשב */
-#configPanelWrapper input {
-  max-width: none !important; 
+/* ביטול הגדרות רוחב ישנות שחלות על כל האינפוטים בפאנל ההגדרות */
+#configPanelWrapper input, 
+#configPanelWrapper button {
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+/* התאמה למובייל - צמצום רווחים */
+@media (max-width: 600px) {
+  .day-settings-row {
+    gap: 5px !important;
+  }
 }
 </style>
 
