@@ -754,45 +754,53 @@ body {
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
 
+/* --- תיקון מאוזן לשורת כפתור מימוש תורים --- */
+
 .day-settings-row {
   display: flex;
-  flex-direction: row; /* מחייב שזה יהיה שורה ולא טור */
-  gap: 10px;          /* רווח אחיד בין האלמנטים */
+  flex-direction: row;
+  gap: 8px;            /* רווח קטן ואסתטי בין הכפתור לשדות */
   align-items: flex-end;
-  width: 100%;        /* חובה! מותח את השורה לכל הרוחב */
+  width: 100%;         /* תופס את כל רוחב הפאנל */
+  max-width: 100%;     /* מונע חריגה החוצה */
   box-sizing: border-box;
+  padding: 0;          /* מוודא שאין פדינג כפול שדוחף החוצה */
 }
 
-/* הגדרת הכפתור הגדול (מימוש תורים) */
+/* הגדרת הכפתור */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  flex: 2;        /* יחס גדילה: תופס פי 2 מקום מהשדות הקטנים */
-  width: auto !important; /* דורס הגדרות קודמות של רוחב קבוע */
-  min-width: 0;   /* מונע שבירה במסכים קטנים מאוד */
+  flex: 1.5;           /* מקטין מעט את הדומיננטיות של הכפתור */
+  height: 35px;
+  min-width: 0;        /* מאפשר לאלמנט להצטמצם אם צריך */
+  white-space: nowrap; /* מונע מהטקסט לרדת שורה */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* הגדרת העמודות של השדות הקטנים (משך תור / קיבולת) */
+/* הגדרת עמודות השדות (משך תור וקיבולת) */
 .field-col {
-  flex: 1;        /* יחס גדילה: תופס יחידה אחת */
-  width: auto;
+  flex: 1;             /* חלוקה שווה ביניהם */
   min-width: 0;
 }
 
-/* מוודא שהאינפוט בתוך העמודה נמתח עד הסוף */
+/* תיקון האינפוטים בפנים */
 .field-col input {
   width: 100% !important;
+  max-width: 100%;
   box-sizing: border-box;
+  height: 35px;
 }
 
-/* --- תיקון ספציפי למובייל (דריסת הגדרות קודמות שמפריעות) --- */
+/* --- התאמה למובייל --- */
 @media (max-width: 600px) {
-  .fulfillment-btn {
-    width: auto !important; /* ביטול רוחב 100% שהוגדר קודם */
-    justify-content: center; /* מירכוז הטקסט בכפתור */
+  .day-settings-row {
+    gap: 5px;          /* צמצום רווחים בטלפון כדי למנוע חריגה */
   }
   
-  .day-settings-row {
-    padding: 0 5px; /* מרווח קטן מהצדדים בטלפון */
+  .fulfillment-btn span {
+    font-size: 11px;   /* הקטנה קלה של הטקסט בטלפון למניעת דחיסה */
   }
 }
 </style>
