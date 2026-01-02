@@ -650,219 +650,92 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 }
 
 .field-col input,
-.fulfillment-btn {
-  height: 38px;
+/* --- הגדרות משתנים (ברירת מחדל: מצב כהה) --- */
+:root {
+  --bg-body: #0f172a;       /* כחול לילה עמוק */
+  --bg-panel: #1e293b;      /* פאנלים כהים */
+  --bg-header: #1e293b;     /* סרגל עליון */
+  --bg-input: #334155;      /* אינפוטים */
+  --text-main: #f1f5f9;     /* טקסט לבן */
+  --text-muted: #94a3b8;    /* טקסט אפור */
+  --border-color: rgba(255,255,255,0.1);
+  
+  --accent-blue: #3b82f6;
+  --accent-green: #ffffff;
+  --accent-red: #ef4444;
+  --accent-gold: #f59e0b;
+  
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --border-radius: 8px;
 }
 
-.fulfillment-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 6px 10px;
-  height: 36px;
-  max-width: 100%;
-
-  background: #475569;          /* אפור – כבוי */
-  color: #ffffff;               /* טקסט לבן */
-  border: 1px solid #64748b;
-  border-radius: 6px;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  cursor: pointer;
-  white-space: nowrap;
+/* --- הגדרות למצב בהיר (Light Mode) --- */
+body.light-mode {
+  --bg-body: #f3f4f6;       /* אפור בהיר מאוד */
+  --bg-panel: #ffffff;      /* לבן */
+  --bg-header: #ffffff;     /* לבן */
+  --bg-input: #ffffff;      /* לבן */
+  --text-main: #111827;     /* שחור */
+  --text-muted: #6b7280;    /* אפור כהה */
+  --border-color: #e5e7eb;  /* אפור בהיר למסגרות */
+  
+  --accent-blue: #2563eb;
+  --accent-green: #059669;
+  --accent-red: #dc2626;
+  --accent-gold: #d97706;
+  
+  --shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* מצב מופעל */
-.fulfillment-btn.on {
-  background: #2563eb;          /* כחול */
-  border-color: #2563eb;
-}
-
-/* אייקון */
-.fulfillment-btn .power-icon {
-  flex-shrink: 0;
-  fill: #ffffff;                /* תמיד לבן */
-  width: 18px;
-  height: 18px;
-}
-
-/* טקסט */
-.fulfillment-btn .btn-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-/* האייקון עצמו */
-.fulfillment-btn .fulfillment-icon {
-  fill: #94a3b8; /* כבוי – אפור */
-  transition: fill 0.2s ease;
-}
-
-/* מצב פעיל */
-.fulfillment-btn.on {
-  border-color: #4caf50;
-}
-
-.fulfillment-btn.on .fulfillment-icon {
-  fill: #4caf50; /* מופעל – ירוק */
-}
-
-label {
-  line-height: 1.2;      /* היה 1.25 – עוד קצת אוויר */
-  margin-bottom: 4px;     /* היה 4px */
-}
-
-label + input {
-  margin-top: 4px;        /* ריווח נוסף בין label ל-input */
-}
-
-
-  @media (max-width: 600px) {
-
-  .apply-mode-btn {
-    flex: 1;
-  }
-
-  .apply-mode-btn,
-  .apply-mode-btn + * {
-    min-width: 0;
-  }
-}
-@media (max-width: 600px) {
-
-  .day-settings-row {
-    width: 100%;
-  }
-
-  .day-settings-row > * {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-/* מצב כבוי – ברירת מחדל */
-#enableFulfillmentBtn {
-  background: var(--bg-input);
+/* --- עיצוב כללי --- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-body);
   color: var(--text-main);
-  border: 1px solid var(--border-color);
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  font-size: 13px;
+  direction: rtl;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* מצב מופעל */
-#enableFulfillmentBtn.on {
-  background: var(--accent-blue);
-  color: #ffffff;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
-  font-weight: 700;
-}
+/* --- כפתור מימוש תורים --- */
 .fulfillment-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-
-  padding: 6px 10px;
-  background: var(--bg-input);
-  border: 1px solid var(--accent-blue);
-  border-radius: 6px;
-
-  font-weight: bold;
-  cursor: pointer;
-
-  color: #94a3b8; /* צבע כבוי */
-}
-
-/* הסמלון יורש צבע מהכפתור */
-.fulfillment-btn .power-icon {
-  fill: currentColor;
-}
-
-/* מצב פעיל */
-.fulfillment-btn.on {
-  color: #4caf50;
-  border-color: #4caf50;
-}
-.fulfillment-btn .power-icon {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;   /* 🔥 זה העיקר */
-  flex-shrink: 0;
-}
-
-/* מצב מופעל */
-.fulfillment-btn.on {
-  background: #2563eb;
-  color: #22c55e;       /* ירוק */
-  border-color: #22c55e;
-}
-.fulfillment-btn {
-  display: inline-flex;
-  align-items: center;
+  justify-content: center;
   gap: 8px;
 
   height: 36px;
   padding: 0 12px;
-
-  background: #475569;          /* כבוי */
-  border: 1px solid #64748b;
   border-radius: 6px;
-
-  color: #cbd5f5;               /* צבע טקסט + אייקון */
+  cursor: pointer;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 
-  cursor: pointer;
+  background: #475569;          /* אפור – מצב כבוי */
+  border: 1px solid #64748b;
+  color: #94a3b8;               /* צבע טקסט כבוי */
+}
+
+/* מצב מופעל (דלקת הכפתור) */
+.fulfillment-btn.on {
+  background: #2563eb;          /* כחול – מצב פעיל */
+  border-color: #2563eb;
+  color: #4ade80;               /* צבע טקסט ירוק */
 }
 
 /* אייקון */
 .fulfillment-btn .power-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;           /* 🔥 זה המפתח: האייקון יורש את הצבע מהכפתור */
   flex-shrink: 0;
-
-  fill: currentColor;           /* 🔥 זה המפתח */
 }
 
-/* מצב מופעל */
-.fulfillment-btn.on {
-  background: #2563eb;
-  border-color: #2563eb;
-  color: #4ade80;               /* גם האייקון מחליף צבע */
-}
-.fulfillment-btn {
-  background: #ccc;                  /* אפור כשכבוי */
-  border: 1px solid #888;
-  color: white;
-  padding: 10px 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.fulfillment-btn.on {
-  background: #4CAF50;               /* כחול / ירוק כשדלוק */
-  border-color: #388E3C;
-}
-
-.power-icon {
-  fill: white;                       /* האייקון בצבע לבן בכל מצב */
-  margin-right: 10px;                 /* רווח קטן בין האייקון לטקסט */
-  transition: fill 0.3s ease;         /* מעבר צבע חלק */
-}
-
-.fulfillment-btn.on .power-icon {
-  fill: white;                       /* בצבע לבן במצב מופעל */
-}
-
-/* הכפתור לא יחרוג מהשדה בטלפון */
+/* נראות במובייל */
 @media (max-width: 600px) {
   .fulfillment-btn {
     width: 100%;
@@ -870,12 +743,12 @@ label + input {
   }
   
   .fulfillment-btn svg {
-    width: 16px;                    /* הקטנה של האייקון לנייד */
+    width: 16px;                    /* הקטנה של האייקון במובייל */
     height: 16px;
   }
 
   .fulfillment-btn span {
-    white-space: nowrap;
+    white-space: nowrap;            /* לא ייגזר טקסט במובייל */
   }
 }
 
