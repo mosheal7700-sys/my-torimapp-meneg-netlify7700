@@ -787,12 +787,20 @@ body {
   flex-direction: column !important;
 }
 
-/* וידוא שהאינפוטים בפנים לא "בורחים" */
 .field-col input {
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 38px !important;
-  box-sizing: border-box !important;
+  /* צבעים משתנים (תיקון הכהה/בהיר) */
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+
+  /* מידות חדשות */
+  width: 100%;             /* נשמור על רוחב מלא */
+  height: 34px;            /* הגובה המוקטן */
+  padding: 0 8px;
+  line-height: 34px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  text-align: center;
 }
 
 /* ביטול הגדרות רוחב ישנות שחלות על כל האינפוטים בפאנל ההגדרות */
