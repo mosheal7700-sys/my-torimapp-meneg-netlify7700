@@ -754,54 +754,53 @@ body {
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
 
-/* --- תיקון מאוזן לשורת כפתור מימוש תורים --- */
+/* --- תיקון סופי שמתאים גם למחשב וגם לטלפון --- */
 
+/* פנייה ישירה למיכל בתוך הפאנל כדי לוודא פריסה מלאה */
+#configPanelWrapper .day-settings-row,
 .day-settings-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;            /* רווח קטן ואסתטי בין הכפתור לשדות */
-  align-items: flex-end;
-  width: 100%;         /* תופס את כל רוחב הפאנל */
-  max-width: 100%;     /* מונע חריגה החוצה */
-  box-sizing: border-box;
-  padding: 0;          /* מוודא שאין פדינג כפול שדוחף החוצה */
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 10px !important;
+  align-items: flex-end !important;
+  box-sizing: border-box !important;
+  margin-top: 15px;
 }
 
-/* הגדרת הכפתור */
+/* הגדרת הכפתור - במחשב ובנייד */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  flex: 1.5;           /* מקטין מעט את הדומיננטיות של הכפתור */
-  height: 35px;
-  min-width: 0;        /* מאפשר לאלמנט להצטמצם אם צריך */
-  white-space: nowrap; /* מונע מהטקסט לרדת שורה */
+  flex: 2 !important;      /* לוקח את החלק המרכזי של השורה */
+  height: 38px !important;
+  min-width: 0 !important;
+  width: auto !important;
+  margin: 0 !important;    /* מבטל מרווחים שדוחפים אותו */
   display: flex;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
 }
 
-/* הגדרת עמודות השדות (משך תור וקיבולת) */
+/* הגדרת העמודות של השדות */
 .field-col {
-  flex: 1;             /* חלוקה שווה ביניהם */
-  min-width: 0;
+  flex: 1 !important;      /* מתחלקים בשארית המקום באופן שווה */
+  min-width: 0 !important;
+  display: flex;
+  flex-direction: column;
 }
 
-/* תיקון האינפוטים בפנים */
+/* וידוא שהאינפוטים בפנים ממלאים את העמודה שלהם */
 .field-col input {
   width: 100% !important;
-  max-width: 100%;
-  box-sizing: border-box;
-  height: 35px;
+  height: 38px !important;
+  box-sizing: border-box !important;
 }
 
-/* --- התאמה למובייל --- */
-@media (max-width: 600px) {
-  .day-settings-row {
-    gap: 5px;          /* צמצום רווחים בטלפון כדי למנוע חריגה */
-  }
-  
-  .fulfillment-btn span {
-    font-size: 11px;   /* הקטנה קלה של הטקסט בטלפון למניעת דחיסה */
-  }
+/* מחיקת הגדרות ישנות שעלולות להפריע במחשב */
+#configPanelWrapper input {
+  max-width: none !important; 
 }
 </style>
 
