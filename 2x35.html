@@ -753,47 +753,50 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
-/* --- קוד מאוחד: פריסה מלאה, גובה נמוך וביטול חיצים --- */
+/* --- פתרון סופי: השוואת גבהים מלאה ע"י הסרת מגבלות --- */
 
-/* --- קוד סופי: גובה אחיד ומושלם לכל המכשירים --- */
-
-/* 1. הגדרת מבנה השורה */
+/* 1. מבנה השורה */
 .day-settings-row {
   display: grid !important;
   grid-template-columns: 2fr 1fr 1fr !important; 
   gap: 10px !important;
   width: 100% !important;
-  align-items: end !important;
+  align-items: flex-end !important; /* יישור תחתון מושלם */
   margin-top: 15px !important;
-  box-sizing: border-box !important;
 }
 
-/* 2. גובה אחיד של 35px - מתאים בדיוק לשורה שמעל */
+/* 2. השוואת הגבהים לשורה שמעל */
 .day-settings-row #enableFulfillmentBtn,
 .day-settings-row .fulfillment-btn,
 .day-settings-row .field-col input {
-  height: 35px !important;      
-  min-height: 35px !important;
-  max-height: 35px !important;
-  padding: 0 8px !important;
-  line-height: 35px !important; 
+  /* ביטול כל הגדרת גובה קודמת */
+  height: auto !important; 
+  min-height: 0 !important;
+  max-height: none !important;
+
+  /* שימוש בפדינג זהה לשדות השעות שמעליהם */
+  padding: 8px !important; 
   font-size: 13px !important;
+  line-height: normal !important;
+  
   box-sizing: border-box !important;
   margin: 0 !important;
-  border-radius: 6px !important;
+  width: 100% !important;
+  text-align: center !important;
 }
 
-/* 3. הגדרות כפתור */
+/* 3. כפתור המימוש - וידוא מראה זהה לשדה קלט */
 #enableFulfillmentBtn, .fulfillment-btn {
-  width: 100% !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
+  border: 1px solid var(--border-color) !important;
+  font-weight: bold !important;
+  /* גובה הכפתור חייב להיות זהה פיזית לאינפוט */
+  min-height: 35px !important; 
 }
 
-/* 4. ביטול חיצים בשדות מספר */
+/* 4. ביטול חיצים */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -803,19 +806,22 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* 5. התאמת הכותרות (Labels) */
+/* 5. תיקון ללייבלים */
 .field-col label {
-  margin-bottom: 4px !important; /* רווח קטן ואסתטי */
+  margin-bottom: 4px !important;
+  display: block !important;
   font-size: 12px !important;
-  color: var(--text-muted);
-  display: block;
 }
 
-/* 6. התאמה למובייל - רק צמצום רווחים, בלי שינוי גובה */
+/* 6. התאמה למובייל - שמירה על פרופורציות */
 @media (max-width: 600px) {
   .day-settings-row {
     gap: 6px !important;
-    padding: 0 2px !important;
+  }
+  /* במובייל נחזיר מעט גובה אם זה נראה דחוס */
+  .day-settings-row #enableFulfillmentBtn,
+  .day-settings-row .field-col input {
+    padding: 10px 5px !important;
   }
 }
 </style>
