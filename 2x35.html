@@ -753,74 +753,46 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
-/* --- פתרון סופי: גובה זהה וצבעים מותאמים למצב בהיר/כהה --- */
 
-/* 1. מבנה השורה - Grid חזק */
 .day-settings-row {
-  display: grid !important;
-  grid-template-columns: 2fr 1fr 1fr !important; 
-  gap: 10px !important;
+  display: flex;
+  flex-direction: row; /* מחייב שזה יהיה שורה ולא טור */
+  gap: 10px;          /* רווח אחיד בין האלמנטים */
+  align-items: flex-end;
+  width: 100%;        /* חובה! מותח את השורה לכל הרוחב */
+  box-sizing: border-box;
+}
+
+/* הגדרת הכפתור הגדול (מימוש תורים) */
+#enableFulfillmentBtn,
+.fulfillment-btn {
+  flex: 2;        /* יחס גדילה: תופס פי 2 מקום מהשדות הקטנים */
+  width: auto !important; /* דורס הגדרות קודמות של רוחב קבוע */
+  min-width: 0;   /* מונע שבירה במסכים קטנים מאוד */
+}
+
+/* הגדרת העמודות של השדות הקטנים (משך תור / קיבולת) */
+.field-col {
+  flex: 1;        /* יחס גדילה: תופס יחידה אחת */
+  width: auto;
+  min-width: 0;
+}
+
+/* מוודא שהאינפוט בתוך העמודה נמתח עד הסוף */
+.field-col input {
   width: 100% !important;
-  align-items: flex-end !important;
-  margin-top: 15px !important;
+  box-sizing: border-box;
 }
 
-/* 2. השוואת גובה וצבעים לשדות */
-.day-settings-row #enableFulfillmentBtn,
-.day-settings-row .fulfillment-btn,
-.day-settings-row .field-col input {
-  /* שימוש במשתנים שלך כדי שיתאים אוטומטית למצב בהיר/כהה */
-  background-color: var(--bg-input) !important;
-  color: var(--text-main) !important;
-  border: 1px solid var(--border-color) !important;
-  
-  /* גובה זהה לחלוטין לשורות שמעל */
-  height: 38px !important; 
-  min-height: 38px !important;
-  padding: 8px !important;
-  
-  font-size: 13px !important;
-  box-sizing: border-box !important;
-  border-radius: 6px !important;
-  text-align: center !important;
-}
-
-/* 3. טיפול ספציפי בכפתור המימוש */
-#enableFulfillmentBtn, .fulfillment-btn {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  cursor: pointer !important;
-  font-weight: bold !important;
-}
-
-/* 4. תיקון צבע הטקסט בכפתור כשהוא "דלוק" (ON) */
-.fulfillment-btn.on {
-  background-color: var(--accent-blue) !important;
-  color: #ffffff !important; /* טקסט לבן בולט כשהוא פעיל */
-}
-
-/* 5. ביטול חיצים בשדות מספר */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-/* 6. לייבלים (כותרות) */
-.field-col label {
-  margin-bottom: 4px !important;
-  font-size: 12px !important;
-  color: var(--text-muted) !important;
-}
-
-/* התאמה למובייל */
+/* --- תיקון ספציפי למובייל (דריסת הגדרות קודמות שמפריעות) --- */
 @media (max-width: 600px) {
+  .fulfillment-btn {
+    width: auto !important; /* ביטול רוחב 100% שהוגדר קודם */
+    justify-content: center; /* מירכוז הטקסט בכפתור */
+  }
+  
   .day-settings-row {
-    gap: 6px !important;
+    padding: 0 5px; /* מרווח קטן מהצדדים בטלפון */
   }
 }
 </style>
