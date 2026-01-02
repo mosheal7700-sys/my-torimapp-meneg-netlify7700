@@ -753,11 +753,9 @@ body {
   }
 }
 /* --- תיקון לשורת כפתור מימוש תורים (שתתפרס לרוחב מלא) --- */
+/* --- תיקון סופי ואחיד למחשב ולנייד --- */
 
-/* --- תיקון סופי שמתאים גם למחשב וגם לטלפון --- */
-
-/* פנייה ישירה למיכל בתוך הפאנל כדי לוודא פריסה מלאה */
-#configPanelWrapper .day-settings-row,
+/* 1. איפוס והגדרת מיכל השורה */
 .day-settings-row {
   display: flex !important;
   flex-direction: row !important;
@@ -766,41 +764,45 @@ body {
   gap: 10px !important;
   align-items: flex-end !important;
   box-sizing: border-box !important;
-  margin-top: 15px;
+  margin-top: 15px !important;
+  padding: 0 !important;
 }
 
-/* הגדרת הכפתור - במחשב ובנייד */
+/* 2. הכפתור - ביטול הגדרות רוחב קשיחות מהמחשב */
 #enableFulfillmentBtn,
 .fulfillment-btn {
-  flex: 2 !important;      /* לוקח את החלק המרכזי של השורה */
+  flex: 2 !important;            /* יחס גדילה גדול יותר מהשדות */
+  width: auto !important;         /* ביטול width: 100% או px קבוע */
+  min-width: 0 !important;        /* מאפשר גמישות */
   height: 38px !important;
-  min-width: 0 !important;
-  width: auto !important;
-  margin: 0 !important;    /* מבטל מרווחים שדוחפים אותו */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
 }
 
-/* הגדרת העמודות של השדות */
+/* 3. עמודות השדות הקטנים */
 .field-col {
-  flex: 1 !important;      /* מתחלקים בשארית המקום באופן שווה */
+  flex: 1 !important;            /* יחס גדילה שווה ביניהם */
   min-width: 0 !important;
-  display: flex;
-  flex-direction: column;
+  width: auto !important;         /* ביטול הגדרות קבועות מהמחשב */
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-/* וידוא שהאינפוטים בפנים ממלאים את העמודה שלהם */
+/* 4. איפוס האינפוטים עצמם בתוך העמודות */
 .field-col input {
-  width: 100% !important;
+  width: 100% !important;         /* מילוי העמודה בלבד */
+  max-width: 100% !important;
+  min-width: 0 !important;
   height: 38px !important;
   box-sizing: border-box !important;
 }
 
-/* מחיקת הגדרות ישנות שעלולות להפריע במחשב */
-#configPanelWrapper input {
-  max-width: none !important; 
+/* 5. תיקון ספציפי למחשב: מונע מהפאנל הצידי להצר את השורה */
+#configPanelWrapper {
+  overflow-x: hidden !important;
 }
 </style>
 
