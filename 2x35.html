@@ -808,6 +808,15 @@ body {
     gap: 5px !important;
   }
 }
+  /*  ביטול חיצים בשדות מספר */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
 </style>
 
 <style>
