@@ -633,7 +633,7 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 .apply-mode-btn {
   text-align: center;
 }
-  .day-settings-row {
+.day-settings-row {
   display: flex;
   gap: 8px;
   align-items: flex-end;
@@ -648,7 +648,6 @@ button.restore-btn { background: rgba(16, 185, 129, 0.1); color: var(--accent-gr
 #enableFulfillmentBtn {
   height: 35px;
 }
-
 
 /* --- הגדרות משתנים (ברירת מחדל: מצב כהה) --- */
 :root {
@@ -706,7 +705,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-
+  
   height: 36px;
   padding: 0 12px;
   border-radius: 6px;
@@ -714,7 +713,7 @@ body {
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-
+  
   background: #475569;          /* אפור – מצב כבוי */
   border: 1px solid #64748b;
   color: #94a3b8;               /* צבע טקסט כבוי */
@@ -737,7 +736,7 @@ body {
 
 /* נראות במובייל */
 @media (max-width: 600px) {
-
+  
   .fulfillment-btn {
     width: 100%;
     justify-content: flex-start;
@@ -747,7 +746,7 @@ body {
     width: 16px;                    /* הקטנה של האייקון במובייל */
     height: 16px;
   }
-
+  
   .fulfillment-btn span {
     white-space: nowrap;            /* לא ייגזר טקסט במובייל */
   }
@@ -758,7 +757,7 @@ body {
 .day-settings-row {
   display: grid !important;
   /* יוצר 3 עמודות: הראשונה (כפתור) גדולה פי 2 מהאחרות */
-  grid-template-columns: 2fr 1fr 1fr !important; 
+  grid-template-columns: 2fr 1fr 1fr !important;
   gap: 10px !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -792,7 +791,7 @@ body {
   background: var(--bg-input);
   color: var(--text-main);
   border: 1px solid var(--border-color);
-
+  
   /* מידות חדשות */
   width: 100%;             /* נשמור על רוחב מלא */
   height: 34px;            /* הגובה המוקטן */
@@ -804,7 +803,7 @@ body {
 }
 
 /* ביטול הגדרות רוחב ישנות שחלות על כל האינפוטים בפאנל ההגדרות */
-#configPanelWrapper input, 
+#configPanelWrapper input,
 #configPanelWrapper button {
   max-width: none !important;
   min-width: 0 !important;
@@ -816,7 +815,7 @@ body {
     gap: 5px !important;
   }
 }
-  /*  ביטול חיצים בשדות מספר */
+/*  ביטול חיצים בשדות מספר */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -934,47 +933,40 @@ button.history-btn.active {
 </div>
 <div style="display: flex; gap: 8px;">
 
-
-
 <div class="day-settings-row">
 
-  <div class="field-col">
-    <label>משך תור (דק'):</label>
-    <input type="number"
-           id="range1Interval"
-           min="5"
-           max="120"
-           value="10">
-  </div>
+<div class="field-col">
+<label>משך תור (דק'):</label>
+<input type="number"
+id="range1Interval"
+min="5"
+max="120"
+value="10">
+</div>
 
-  <div class="field-col">
-    <label>קיבולת תורים:</label>
-    <input type="number"
-           id="maxSlots"
-           min="1"
-           max="20"
-           value="1">
-  </div>
+<div class="field-col">
+<label>קיבולת תורים:</label>
+<input type="number"
+id="maxSlots"
+min="1"
+max="20"
+value="1">
+</div>
 
-  <div class="field-col">
-    <label>&nbsp;</label>
+<div class="field-col">
+<label>&nbsp;</label>
 <button type="button" id="enableFulfillmentBtn" class="fulfillment-btn" onclick="toggleEnableFulfillment()">
-  <svg class="power-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
-    <path d="M480.21-480q-15.21 0-25.71-10.35T444-516v-312q0-15.3 10.29-25.65Q464.58-864 479.79-864t25.71 10.35Q516-843.3 516-828v312q0 15.3-10.29 25.65Q495.42-480 480.21-480ZM480-144q-70 0-131.13-26.6-61.14-26.6-106.4-71.87-45.27-45.26-71.87-106.4Q144-410 144-480q0-58.57 20-113.79Q184-649 221-694q10-13 25-14.5t26 9.5q10 11 11 25.5t-7 25.5q-29.45 36-44.73 79Q216-526 216-480q0 110.31 76.78 187.16 76.78 76.84 187 76.84T667-292.84q77-76.85 77-187.16 0-47-16-89.5T683-649q-9-11-8-25.5t12-25.5q10-11 25-9t25.78 14.36Q776-649 796-594t20 114q0 70-26.6 131.13-26.6 61.14-71.87 106.4-45.26 45.27-106.4 71.87Q550-144 480-144Z"/>
-  </svg>
-  מימוש תורים
+<svg class="power-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
+<path d="M480.21-480q-15.21 0-25.71-10.35T444-516v-312q0-15.3 10.29-25.65Q464.58-864 479.79-864t25.71 10.35Q516-843.3 516-828v312q0 15.3-10.29 25.65Q495.42-480 480.21-480ZM480-144q-70 0-131.13-26.6-61.14-26.6-106.4-71.87-45.27-45.26-71.87-106.4Q144-410 144-480q0-58.57 20-113.79Q184-649 221-694q10-13 25-14.5t26 9.5q10 11 11 25.5t-7 25.5q-29.45 36-44.73 79Q216-526 216-480q0 110.31 76.78 187.16 76.78 76.84 187 76.84T667-292.84q77-76.85 77-187.16 0-47-16-89.5T683-649q-9-11-8-25.5t12-25.5q10-11 25-9t25.78 14.36Q776-649 796-594t20 114q0 70-26.6 131.13-26.6 61.14-71.87 106.4-45.26 45.27-106.4 71.87Q550-144 480-144Z"/>
+</svg>
+מימוש תורים
 </button>
 
-
-
-  </div>
+</div>
 
 </div>
 
-
 </div>
-
-
 
 <hr style="border-color: var(--border-color); opacity:0.3;">
 <label>הפסקות:</label>
@@ -1048,8 +1040,17 @@ text-align: center;
 </div>
 
 <div id="slotsWrapper" class="panel">
-<h3>תורים: <span id="selectedDateDisplay" style="color:var(--text-main);"></span></h3>
-<div id="slotsContainer"></div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    
+    <h3 style="margin: 0;">תורים: <span id="selectedDateDisplay" style="color:var(--text-main);"></span></h3>
+    
+    <button id="togglePastBtn" onclick="togglePastView()" style="background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+      <span class="material-symbols-outlined" style="font-size: 18px;">visibility_off</span>
+      <span style="font-size: 14px;">הצג שעברו</span>
+    </button>
+    
+  </div>
+  <div id="slotsContainer"></div>
 </div>
 
 <div id="reportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
@@ -1418,20 +1419,57 @@ function removeManualSlot(dateKey, time) {
   });
 }
 
-function renderSlots(dateKey) {
+// --- התחלת תוספת עבור כפתור הצגת תורים שעברו ---
 
+// 1. משתנה שזוכר האם להציג תורים שעברו (ברירת מחדל: לא)
+let showPastSlots = false;
+
+// 2. הפונקציה שמופעלת בלחיצה על הכפתור
+function togglePastView() {
+  // החלפת המצב (אם היה כבוי -> דולק, ולהפך)
+  showPastSlots = !showPastSlots;
+
+  // איתור הכפתור כדי לשנות לו את המראה
+  const btn = document.getElementById('togglePastBtn');
+  if (btn) {
+    if (showPastSlots) {
+      // מצב פעיל: מציגים הכל
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">visibility</span><span style="font-size: 14px;">הסתר שעברו</span>';
+      // שינוי עיצוב קטן כדי להדגיש שהכפתור לחוץ
+      btn.style.background = 'var(--primary-color, #3b82f6)'; 
+      btn.style.color = '#ffffff';
+      btn.style.borderColor = 'transparent';
+    } else {
+      // מצב כבוי: מסתירים שעברו (ברירת המחדל)
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">visibility_off</span><span style="font-size: 14px;">הצג שעברו</span>';
+      btn.style.background = 'var(--bg-input)';
+      btn.style.color = 'var(--text-main)';
+      btn.style.borderColor = 'var(--border-color)';
+    }
+  }
+
+  // רענון התצוגה של התורים מחדש
+  // (הבדיקה נועדה לוודא שהמשתנים קיימים כדי למנוע שגיאות)
+  if (typeof renderSlots === "function" && typeof selectedDateKey !== "undefined") {
+    renderSlots(selectedDateKey);
+  }
+}
+// --- סוף תוספת ---
+
+function renderSlots(dateKey) {
+  
   const daySettings = globalData[dateKey]?.settings || {};
   enableFulfillment = daySettings.enableFulfillment === true;
-
+  
   const btn = document.getElementById('enableFulfillmentBtn');
   if (btn) {
     btn.classList.toggle('on', enableFulfillment);
   }
-
+  
   if (!dateKey) dateKey = dateToKey(new Date());
   selectedDate = dateKey;
   document.getElementById("selectedDateDisplay").innerText = dateKey;
-
+  
   const today = new Date(new Date().toDateString());
   const dateToCheck = new Date(dateKey);
   
@@ -1507,17 +1545,16 @@ function renderSlots(dateKey) {
       let statusClass = "";
       
       switch (a.status) {
-
-case 'BOOKED':
-  if (a.fulfilled === true) {
-    statusText = "✔ בוצע";
-    statusClass = "history-booked";
-  } else {
-    statusText = "הוזמן";
-    statusClass = "history-booked";
-  }
-  break;
-
+        
+        case 'BOOKED':
+        if (a.fulfilled === true) {
+          statusText = "✔ בוצע";
+          statusClass = "history-booked";
+        } else {
+          statusText = "הוזמן";
+          statusClass = "history-booked";
+        }
+        break;
         
         case 'CANCELLED':
         statusText = "❌ בוטל ע״י לקוח";
@@ -1626,6 +1663,16 @@ case 'BOOKED':
     
     const tMin = timeToMinutes(time);
     const prevTime = index > 0 ? combined[index - 1] : null;
+
+    // --- לוגיקת הסתרת תורים שעברו ---
+    // אם זה היום, והשעה עברה, והמשתמש לא ביקש להציג שעברו -> דלג
+    if (isToday && tMin < currentMinutes && !showPastSlots) {
+        return;
+    }
+
+    // משתנה עיצוב: אם מציגים תור שעבר, נוסיף לו שקיפות
+    const pastStyle = (isToday && tMin < currentMinutes) ? 'opacity: 0.6; filter: grayscale(100%);' : '';
+    // --------------------------------
     
     // הפסקות מוגדרות
     if (prevTime) {
@@ -1651,20 +1698,10 @@ case 'BOOKED':
     
     if (totalCapacity === 0 && !activeAppointments.some(a => a.time === time)) return;
     
-    // דילוג על עבר של היום הנוכחי
-    if (isToday && tMin < currentMinutes) {
-      const hasActive = activeAppointments.some(x =>
-      x.time === time &&
-      x.status !== 'DELETED' &&
-      x.status !== 'EXTRA_CAPACITY'
-      );
-      if (!hasActive) return;
-    }
-    
     // תוספת מכסה — הצגה
     if (extrasHere > 0) {
       slotsDiv.innerHTML += `
-      <div class="slot" style="border:1px dashed var(--text-muted); padding:5px;">
+      <div class="slot" style="border:1px dashed var(--text-muted); padding:5px; ${pastStyle}">
       <div style="font-size:0.9em; color:var(--text-muted);">
       ➕ תוספת מכסה (${extrasHere}) לשעה ${time}
       </div>
@@ -1677,36 +1714,34 @@ case 'BOOKED':
     x.time === time && x.phone && x.status !== 'DELETED'
     );
     
-bookings.forEach(appt => {
-
-  const fulfilledClass = appt.fulfilled ? 'fulfilled' : '';
-
-  slotsDiv.innerHTML += `
-  <div class="slot booked ${fulfilledClass}">
-    <div>
+    bookings.forEach(appt => {
+      
+      const fulfilledClass = appt.fulfilled ? 'fulfilled' : '';
+      
+      slotsDiv.innerHTML += `
+      <div class="slot booked ${fulfilledClass}" style="${pastStyle}">
+      <div>
       <strong>${time}</strong> — ${appt.first} ${appt.last}
       <br><small>📞 ${appt.phone}</small>
-
+      
       ${
         enableFulfillment
-          ? `<span
-               class="fulfill-badge ${appt.fulfilled ? 'on' : ''}"
-               onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})">
-               מומש
-             </span>`
-          : ''
+        ? `<span
+        class="fulfill-badge ${appt.fulfilled ? 'on' : ''}"
+        onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})">
+        מומש
+        </span>`
+        : ''
       }
-    </div>
-
-    ${!isPast
-      ? `<button class="del-btn"
-          onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>`
-      : ''
-    }
-  </div>`;
-});
-
-
+      </div>
+      
+      ${!isPast
+        ? `<button class="del-btn"
+        onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>`
+        : ''
+      }
+      </div>`;
+    });
     
     // חסומים
     const blocked = activeAppointments.filter(x =>
@@ -1715,7 +1750,7 @@ bookings.forEach(appt => {
     
     blocked.forEach(blk => {
       slotsDiv.innerHTML += `
-      <div class="slot blocked">
+      <div class="slot blocked" style="${pastStyle}">
       <div style="text-decoration:line-through;"><strong>${time}</strong> — חסום</div>
       ${!isPast ? `<button class="restore-btn" onclick="restoreSlot('${dateKey}', '${time}')">שחזר</button>` : ''}
       </div>`;
@@ -1726,12 +1761,12 @@ bookings.forEach(appt => {
     const remaining = totalCapacity - used;
     
     // תורים פנויים
-    if (remaining > 0 && (!isToday || tMin > currentMinutes)) {
+    if (remaining > 0) { // הסרתי את התנאי הישן של isToday כי טיפלנו בזה למעלה
       for (let i = 0; i < remaining; i++) {
         const countText = totalCapacity > 1 ? ` (${i + 1})` : '';
         
         slotsDiv.innerHTML += `
-        <div class="slot free" onclick="openBookingWindow('${time}')" style="cursor: pointer;" title="לחץ להזמנת תור">
+        <div class="slot free" onclick="openBookingWindow('${time}')" style="cursor: pointer; ${pastStyle}" title="לחץ להזמנת תור">
         <div>
         <div style="font-weight:bold;">${time}</div>
         <div style="font-size:0.85em; opacity:0.8;">פנוי - לחץ להזמנה ${countText}</div>
@@ -1772,28 +1807,29 @@ bookings.forEach(appt => {
     }
     
   });
+}
+
+// ────────────────────────────────────────────
+// סוף יום (רגיל) - יוצג רק אם *לא* היה קיצור יום
+// ────────────────────────────────────────────
+// 🟢 תיקון חדש: התנאי effectiveEndIndex === combined.length
+if (combined.length > 0 && effectiveEndIndex === combined.length) {
+  const lastTime = combined[combined.length - 1];
+  const interval = parseInt(s.range1Interval) || 10;
+  const lastMins = timeToMinutes(lastTime);
+  const endMins = lastMins + interval;
   
-  // ────────────────────────────────────────────
-  // סוף יום (רגיל) - יוצג רק אם *לא* היה קיצור יום
-  // ────────────────────────────────────────────
-  // 🟢 תיקון חדש: התנאי effectiveEndIndex === combined.length
-  if (combined.length > 0 && effectiveEndIndex === combined.length) {
-    const lastTime = combined[combined.length - 1];
-    const interval = parseInt(s.range1Interval) || 10;
-    const lastMins = timeToMinutes(lastTime);
-    const endMins = lastMins + interval;
-    
-    const endHour = String(Math.floor(endMins / 60)).padStart(2, '0');
-    const endMin = String(endMins % 60).padStart(2, '0');
-    
-    const finalEnd = `${endHour}:${endMin}`;
-    
-    const div = document.createElement("div");
-    div.className = "break-separator end-of-day";
-    div.style.marginTop = "12px";
-    div.textContent = `-------- סוף יום (${finalEnd}) --------`;
-    slotsDiv.appendChild(div);
-  }
+  const endHour = String(Math.floor(endMins / 60)).padStart(2, '0');
+  const endMin = String(endMins % 60).padStart(2, '0');
+  
+  const finalEnd = `${endHour}:${endMin}`;
+  
+  const div = document.createElement("div");
+  div.className = "break-separator end-of-day";
+  div.style.marginTop = "12px";
+  div.textContent = `-------- סוף יום (${finalEnd}) --------`;
+  slotsDiv.appendChild(div);
+}
 }
 
 function addManualSlotFromUI() {
@@ -1942,61 +1978,61 @@ function addBreakRow(s='', e='') {
 function renderBreaksConfig(breaks=[]) { document.getElementById("breaksContainer").innerHTML=''; breaks.forEach(b=>addBreakRow(b.start, b.end)); }
 
 function adminCancel(dateKey, time, phoneToCancel) {
-
+  
   const dayData = globalData[dateKey];
   let clientPhone = phoneToCancel || "";
   let clientName = "לקוח";
-
+  
   if (dayData && dayData.appointments) {
     const appt = dayData.appointments.find(
-      a => a.time === time && a.phone === phoneToCancel
+    a => a.time === time && a.phone === phoneToCancel
     );
     if (appt) clientName = appt.first || "לקוח";
   }
-
+  
   if (!confirm("האם לבטל את התור הזה?")) return;
-
+  
   // 🔴 מחיקה אמיתית של התור (בלי סטטוס, בלי יצירה)
   db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
     let list = s.val() || [];
-
+    
     list = list.filter(a =>
-      !(a.time === time && a.phone === phoneToCancel)
+    !(a.time === time && a.phone === phoneToCancel)
     );
-
+    
     db.ref(`appointments/${dateKey}/appointments`).set(list)
-      .then(() => {
-        // עדכון מקומי למניעת רינדור כפול
-        if (globalData[dateKey]) {
-          globalData[dateKey].appointments = list;
-        }
-        renderSlots(dateKey);
-      });
+    .then(() => {
+      // עדכון מקומי למניעת רינדור כפול
+      if (globalData[dateKey]) {
+        globalData[dateKey].appointments = list;
+      }
+      renderSlots(dateKey);
+    });
   });
-
+  
   // --- שליחת וואטסאפ (נשאר כמו שהיה) ---
   if (clientPhone && clientPhone.length > 5) {
     let cleanPhone = clientPhone.replace(/\D/g, '');
     if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
-
+    
     const titleElement = document.getElementById("calendarTitleSetting");
     const serviceName =
-      (titleElement && titleElement.value) ? titleElement.value : "העסק";
-
+    (titleElement && titleElement.value) ? titleElement.value : "העסק";
+    
     const message =
-      `${clientName} שלום,\n` +
-      `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
-      `הינך מוזמן לקבוע תור חדש בקישור:\n` +
-      `https://torimapp.netlify.app/`;
-
+    `${clientName} שלום,\n` +
+    `התור שנקבע ל${serviceName} לתאריך ${dateKey}, שעה ${time} בוטל.\n` +
+    `הינך מוזמן לקבוע תור חדש בקישור:\n` +
+    `https://torimapp.netlify.app/`;
+    
     const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     const waBtn = document.getElementById("waModalBtn");
-
+    
     waBtn.onclick = function () {
       window.open(url, '_blank');
       document.getElementById('waModal').style.display = 'none';
     };
-
+    
     document.getElementById('waModal').style.display = 'flex';
   }
 }
@@ -2004,15 +2040,15 @@ function adminCancel(dateKey, time, phoneToCancel) {
 function toggleFulfilled(dateKey, time, phone, checked) {
   db.ref(`appointments/${dateKey}/appointments`).once('value', s => {
     const list = s.val() || [];
-
+    
     const idx = list.findIndex(a =>
-      a.time === time && a.phone === phone
+    a.time === time && a.phone === phone
     );
-
+    
     if (idx === -1) return;
-
+    
     list[idx].fulfilled = checked;
-
+    
     db.ref(`appointments/${dateKey}/appointments`).set(list);
   });
 }
@@ -2373,15 +2409,14 @@ function saveDayConfig() {
   
   /* ========= 3. אובייקט הגדרות ========= */
   
-const settingsObj = {
-  range1Start: r1Start,
-  range1End: r1End,
-  range1Interval: r1Interval,
-  maxSlots: String(maxSlotsVal),
-  breaks: breaks,
-  enableFulfillment: enableFulfillment   // ✅ רק זה
-};
-
+  const settingsObj = {
+    range1Start: r1Start,
+    range1End: r1End,
+    range1Interval: r1Interval,
+    maxSlots: String(maxSlotsVal),
+    breaks: breaks,
+    enableFulfillment: enableFulfillment   // ✅ רק זה
+  };
   
   /* ========= 4. קביעת תאריכים להחלה ========= */
   
@@ -2916,7 +2951,7 @@ function toggleApplyDate(dateKey, dayElement) {
 }
 function toggleEnableFulfillment() {
   enableFulfillment = !enableFulfillment;
-
+  
   const btn = document.getElementById('enableFulfillmentBtn');
   if (enableFulfillment) {
     btn.classList.add('on');
