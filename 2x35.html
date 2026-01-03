@@ -1619,37 +1619,20 @@ function renderSlots(dateKey) {
     }
     
     // הזמנות
-// תורים מוזמנים
-    const bookings = activeAppointments.filter(x =>
-      x.time === time && x.phone && x.status !== 'DELETED'
-    );
-    
+const bookings = activeAppointments.filter(x => x.time === time && x.phone && x.status !== 'DELETED');
     bookings.forEach(appt => {
-      
       const fulfilledClass = appt.fulfilled ? 'fulfilled' : '';
-      
       slotsDiv.innerHTML += `
       <div class="slot booked ${fulfilledClass}" style="${pastStyle}">
-        <div>
-          <strong>${time}</strong> — ${appt.first} ${appt.last}
-          <br><small>📞 ${appt.phone}</small>
-          
-          ${
-            enableFulfillment
-            ? `<span
-                class="fulfill-badge ${appt.fulfilled ? 'on' : ''}"
-                onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})">
-                מומש
-               </span>`
-            : ''
-          }
-        </div>
-        
-        ${(!isPast && !appt.fulfilled)
-          ? `<button class="del-btn"
-              onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>`
-          : ''
-        }
+      <div>
+      <strong>${time}</strong> — ${appt.first} ${appt.last}
+      <br><small>📞 ${appt.phone}</small>
+      ${enableFulfillment ? `<span class="fulfill-badge ${appt.fulfilled ? 'on' : ''}" onclick="toggleFulfilled('${dateKey}', '${time}', '${appt.phone}', ${!appt.fulfilled})">מומש</span>` : ''}
+      </div>
+      
+      ${(!isPast && !appt.fulfilled) 
+        ? `<button class="del-btn" onclick="adminCancel('${dateKey}', '${time}', '${appt.phone}')">❌ בטל</button>` 
+        : ''}
       </div>`;
     });
     
