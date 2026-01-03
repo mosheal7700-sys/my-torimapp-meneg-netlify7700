@@ -1646,22 +1646,41 @@ const bookings = activeAppointments.filter(x => x.time === time && x.phone && x.
       </div>`;
     });
     
-    // פנויים
+// חישוב פנויים
     const used = bookings.length + blocked.length;
     const remaining = totalCapacity - used;
     
+    // בדיקה האם הסלוט הזה כבר עבר (כדי לחסום לחיצה)
+    // התנאי: או שהיום עבר כולו, או שזה היום והשעה עברה
+    const isSlotExpired = isPast || (isToday && tMin < currentMinutes);
+
+    // תורים פנויים
     if (remaining > 0) {
       for (let i = 0; i < remaining; i++) {
         const countText = totalCapacity > 1 ? ` (${i + 1})` : '';
+        
+        // הגדרת הפעולות לפי המצב: אם עבר - אין לחיצה. אם עתידי - פותח חלונית.
+        const onClickAction = isSlotExpired ? '' : `onclick="openBookingWindow('${time}')"`;
+        const cursorStyle = isSlotExpired ? 'cursor: default;' : 'cursor: pointer;';
+        const tooltip = isSlotExpired ? 'לא ניתן להזמין בזמן שעבר' : 'לחץ להזמנת תור';
+        
         slotsDiv.innerHTML += `
-        <div class="slot free" onclick="openBookingWindow('${time}')" style="cursor: pointer; ${pastStyle}" title="לחץ להזמנת תור">
-        <div>
-        <div style="font-weight:bold;">${time}</div>
-        <div style="font-size:0.85em; opacity:0.8;">פנוי - לחץ להזמנה ${countText}</div>
-        </div>
-        <div style="z-index: 10;">
-        ${!isPast ? `<button class="del-free-slot-btn" onclick="event.stopPropagation(); blockFreeSlot('${dateKey}', '${time}')" title="חסום תור זה">❌</button>` : ''}
-        </div>
+        <div class="slot free" ${onClickAction} style="${cursorStyle} ${pastStyle}" title="${tooltip}">
+          <div>
+            <div style="font-weight:bold;">${time}</div>
+            <div style="font-size:0.85em; opacity:0.8;">
+                ${isSlotExpired ? 'פנוי (עבר)' : `פנוי - לחץ להזמנה ${countText}`}
+            </div>
+          </div>
+          
+          <div style="z-index: 10;">
+            ${!isPast ? `
+            <button class="del-free-slot-btn"
+              onclick="event.stopPropagation(); blockFreeSlot('${dateKey}', '${time}')"
+              title="חסום תור זה">
+              ❌
+            </button>` : ''}
+          </div>
         </div>`;
       }
     }
