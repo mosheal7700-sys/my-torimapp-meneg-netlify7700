@@ -1426,32 +1426,36 @@ let showPastSlots = false;
 
 // 2. הפונקציה שמופעלת בלחיצה על הכפתור
 function togglePastView() {
-  // החלפת המצב (אם היה כבוי -> דולק, ולהפך)
+  // 1. החלפת המצב
   showPastSlots = !showPastSlots;
 
-  // איתור הכפתור כדי לשנות לו את המראה
+  // 2. עדכון המראה של הכפתור
   const btn = document.getElementById('togglePastBtn');
   if (btn) {
     if (showPastSlots) {
-      // מצב פעיל: מציגים הכל
+      // מצב פעיל
       btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">visibility</span><span style="font-size: 14px;">הסתר שעברו</span>';
-      // שינוי עיצוב קטן כדי להדגיש שהכפתור לחוץ
-      btn.style.background = 'var(--primary-color, #3b82f6)'; 
+      btn.style.background = 'var(--accent-blue)'; 
       btn.style.color = '#ffffff';
-      btn.style.borderColor = 'transparent';
     } else {
-      // מצב כבוי: מסתירים שעברו (ברירת המחדל)
+      // מצב כבוי
       btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">visibility_off</span><span style="font-size: 14px;">הצג שעברו</span>';
       btn.style.background = 'var(--bg-input)';
       btn.style.color = 'var(--text-main)';
-      btn.style.borderColor = 'var(--border-color)';
     }
   }
 
-  // רענון התצוגה של התורים מחדש
-  // (הבדיקה נועדה לוודא שהמשתנים קיימים כדי למנוע שגיאות)
-  if (typeof renderSlots === "function" && typeof selectedDateKey !== "undefined") {
-    renderSlots(selectedDateKey);
+  // 3. התיקון: זיהוי התאריך הנוכחי ורענון מיידי
+  // אנחנו מנסים לקחת את התאריך מהמשתנה הגלובלי selectedDate
+  // אם הוא לא קיים, ניקח מהכותרת במסך
+  let dateToRefresh = typeof selectedDate !== 'undefined' ? selectedDate : document.getElementById("selectedDateDisplay")?.innerText;
+
+  if (dateToRefresh) {
+    console.log("Refreshing view for:", dateToRefresh); // בדיקה לקונסול
+    renderSlots(dateToRefresh);
+  } else {
+    // אם הכל נכשל, נרענן להיום
+    renderSlots(dateToKey(new Date()));
   }
 }
 // --- סוף תוספת ---
