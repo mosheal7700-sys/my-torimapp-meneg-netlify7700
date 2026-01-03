@@ -74,7 +74,55 @@
   border-color: transparent !important;
   opacity: 0.5;
 }
+/* --- תיקון נראות לתורים שמומשו (Fulfilled) --- */
 
+/* 1. הגדרה למצב חשוך (ברירת מחדל) */
+.slot.booked.fulfilled {
+  /* רקע ירוק-בקבוק עמוק, לא אפור */
+  background-color: rgba(6, 95, 70, 0.9) !important; 
+  /* מסגרת ירוקה זוהרת */
+  border: 1px solid #34d399 !important; 
+  /* צל עדין ירוק */
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.15) !important;
+}
+
+/* 2. הכרחת כל הטקסטים בתוך הסלוט להיות בהירים */
+.slot.booked.fulfilled,
+.slot.booked.fulfilled strong,
+.slot.booked.fulfilled div,
+.slot.booked.fulfilled span {
+  color: #ecfdf5 !important; /* לבן עם גוון מנטה עדין */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5); /* צל לטקסט לקריאות מקסימלית */
+}
+
+/* טקסט קטן (כמו טלפון) - מעט פחות בוהק אבל עדיין קריא */
+.slot.booked.fulfilled small {
+  color: #d1fae5 !important;
+  opacity: 0.9 !important;
+}
+
+/* 3. טיפול בכפתור "מומש" עצמו כשהוא דולק */
+.fulfill-badge.on {
+  background-color: #34d399 !important; /* ירוק בהיר */
+  color: #064e3b !important; /* טקסט כהה עליו */
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* --- התאמה למצב בהיר (Light Mode) --- */
+/* כדי שלא יהיה כהה מדי אם תעבור למצב יום */
+body.light-mode .slot.booked.fulfilled {
+  background-color: #d1fae5 !important; /* רקע מנטה בהיר */
+  border-color: #10b981 !important;
+  color: #065f46 !important; /* טקסט ירוק כהה */
+}
+
+body.light-mode .slot.booked.fulfilled strong,
+body.light-mode .slot.booked.fulfilled small,
+body.light-mode .slot.booked.fulfilled div {
+  color: #065f46 !important;
+  text-shadow: none !important;
+}
 
 /* ============================================================
    התאמה למצב בהיר (Light Mode)
