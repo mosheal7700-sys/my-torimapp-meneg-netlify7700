@@ -32,45 +32,74 @@
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --border-radius: 8px;
 }
-/* --- תיקון ניגודיות לתורים שעברו --- */
 
-/* הגדרה כללית לסלוט שעבר: קצת שקוף, אבל לא שחור לבן */
-.slot.past-slot {
-  opacity: 0.75; 
-  position: relative;
-}
+/* --- תיקון ניגודיות לתורים שעברו (Dark & Light Mode) --- */
 
-/* 1. תור פנוי שעבר: רק מסגרת מקווקוות, רקע שונה מהרגיל */
-.slot.free.past-slot {
-  background-color: rgba(128, 128, 128, 0.1) !important; /* רקע אפרפר עדין */
-  border: 1px dashed var(--text-muted) !important;
-  color: var(--text-muted) !important;
-  box-shadow: none !important;
-}
-
-/* 2. תור מוזמן שעבר (ולא מומש): נשאר כחול אבל דהוי */
-.slot.booked.past-slot {
-  background-color: rgba(59, 130, 246, 0.25) !important; /* כחול דהוי אבל ברור */
-  border: 1px solid rgba(59, 130, 246, 0.4) !important;
-  color: var(--text-main);
-}
-/* הסתרת כפתורים מיותרים בתורים שעברו */
+/* הגדרה בסיסית: הסתרה של אלמנטים מיותרים */
 .slot.past-slot .del-btn,
 .slot.past-slot .del-free-slot-btn {
   display: none !important;
 }
 
-/* 3. תור שמומש (גם אם עבר - נשאר ירוק) */
-.slot.booked.fulfilled.past-slot {
-  background-color: rgba(16, 185, 129, 0.25) !important; /* ירוק דהוי */
-  border-color: rgba(16, 185, 129, 0.4) !important;
+/* ============================================================
+   ברירת מחדל: מצב חשוך (Dark Mode)
+   המטרה: להחשיך את הסלוטים כדי שייראו "כבויים" ולא בולטים
+   ============================================================ */
+
+/* 1. תור פנוי שעבר (חשוך) - רקע כהה מאוד, כיתוב עמום */
+.slot.free.past-slot {
+  background-color: rgba(0, 0, 0, 0.25) !important; /* משחיר את הרקע */
+  border: 1px dashed rgba(255, 255, 255, 0.1) !important; /* מסגרת כמעט שקופה */
+  color: rgba(255, 255, 255, 0.3) !important; /* טקסט כהה/שקוף */
+  box-shadow: none !important;
+  opacity: 0.7;
 }
 
-/* 4. חסום שעבר */
-.slot.blocked.past-slot {
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid transparent;
+/* 2. תור מוזמן שעבר (חשוך) - כחול עמוק וכהה */
+.slot.booked.past-slot {
+  background-color: rgba(30, 58, 138, 0.3) !important; /* כחול כהה מאוד */
+  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
 }
+
+/* 3. תור מומש שעבר (חשוך) */
+.slot.booked.fulfilled.past-slot {
+  background-color: rgba(6, 78, 59, 0.3) !important; /* ירוק כהה מאוד */
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* 4. חסום שעבר (חשוך) */
+.slot.blocked.past-slot {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border-color: transparent !important;
+  opacity: 0.5;
+}
+
+
+/* ============================================================
+   התאמה למצב בהיר (Light Mode)
+   המטרה: כאן נשתמש באפור הבהיר שאהבת
+   ההנחה: למצב בהיר יש Class בשם 'light-mode' על ה-body
+   ============================================================ */
+
+body.light-mode .slot.free.past-slot {
+  background-color: rgba(0, 0, 0, 0.05) !important; /* אפור בהיר עדין */
+  border: 1px dashed #cbd5e1 !important; /* מסגרת אפורה */
+  color: #94a3b8 !important; /* טקסט אפור */
+  opacity: 1;
+}
+
+body.light-mode .slot.booked.past-slot {
+  background-color: rgba(219, 234, 254, 0.5) !important; /* תכלת בהיר מאוד */
+  border: 1px solid #bfdbfe !important;
+  color: #64748b !important;
+}
+
+body.light-mode .slot.booked.fulfilled.past-slot {
+  background-color: rgba(209, 250, 229, 0.5) !important; /* ירקרק בהיר מאוד */
+  border: 1px solid #a7f3d0 !important;
+}
+
 /* --- הגדרות למצב בהיר (Light Mode) --- */
 body.light-mode {
   --bg-body: #f3f4f6;       /* אפור בהיר מאוד */
